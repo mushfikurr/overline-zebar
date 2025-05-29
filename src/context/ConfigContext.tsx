@@ -1,25 +1,49 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import {
   getFlowLauncherPath,
   getUseAutoTiling,
   getAutoTilingWebSocketUri,
-  getMediaMaxWidth
-} from '../utils/getFromEnv';
+  getMediaMaxWidth,
+  getZebarBackgroundColor,
+  getZebarBorderColor,
+  getZebarBorderRadius,
+  getZebarBorderWidth,
+  getZebarHorizontalSpace,
+  getZebarVerticalSpace,
+} from "../utils/getFromEnv";
 
 interface ConfigContextType {
   flowLauncherPath: string;
   useAutoTiling: boolean;
   autoTilingWebSocketUri: string;
   mediaMaxWidth: string;
+  zebarBackgroundColor: string;
+  zebarBorderColor: string;
+  zebarBorderRadius: string;
+  zebarBorderWidth: string;
+  zebarHorizontalSpace: string;
+  zebarVerticalSpace: string;
   isLoading: boolean;
 }
 
 const defaultConfig: ConfigContextType = {
-  flowLauncherPath: 'C:\\Program Files\\FlowLauncher\\Flow.Launcher.exe',
+  flowLauncherPath: "C:\\Program Files\\FlowLauncher\\Flow.Launcher.exe",
   useAutoTiling: false,
-  autoTilingWebSocketUri: 'ws://localhost:6123',
-  mediaMaxWidth: '400',
-  isLoading: true
+  autoTilingWebSocketUri: "ws://localhost:6123",
+  mediaMaxWidth: "400",
+  zebarBackgroundColor: "#1e2228CC",
+  zebarBorderColor: "#4e5663CC",
+  zebarBorderRadius: "8px",
+  zebarBorderWidth: "1px",
+  zebarHorizontalSpace: "4px",
+  zebarVerticalSpace: "5px",
+  isLoading: true,
 };
 
 const ConfigContext = createContext<ConfigContextType>(defaultConfig);
@@ -36,11 +60,28 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const [flowLauncherPath, useAutoTiling, autoTilingWebSocketUri, mediaMaxWidth] = await Promise.all([
+        const [
+          flowLauncherPath,
+          useAutoTiling,
+          autoTilingWebSocketUri,
+          mediaMaxWidth,
+          zebarBackgroundColor,
+          zebarBorderColor,
+          zebarBorderRadius,
+          zebarBorderWidth,
+          zebarHorizontalSpace,
+          zebarVerticalSpace,
+        ] = await Promise.all([
           getFlowLauncherPath(),
           getUseAutoTiling(),
           getAutoTilingWebSocketUri(),
           getMediaMaxWidth(),
+          getZebarBackgroundColor(),
+          getZebarBorderColor(),
+          getZebarBorderRadius(),
+          getZebarBorderWidth(),
+          getZebarHorizontalSpace(),
+          getZebarVerticalSpace(),
         ]);
 
         setConfig({
@@ -48,11 +89,17 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
           useAutoTiling,
           autoTilingWebSocketUri,
           mediaMaxWidth,
-          isLoading: false
+          zebarBackgroundColor,
+          zebarBorderColor,
+          zebarBorderRadius,
+          zebarBorderWidth,
+          zebarHorizontalSpace,
+          zebarVerticalSpace,
+          isLoading: false,
         });
       } catch (error) {
-        console.error('Failed to load configuration:', error);
-        setConfig(prev => ({ ...prev, isLoading: false }));
+        console.error("Failed to load configuration:", error);
+        setConfig((prev) => ({ ...prev, isLoading: false }));
       }
     };
 
@@ -60,8 +107,6 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <ConfigContext.Provider value={config}>
-      {children}
-    </ConfigContext.Provider>
+    <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
   );
 };

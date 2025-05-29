@@ -93,12 +93,8 @@ export const getFlowLauncherPath = async (): Promise<string> => {
 };
 
 export const getMediaMaxWidth = async (): Promise<string> => {
-  return await getStringFromConfig(
-    "MEDIA_MAX_WIDTH",
-    "400"
-  );
+  return await getStringFromConfig("MEDIA_MAX_WIDTH", "400");
 };
-
 
 export const getUseAutoTiling = async (): Promise<boolean> => {
   return await getBooleanFromConfig("USE_AUTOTILING", false);
@@ -109,4 +105,28 @@ export const getAutoTilingWebSocketUri = async (): Promise<string> => {
     "AUTOTILING_WEBSOCKET_URI",
     "ws://localhost:6123"
   );
+};
+
+export const getZebarBackgroundColor = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_BACKGROUND_COLOR", "#1e2228CC");
+};
+
+export const getZebarBorderColor = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_BORDER_COLOR", "#4e5663CC");
+};
+
+export const getZebarBorderRadius = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_BORDER_RADIUS", "8px");
+};
+
+export const getZebarBorderWidth = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_BORDER_WIDTH", "1px");
+};
+
+export const getZebarHorizontalSpace = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_HORIZONTAL_SPACE", "4px");
+};
+
+export const getZebarVerticalSpace = async (): Promise<string> => {
+  return await getStringFromConfig("ZEBAR_VERTICAL_SPACE", "5px");
 };

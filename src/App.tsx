@@ -13,6 +13,7 @@ import "./styles/fonts.css";
 import { useAutoTiling } from "./utils/useAutoTiling";
 import { getWeatherIcon } from "./utils/weatherIcons";
 import Systray from "./components/systray";
+import { useConfig } from "./context/ConfigContext";
 
 const providers = zebar.createProviderGroup({
   media: { type: "media" },
@@ -37,8 +38,29 @@ function App() {
 
   const statIconClassnames = "h-3 w-3 text-icon";
 
+  const {
+    zebarBackgroundColor,
+    zebarBorderColor,
+    zebarBorderRadius,
+    zebarBorderWidth,
+    zebarHorizontalSpace,
+    zebarVerticalSpace,
+  } = useConfig();
+
+  const configStyles = {
+    backgroundColor: zebarBackgroundColor,
+    borderColor: zebarBorderColor,
+    borderRadius: zebarBorderRadius,
+    borderWidth: zebarBorderWidth,
+    marginInline: zebarHorizontalSpace,
+    marginBlock: zebarVerticalSpace,
+  };
+
   return (
-    <div className="relative flex justify-between items-center bg-background/80 border border-button-border/80 backdrop-blur-3xl text-text h-full antialiased select-none rounded-lg font-mono py-1.5 mx-1">
+    <div
+      className="relative flex justify-between items-center backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5"
+      style={configStyles}
+    >
       <div className="flex items-center gap-2 h-full z-10 pl-1.5">
         <div className="flex items-center gap-1.5 h-full">
           <TilingControl glazewm={output.glazewm} />
