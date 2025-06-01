@@ -2,5 +2,11 @@
   "FLOW_LAUNCHER_PATH": "C:\\Users\\msy\\AppData\\Local\\FlowLauncher\\Flow.Launcher.exe",
   "USE_AUTOTILING": true,
   "AUTOTILING_WEBSOCKET_URI": "ws://localhost:6123",
-  "MEDIA_MAX_WIDTH": "300"
+  "MEDIA_MAX_WIDTH": "300",
+  "ZEBAR_BACKGROUND_COLOR": "#1e2228CC",
+  "ZEBAR_BORDER_COLOR": "#4e5663CC",
+  "ZEBAR_BORDER_RADIUS": "8px",
+  "ZEBAR_BORDER_WIDTH": "1px",
+  "ZEBAR_HORIZONTAL_SPACE": "4px",
+  "ZEBAR_VERTICAL_SPACE": "5px"
 }
