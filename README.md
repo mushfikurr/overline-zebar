@@ -162,3 +162,4 @@ Follow the steps to build the project from source.
 ## Contributions
 
 Pull requests are welcome. If you find any issues or have feature suggestions, feel free to open an issue on GitHub.
+
