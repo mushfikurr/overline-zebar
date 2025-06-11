@@ -1,4 +1,4 @@
-import { Card } from '@overline-zebar/ui';
+import { Card, CardTitle } from '@overline-zebar/ui';
 import { Info, Wifi } from 'lucide-react';
 import { useSearchParams } from 'wouter';
 import * as zebar from 'zebar';
@@ -70,9 +70,9 @@ export default function Network({ network }: NetworkPanelProps) {
       {/* Gateway Info */}
       {network.gateway && (
         <Card>
-          <h3 className="font-medium mb-1 text-sm">
+          <CardTitle>
             Gateway {network.gateway.ssid ? `(${network.gateway.ssid})` : ''}
-          </h3>
+          </CardTitle>
           <div className="grid grid-cols-2 gap-x-3 gap-y-1">
             <div>
               <p className="text-text-muted">MAC Address</p>

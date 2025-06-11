@@ -1,5 +1,5 @@
-import { Card } from '@overline-zebar/ui';
-import { ArrowDownUp } from 'lucide-react';
+import { Card, CardTitle } from '@overline-zebar/ui';
+import { ArrowDownUp, CloudDownload, CloudUpload } from 'lucide-react';
 import { NetworkTraffic } from 'zebar';
 
 type Props = {
@@ -22,23 +22,23 @@ export default function Traffic({ traffic }: Props) {
       </h3>
       <div className="grid grid-cols-2 gap-2">
         <Card>
-          <div className="text-text-muted">Received</div>
+          <CardTitle Icon={CloudDownload}>Received</CardTitle>
           <div className="text-text">{formatDataSize(traffic.received)}</div>
         </Card>
         <Card>
-          <div className="text-text-muted">Transmitted</div>
+          <CardTitle Icon={CloudUpload}>Transmitted</CardTitle>
           <div className="text-text">{formatDataSize(traffic.transmitted)}</div>
         </Card>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <Card>
-          <div className="text-text-muted">Total Received</div>
+          <CardTitle Icon={CloudDownload}>Total Received</CardTitle>
           <div className="text-text">
             {formatDataSize(traffic.totalReceived)}
           </div>
         </Card>
         <Card>
-          <div className="text-text-muted">Total Transmitted</div>
+          <CardTitle Icon={CloudUpload}>Total Transmitted</CardTitle>
           <div className="text-text">
             {formatDataSize(traffic.totalTransmitted)}
           </div>
