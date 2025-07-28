@@ -21,7 +21,7 @@ export default function Storage({ disk }: { disk: DiskOutput | null }) {
   return (
     <PanelLayout title="Storage">
       {sortedDisks.map((d, index) => (
-        <DiskItem key={index} disk={d} />
+        <DiskItem key={index} initialAnimationDelay={50 * index} disk={d} />
       ))}
     </PanelLayout>
   );

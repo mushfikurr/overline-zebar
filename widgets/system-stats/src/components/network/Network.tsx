@@ -1,10 +1,16 @@
-import { Card, CardTitle } from '@overline-zebar/ui';
-import { Info, Wifi } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useSearchParams } from 'wouter';
 import * as zebar from 'zebar';
 import PanelLayout from '../common/PanelLayout';
 import InterfaceDetails from './components/InterfaceDetails';
 import Traffic from './components/Traffic';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@overline-zebar/ui';
 
 interface NetworkPanelProps {
   network: {
@@ -15,6 +21,9 @@ interface NetworkPanelProps {
 }
 
 export default function Network({ network }: NetworkPanelProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') || 'default';
+
   if (!network || !network.interfaces || network.interfaces.length === 0) {
     return (
       <PanelLayout title="Network">
@@ -27,27 +36,13 @@ export default function Network({ network }: NetworkPanelProps) {
     );
   }
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get('tab') || 'default';
-
   const defaultInterface =
     network.interfaces.find((iface) => iface.isDefault) ||
     network.interfaces[0];
   const currInterface =
     network.interfaces.find((iface) => iface.name === tab) ?? defaultInterface;
 
-  if (!currInterface) {
-    return (
-      <PanelLayout title="Network">
-        <div className="flex flex-col justify-center items-center select-text w-full text-text-muted h-full">
-          <Info className="w-10 h-10 mb-4 text-text-muted" />
-          <p>Error retrieving network interface.</p>
-        </div>
-      </PanelLayout>
-    );
-  }
-
-  if (!defaultInterface) {
+  if (!currInterface || !defaultInterface) {
     return (
       <PanelLayout title="Network">
         <div className="flex flex-col justify-center items-center select-text w-full text-text-muted h-full">
@@ -66,47 +61,33 @@ export default function Network({ network }: NetworkPanelProps) {
       className="space-y-6"
     >
       <Traffic traffic={network.traffic} />
+
+      <div className="flex items-center gap-3">
+        <Select
+          value={currInterface.name}
+          onValueChange={(value) => {
+            const selected = value as string;
+            setSearchParams((prev) => {
+              const params = new URLSearchParams(prev);
+              params.set('tab', selected);
+              return params;
+            });
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Interface..."></SelectValue>
+          </SelectTrigger>
+          <SelectContent position="item-aligned">
+            {network.interfaces.map((i) => (
+              <SelectItem key={i.name} value={i.name}>
+                {i.friendlyName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <InterfaceDetails iface={currInterface} />
-      {/* Gateway Info */}
-      {network.gateway && (
-        <Card>
-          <CardTitle>
-            Gateway {network.gateway.ssid ? `(${network.gateway.ssid})` : ''}
-          </CardTitle>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-            <div>
-              <p className="text-text-muted">MAC Address</p>
-              <p>{network.gateway.macAddress}</p>
-            </div>
-            {network.gateway.signalStrength !== null &&
-              typeof network.gateway.signalStrength !== 'undefined' && (
-                <div>
-                  <p className="text-text-muted">Signal Strength</p>
-                  <p className="flex items-center">
-                    <Wifi className="w-3 h-3 mr-1" />{' '}
-                    {network.gateway.signalStrength}%
-                  </p>
-                </div>
-              )}
-          </div>
-          <div className="mt-1">
-            <p className="text-text-muted">IPv4 Addresses</p>
-            {network.gateway.ipv4Addresses.length > 0 ? (
-              network.gateway.ipv4Addresses.map((ip) => <p key={ip}>{ip}</p>)
-            ) : (
-              <p>N/A</p>
-            )}
-          </div>
-          <div className="mt-1">
-            <p className="text-text-muted">IPv6 Addresses</p>
-            {network.gateway.ipv6Addresses.length > 0 ? (
-              network.gateway.ipv6Addresses.map((ip) => <p key={ip}>{ip}</p>)
-            ) : (
-              <p>N/A</p>
-            )}
-          </div>
-        </Card>
-      )}
     </PanelLayout>
   );
 }

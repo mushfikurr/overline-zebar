@@ -1,7 +1,8 @@
 import { Card, CardTitle } from '@overline-zebar/ui';
-import { ArrowDown, Globe, Rss } from 'lucide-react';
+import { ArrowDown, ArrowUp, Globe, Rss } from 'lucide-react';
 import * as zebar from 'zebar';
 import List from './List';
+import { CopyToClipboard } from '@/components/common/CopyToClipboard';
 
 const formatSpeed = (bytesPerSecond: number | null | undefined): string => {
   if (!bytesPerSecond || bytesPerSecond < 0) return 'N/A';
@@ -18,11 +19,13 @@ interface Props {
 
 export default function InterfaceDetails({ iface }: Props) {
   return (
-    <div className="space-y-6">
-      <h3 className="font-medium">
-        {iface.friendlyName || iface.name} ({iface.type})
-      </h3>
-      <p className="">{iface.description}</p>
+    <div className="space-y-4">
+      <div>
+        <h3 className="font-medium">
+          {iface.friendlyName || iface.name} ({iface.type})
+        </h3>
+        <p className="text-text-muted">{iface.description}</p>
+      </div>
       <section className="space-y-1.5">
         <h3 className="font-medium flex items-center text-text-muted gap-2">
           <Rss className="h-5 w-5" aria-hidden="true" />
@@ -30,39 +33,41 @@ export default function InterfaceDetails({ iface }: Props) {
         </h3>
         <div className="grid grid-cols-2 gap-2">
           <Card className="space-y-1.5">
-            <CardTitle icon={<ArrowDown />}>Receive</CardTitle>
+            <CardTitle Icon={ArrowDown}>Receive</CardTitle>
             {formatSpeed(iface.receiveSpeed)}
           </Card>
-          <Card className="space-y-1.5">
-            <div className="text-text-muted">Transmit</div>
-            <div className="text-text">{iface.transmitSeed}</div>
+          <Card className="space-y-1.5 select-all">
+            <CardTitle Icon={ArrowUp}>Transmit</CardTitle>
+            <span className="select-all">
+              {/* 
+              // @ts-ignore */}
+              {formatSpeed(iface.transmitSpeed)}
+            </span>
           </Card>
         </div>
       </section>
-
       <section className="space-y-1.5">
         <h3 className="font-medium flex items-center text-text-muted gap-2">
           <Globe className="h-5 w-5" aria-hidden="true" />
           Network Addresses
         </h3>
-
-        <Card className="space-y-1.5">
-          <div>
-            <p className="text-text-muted">MAC Address</p>
-            <p>{iface.macAddress || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="text-text-muted">IPv4 Addresses</p>
-            <List ips={iface.ipv4Addresses} />
-          </div>
-          <div>
-            <p className="text-text-muted">IPv6 Addresses</p>
-            <List ips={iface.ipv6Addresses} />
-          </div>
-          <div>
-            <p className="text-text-muted">DNS Servers</p>
-            <List ips={iface.dnsServers} />
-          </div>
+        <Card>
+          <CardTitle>MAC Address</CardTitle>
+          <CopyToClipboard textToCopy={iface.macAddress}>
+            {iface.macAddress}
+          </CopyToClipboard>
+        </Card>
+        <Card>
+          <CardTitle>IPv4 Address</CardTitle>
+          <List ips={iface.ipv4Addresses} />
+        </Card>
+        <Card>
+          <CardTitle>IPv6 Address</CardTitle>
+          <List ips={iface.ipv6Addresses} />
+        </Card>
+        <Card>
+          <CardTitle>DNS Servers</CardTitle>
+          <List ips={iface.dnsServers} />
         </Card>
       </section>
     </div>

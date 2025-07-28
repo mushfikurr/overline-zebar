@@ -37,7 +37,7 @@ const CardTitle = React.forwardRef<HTMLDivElement, CardTitleProps>(
         className={cn('flex items-center justify-between', className)}
         {...props}
       >
-        <p className="font-medium text-text-muted">{children}</p>
+        <h3 className="font-medium text-text-muted">{children}</h3>
         {Icon && <Icon className="h-5 w-5 text-text-muted" />}
       </div>
     );

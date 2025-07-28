@@ -4,3 +4,15 @@ export { LabelType } from './components/stat-ring/types/labelType';
 export type { Thresholds } from './components/stat-ring/types/thresholds';
 export { systemStatThresholds } from './components/stat-ring/defaults/systemStatThresholds';
 export { Card, CardTitle } from './components/card/Card';
+export { Chip } from './components/chip';
+export { Progress, ProgressValue } from './components/progress';
+export {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+} from './components/select';

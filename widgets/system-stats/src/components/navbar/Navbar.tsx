@@ -1,13 +1,5 @@
 import { Button } from '@overline-zebar/ui';
-import {
-  Cloud,
-  Cpu,
-  Globe,
-  HardDrive,
-  LucideIcon,
-  MemoryStick,
-  Server,
-} from 'lucide-react';
+import { BarChart, Globe, HardDrive, LucideIcon, Server } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '../../utils/cn';
 
@@ -16,11 +8,8 @@ export default function Navbar() {
     <div className="h-full border-r border-border rounded-tl rounded-bl flex flex-col overflow-clip">
       <IconNavbarItem Icon={Server} title="Host" href="/" />
       <IconNavbarItem Icon={HardDrive} title="Storage" href="/storage" />
-      <IconNavbarItem Icon={Cpu} title="CPU" href="/cpu" />
+      <IconNavbarItem Icon={BarChart} title="Performance" href="/performance" />
       <IconNavbarItem Icon={Globe} title="Network" href="/network" />
-      <IconNavbarItem Icon={MemoryStick} title="RAM" href="" />
-      {/* <IconNavbarItem Icon={Network} title="Network" href="" /> */}
-      <IconNavbarItem Icon={Cloud} title="Weather" href="" />
     </div>
   );
 }
@@ -42,7 +31,7 @@ function IconNavbarItem({
     <Button
       onClick={handleClick}
       className={cn(
-        'group flex items-center gap-2 h-full px-4 bg-button/60 border-none border-b border-border rounded-none last:rounded-bl-md last:border-b-0',
+        'group max-h-12 flex items-center gap-2 h-full px-4 bg-button/60 border-none border-b border-border rounded-none last:rounded-bl-md last:border-b-0',
         location === href && 'bg-background hover:bg-background text-text'
       )}
     >
