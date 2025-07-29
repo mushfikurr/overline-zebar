@@ -66,6 +66,46 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/config:
+    dependencies:
+      react:
+        specifier: 'catalog:'
+        version: 18.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@overline-zebar/tailwind':
+        specifier: workspace:*
+        version: link:../tailwind
+      '@overline-zebar/typescript':
+        specifier: workspace:*
+        version: link:../typescript
+      '@tsconfig/recommended':
+        specifier: ^1.0.8
+        version: 1.0.8
+      '@types/node':
+        specifier: ^22.15.29
+        version: 22.15.29
+      '@types/react':
+        specifier: 'catalog:'
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 18.3.7(@types/react@18.3.23)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.21(postcss@8.5.4)
+      postcss:
+        specifier: 'catalog:'
+        version: 8.5.4
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 3.4.17
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/tailwind:
     devDependencies:
       '@overline-zebar/typescript':
@@ -97,9 +137,6 @@ importers:
       react:
         specifier: 'catalog:'
         version: 18.3.1
-      react-compiler-runtime:
-        specifier: 'catalog:'
-        version: 19.1.0-rc.2(react@18.3.1)
       react-dom:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)

@@ -40,7 +40,7 @@ export default function InterfaceDetails({ iface }: Props) {
             <CardTitle Icon={ArrowUp}>Transmit</CardTitle>
             <span className="select-all">
               {/* 
-              // @ts-ignore */}
+              // @ts-expect-error */}
               {formatSpeed(iface.transmitSpeed)}
             </span>
           </Card>

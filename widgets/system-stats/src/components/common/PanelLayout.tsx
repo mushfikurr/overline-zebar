@@ -6,7 +6,6 @@ interface PanelLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function PanelLayout({
-  title,
   children,
   className,
   ...props
