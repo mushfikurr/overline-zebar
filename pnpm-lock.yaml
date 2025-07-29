@@ -177,6 +177,9 @@ importers:
 
   widgets/main:
     dependencies:
+      '@overline-zebar/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@overline-zebar/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind

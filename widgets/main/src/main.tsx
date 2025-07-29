@@ -1,12 +1,12 @@
+import '@overline-zebar/ui/fonts.css';
+import '@overline-zebar/ui/index.css';
+import '@overline-zebar/ui/theme.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import '@overline-zebar/ui/theme.css';
-import '@overline-zebar/ui/index.css';
-import '@overline-zebar/ui/fonts.css';
 import App from './App';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConfigProvider } from './context/ConfigContext';
+import './index.css';
+import { ConfigProvider } from '@overline-zebar/config';
 
 const queryClient = new QueryClient();
 

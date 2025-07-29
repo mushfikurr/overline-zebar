@@ -13,6 +13,7 @@
   "dependencies": {
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
+    "@overline-zebar/config": "workspace:*",
     "@radix-ui/react-slider": "^1.2.2",
     "@tanstack/react-query": "^5.60.5",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
