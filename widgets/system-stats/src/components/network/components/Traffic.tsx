@@ -26,7 +26,7 @@ export default function Traffic({ traffic }: Props) {
           <div className="text-text">{formatDataSize(traffic.received)}</div>
         </Card>
         <Card>
-          <CardTitle Icon={CloudUpload}>Transmitted</CardTitle>
+          <CardTitle Icon={CloudUpload}>Transmit</CardTitle>
           <div className="text-text">{formatDataSize(traffic.transmitted)}</div>
         </Card>
       </div>
@@ -38,7 +38,7 @@ export default function Traffic({ traffic }: Props) {
           </div>
         </Card>
         <Card>
-          <CardTitle Icon={CloudUpload}>Total Transmitted</CardTitle>
+          <CardTitle Icon={CloudUpload}>Total Transmit</CardTitle>
           <div className="text-text">
             {formatDataSize(traffic.totalTransmitted)}
           </div>

@@ -16,3 +16,4 @@ export {
   SelectLabel,
   SelectSeparator,
 } from './components/select';
+export { WindowsIcon } from './components/icons/windows';

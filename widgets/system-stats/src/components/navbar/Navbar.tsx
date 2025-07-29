@@ -31,7 +31,7 @@ function IconNavbarItem({
     <Button
       onClick={handleClick}
       className={cn(
-        'group max-h-12 flex items-center gap-2 h-full px-4 bg-button/60 border-none border-b border-border rounded-none last:rounded-bl-md last:border-b-0',
+        'group max-h-12 flex items-center gap-2 h-full px-4 bg-button/60 border-none border-b border-border rounded-none last:border-b-0',
         location === href && 'bg-background hover:bg-background text-text'
       )}
     >

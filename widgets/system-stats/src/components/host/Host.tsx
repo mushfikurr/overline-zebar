@@ -2,6 +2,7 @@ import { BatteryOutput, HostOutput } from 'zebar';
 import { BatterySection } from './components/BatterySection';
 import { formatMsToHumanDuration } from '@/utils/time';
 import PanelLayout from '../common/PanelLayout';
+import { WindowsIcon } from '@overline-zebar/ui';
 
 export default function Host({
   host,
@@ -14,6 +15,12 @@ export default function Host({
 
   const bootedAt = new Date(Number(host.bootTime));
   const uptimeDisplay = formatMsToHumanDuration(Number(host.uptime));
+  const renderOsIcon = (osName: string | null) => {
+    if (osName === 'Windows') {
+      return <WindowsIcon className="h-5 w-5 text-text-muted" />;
+    }
+    return null;
+  };
 
   return (
     <PanelLayout title="Host">
@@ -22,9 +29,12 @@ export default function Host({
           <div className="flex items-start">
             <div className="text-text border-text-muted/40 w-full">
               <div className="w-full overflow-hidden">
-                <p className="font-medium truncate whitespace-nowrap overflow-hidden">
-                  {host.osName} - {host.friendlyOsVersion}
-                </p>
+                <span className="flex items-center gap-2">
+                  {renderOsIcon(host.osName)}
+                  <p className="font-medium truncate whitespace-nowrap overflow-hidden">
+                    {host.osName} - {host.friendlyOsVersion}
+                  </p>
+                </span>
               </div>
               <p>{host.hostname}</p>
             </div>

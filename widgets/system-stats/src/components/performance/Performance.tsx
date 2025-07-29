@@ -1,9 +1,9 @@
 import { Card, CardTitle } from '@overline-zebar/ui';
 import {
-  ArrowDownUp,
   BarChart3,
   Brain,
   CpuIcon,
+  HardDriveDownload,
   MemoryStick,
   Zap,
 } from 'lucide-react';
@@ -18,8 +18,8 @@ interface PerformanceProps {
 export default function Performance({ cpu, memory }: PerformanceProps) {
   return (
     <PanelLayout title="Performance" className="space-y-3">
-      <Cpu cpu={cpu} />
       <Memory memory={memory} />
+      <Cpu cpu={cpu} />
     </PanelLayout>
   );
 }
@@ -59,7 +59,7 @@ function Memory({ memory }: { memory: MemoryOutput | null }) {
           {`(${memory.usage.toFixed(1)}%)`}
         </Card>
         <Card>
-          <CardTitle Icon={Zap}>Swap Usage</CardTitle>
+          <CardTitle Icon={HardDriveDownload}>Swap Usage</CardTitle>
           {`${toGB(memory.totalSwap - memory.freeSwap)} GB`}{' '}
           {`(${swapUsage.toFixed(1)}%)`}
         </Card>
