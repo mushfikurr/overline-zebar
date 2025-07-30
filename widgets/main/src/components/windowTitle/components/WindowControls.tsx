@@ -1,9 +1,9 @@
 import React from 'react';
 import { GlazeWmOutput } from 'zebar';
-import { Chip } from '../../common/Chip';
 import { ConditionalPanel } from '../../common/ConditionalPanel';
 import { CopyProcessName } from './commands/CopyProcessName';
 import { ToggleFloating } from './commands/CycleFocus';
+import { Chip } from '@overline-zebar/ui';
 
 interface WindowControlsProps {
   show: boolean;

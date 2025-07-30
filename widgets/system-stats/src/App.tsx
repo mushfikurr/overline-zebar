@@ -7,6 +7,7 @@ import Host from './components/host';
 import Storage from './components/storage';
 import Network from './components/network';
 import Performance from './components/performance';
+import { ThemeEditor } from './components/theme/ThemeEditor';
 
 const providers = zebar.createProviderGroup({
   cpu: { type: 'cpu' },
@@ -61,6 +62,9 @@ function App() {
             </Route>
             <Route path="/network">
               <Network network={output.network} />
+            </Route>
+            <Route path="/theme">
+              <ThemeEditor />
             </Route>
           </Switch>
         </div>

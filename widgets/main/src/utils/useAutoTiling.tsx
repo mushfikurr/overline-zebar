@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useConfig } from '../context/ConfigContext';
+import { useAppSetting } from '@overline-zebar/config';
 
 export const useAutoTiling = () => {
   const queryClient = useQueryClient();
-  const { autoTilingWebSocketUri, useAutoTiling: isAutoTilingEnabled } =
-    useConfig();
+  const [shouldUseAutoTiling] = useAppSetting('useAutoTiling');
+  const [autoTilingWebSocketUri] = useAppSetting('autoTilingWebSocketUri');
 
   useEffect(() => {
     // Only connect to WebSocket if auto-tiling is enabled
-    if (!isAutoTilingEnabled) return;
+    if (!shouldUseAutoTiling) return;
 
     const websocket = new WebSocket(autoTilingWebSocketUri);
 
@@ -44,11 +44,11 @@ export const useAutoTiling = () => {
     return () => {
       websocket.close();
     };
-  }, [queryClient, autoTilingWebSocketUri, isAutoTilingEnabled]);
+  }, [queryClient, autoTilingWebSocketUri, shouldUseAutoTiling]);
 
   return {
     tilingSize: queryClient.getQueryData(['tilingSize']),
-    isAutoTilingEnabled,
+    shouldUseAutoTiling,
   };
 };
 

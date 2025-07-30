@@ -19,5 +19,8 @@
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix"
+  },
+  "dependencies": {
+    "react-compiler-runtime": "catalog:"
   }
 }

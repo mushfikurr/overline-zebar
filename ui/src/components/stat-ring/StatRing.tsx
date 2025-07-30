@@ -43,8 +43,8 @@ export function StatRing({
     >
       {Icon}
       <Ring
-        className="w-3.5 h-3.5"
         percentage={statAsInt}
+        className="h-5 w-5"
         strokeColor={cn(
           thresholdLabel === LabelType.DEFAULT && 'stroke-success',
           thresholdLabel === LabelType.WARNING && 'stroke-warning',

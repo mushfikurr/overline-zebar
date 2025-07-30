@@ -1,9 +1,8 @@
-import { buttonStyles } from '@overline-zebar/ui';
+import { buttonStyles, Chip } from '@overline-zebar/ui';
 import { motion } from 'framer-motion';
 import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
 import { cn } from '../utils/cn';
-import { Chip } from './common/Chip';
 
 type WorkspaceControlsProps = {
   glazewm: GlazeWmOutput | null;
@@ -46,7 +45,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center gap-1.5 select-none overflow-hidden px-[2px] h-full'
+          'flex items-center select-none overflow-hidden p-1 h-full'
         )}
         as="div"
         ref={ref}
@@ -61,7 +60,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 glazewm.runCommand(`focus --workspace ${workspace.name}`)
               }
               className={cn(
-                'relative rounded-xl px-2 transition duration-500 ease-in-out text-text-muted h-full',
+                'relative px-2.5 transition duration-500 ease-in-out text-text-muted h-full',
                 isFocused ? '' : 'hover:text-text',
                 isFocused &&
                   'text-text duration-700 transition-all ease-in-out font-medium'
@@ -70,21 +69,21 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 WebkitTapHighlightColor: 'transparent',
               }}
             >
-              <p className={cn('z-10')}>
-                {workspace.displayName ?? workspace.name}
-              </p>
-
               {isFocused && (
                 <motion.span
                   layoutId="bubble"
                   className={cn(
                     buttonStyles,
-                    'bg-primary border-primary-border drop-shadow-sm rounded-[0.5rem] absolute inset-0 -z-10',
+                    'bg-primary inset-0 rounded-[0.75rem] border-primary-border drop-shadow-sm absolute -z-10',
                     isFocused && 'hover:bg-primary'
                   )}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
+
+              <p className={cn('z-10')}>
+                {workspace.displayName ?? workspace.name}
+              </p>
             </button>
           );
         })}

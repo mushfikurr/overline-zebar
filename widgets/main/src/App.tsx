@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as zebar from 'zebar';
 import { Center } from './components/Center';
-import { Chip } from './components/common/Chip';
 import Media from './components/media';
 import Stat from './components/stat';
 import { weatherThresholds } from './components/stat/defaults/thresholds';
@@ -13,6 +12,7 @@ import { WorkspaceControls } from './components/WorkspaceControls';
 import { calculateWidgetPlacementFromRight } from './utils/calculateWidgetPlacement';
 import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
+import { Chip } from '@overline-zebar/ui';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
@@ -35,13 +35,13 @@ function App() {
 
   useAutoTiling();
 
-  const statIconClassnames = 'h-3 w-3 text-icon';
+  const statIconClassnames = 'h-5 w-5 text-icon';
   const chipRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5 mx-1">
-      <div className="flex items-center gap-2 h-full z-10 pl-1.5">
-        <div className="flex items-center gap-1.5 h-full">
+    <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5">
+      <div className="flex items-center gap-2 h-full z-10 pl-2">
+        <div className="flex items-center gap-1.5 h-full py-0.5">
           <TilingControl glazewm={output.glazewm} />
         </div>
         <div className="flex items-center gap-2 h-full">
@@ -112,7 +112,7 @@ function App() {
           <Systray systray={output.systray} />
         </div>
 
-        <div className="h-full flex items-center justify-center pr-2">
+        <div className="h-full flex items-center justify-center pr-2.5">
           {output?.date?.formatted ??
             new Intl.DateTimeFormat('en-GB', {
               weekday: 'short', // EEE

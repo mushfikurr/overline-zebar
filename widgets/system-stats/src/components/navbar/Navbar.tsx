@@ -1,5 +1,5 @@
 import { Button } from '@overline-zebar/ui';
-import { BarChart, Globe, HardDrive, LucideIcon, Server } from 'lucide-react';
+import { BarChart, Globe, HardDrive, LucideIcon, Palette, Server } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '../../utils/cn';
 
@@ -10,6 +10,7 @@ export default function Navbar() {
       <IconNavbarItem Icon={HardDrive} title="Storage" href="/storage" />
       <IconNavbarItem Icon={BarChart} title="Performance" href="/performance" />
       <IconNavbarItem Icon={Globe} title="Network" href="/network" />
+      <IconNavbarItem Icon={Palette} title="Theme" href="/theme" />
     </div>
   );
 }

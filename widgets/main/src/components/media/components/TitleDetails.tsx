@@ -2,7 +2,7 @@ import { AnimatePresence, MotionProps, motion } from 'framer-motion';
 import React from 'react';
 import { cn } from '../../../utils/cn';
 import useMeasure from 'react-use-measure';
-import { useConfig } from '../../../context/ConfigContext';
+import { useAppSetting } from '@overline-zebar/config';
 
 export function TitleDetails({
   title,
@@ -21,7 +21,8 @@ export function TitleDetails({
   const [truncateArtist, setTruncateArtist] = React.useState<boolean | null>(
     null
   );
-  const config = useConfig();
+
+  const [mediaMaxWidth] = useAppSetting('mediaMaxWidth');
 
   React.useEffect(() => {
     if (artistWidth === 0 || titleWidth === 0) return;
@@ -32,11 +33,7 @@ export function TitleDetails({
 
   return (
     <div
-      style={
-        config.mediaMaxWidth
-          ? { maxWidth: `${config.mediaMaxWidth}px` }
-          : undefined
-      }
+      style={mediaMaxWidth ? { maxWidth: `${mediaMaxWidth}px` } : undefined}
       className={cn(
         'inline-flex items-center gap-1.5 cursor-pointer outline-none'
       )}

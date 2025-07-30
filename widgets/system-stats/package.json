@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@overline-zebar/config": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
     "@radix-ui/react-slider": "^1.2.2",

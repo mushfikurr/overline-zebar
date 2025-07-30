@@ -33,9 +33,9 @@
         {
           "name": "default",
           "anchor": "top_left",
-          "offsetX": "-4px",
+          "offsetX": "0px",
           "offsetY": "0px",
-          "width": "100.5%",
+          "width": "100%",
           "height": "34px",
           "monitorSelection": {
             "type": "all"

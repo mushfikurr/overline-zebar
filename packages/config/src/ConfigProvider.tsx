@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { RootConfig, defaultConfig } from './types';
 import { configManager } from './ConfigManager';
+import * as zebar from 'zebar';
 
 type Action =
   | { type: 'SET_APP_SETTING'; key: keyof RootConfig['app']; value: any }
@@ -47,9 +48,31 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(configReducer, defaultConfig);
 
   useEffect(() => {
+    const listen = async () => {
+      await zebar.currentWidget().tauriWindow.listen('config-changed', () => {
+        const reloaded = configManager.loadConfig(true); // Force reload
+        dispatch({ type: 'LOAD_CONFIG', config: reloaded });
+      });
+    };
+
+    listen();
+  }, []);
+
+  useEffect(() => {
     const loaded = configManager.loadConfig();
     dispatch({ type: 'LOAD_CONFIG', config: loaded });
   }, []);
+
+  useEffect(() => {
+    const theme = state.app.themes.find(
+      (t) => t.name === state.app.currentTheme
+    );
+    if (theme) {
+      Object.entries(theme.colors).forEach(([key, value]) => {
+        document.documentElement.style.setProperty(key, value);
+      });
+    }
+  }, [state.app.currentTheme, state.app.themes]);
 
   return (
     <ConfigStateContext.Provider value={state}>

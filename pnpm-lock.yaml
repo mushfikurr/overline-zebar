@@ -34,6 +34,10 @@ catalogs:
 importers:
 
   .:
+    dependencies:
+      react-compiler-runtime:
+        specifier: 'catalog:'
+        version: 19.1.0-rc.2(react@18.3.1)
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
@@ -74,6 +78,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
+      zebar:
+        specifier: 'catalog:'
+        version: 3.1.0
     devDependencies:
       '@overline-zebar/tailwind':
         specifier: workspace:*
@@ -93,15 +100,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 18.3.7(@types/react@18.3.23)
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.21(postcss@8.5.4)
-      postcss:
-        specifier: 'catalog:'
-        version: 8.5.4
-      tailwindcss:
-        specifier: 'catalog:'
-        version: 3.4.17
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -280,6 +278,9 @@ importers:
 
   widgets/system-stats:
     dependencies:
+      '@overline-zebar/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@overline-zebar/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind

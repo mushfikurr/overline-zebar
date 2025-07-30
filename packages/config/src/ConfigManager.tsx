@@ -1,11 +1,12 @@
 import { RootConfig, defaultConfig } from './types';
+import * as zebar from 'zebar';
 
 const STORAGE_KEY = 'overline-zebar-config';
 
 let cachedConfig: RootConfig | null = null;
 
-function loadConfig(): RootConfig {
-  if (cachedConfig) return cachedConfig;
+function loadConfig(forceReload = false): RootConfig {
+  if (cachedConfig && !forceReload) return cachedConfig;
 
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) {
@@ -31,6 +32,7 @@ function loadConfig(): RootConfig {
 function saveConfig(config: RootConfig) {
   cachedConfig = config;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  zebar.currentWidget().tauriWindow.emit('config-changed');
 }
 
 function updateAppSetting<K extends keyof RootConfig['app']>(

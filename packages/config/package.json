@@ -2,11 +2,12 @@
   "name": "@overline-zebar/config",
   "version": "1.0.0",
   "private": true,
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "dependencies": {
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "zebar": "catalog:"
   },
   "devDependencies": {
     "@overline-zebar/tailwind": "workspace:*",
@@ -15,9 +16,6 @@
     "@types/node": "^22.15.29",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "autoprefixer": "^10.4.20",
-    "postcss": "catalog:",
-    "tailwindcss": "catalog:",
     "typescript": "^5.8.3"
   }
 }

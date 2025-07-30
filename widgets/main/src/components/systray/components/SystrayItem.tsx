@@ -36,7 +36,7 @@ export function SystrayItem({ icon, systray }: SystrayItemProps) {
         e.preventDefault();
       }}
     >
-      <img src={icon.iconUrl} className="h-4 w-4" />
+      <img src={icon.iconUrl} className="h-6 w-6" />
     </button>
   );
 }

@@ -5,7 +5,7 @@ import '@overline-zebar/ui/theme.css';
 import '@overline-zebar/ui/index.css';
 import '@overline-zebar/ui/fonts.css';
 import App from './App';
-import { ConfigProvider } from './context/ConfigContext';
+import { ConfigProvider } from '@overline-zebar/config';
 
 const rootElement = document.getElementById('root');
 

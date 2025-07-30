@@ -1,11 +1,11 @@
 import React from 'react';
 import { MediaOutput } from 'zebar';
 import { cn } from '../../utils/cn';
-import { Chip } from '../common/Chip';
 import { ConditionalPanel } from '../common/ConditionalPanel';
 import { ProgressBar } from './components/ProgressBar';
 import { Status } from './components/Status';
 import { TitleDetails } from './components/TitleDetails';
+import { Chip } from '@overline-zebar/ui';
 
 export const TitleDetailsMemo = React.memo(TitleDetails);
 

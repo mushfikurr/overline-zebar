@@ -1,5 +1,5 @@
 import { useConfigDispatch, useConfigState } from '../ConfigProvider';
-import { RootConfig } from '../types';
+import { RootConfig, Theme } from '../types';
 
 export function useAppSetting<K extends keyof RootConfig['app']>(
   key: K
@@ -34,4 +34,41 @@ export function useWidgetSetting(
   };
 
   return [value, setValue];
+}
+
+export function useThemes(): [Theme[], (themes: Theme[]) => void] {
+  const state = useConfigState();
+  const dispatch = useConfigDispatch();
+
+  const setThemes = (themes: Theme[]) => {
+    dispatch({ type: 'SET_APP_SETTING', key: 'themes', value: themes });
+  };
+
+  return [state.app.themes, setThemes];
+}
+
+export function useTheme(): [Theme | undefined, (themeName: string) => void] {
+  const state = useConfigState();
+  const dispatch = useConfigDispatch();
+  const { themes, currentTheme } = state.app;
+  const theme = themes.find((t) => t.name === currentTheme);
+
+  const setTheme = (themeName: string) => {
+    dispatch({ type: 'SET_APP_SETTING', key: 'currentTheme', value: themeName });
+  };
+
+  return [theme, setTheme];
+}
+
+export function useThemeProperties(): (theme: Theme) => void {
+  const state = useConfigState();
+  const dispatch = useConfigDispatch();
+  const { themes } = state.app;
+
+  const setThemeProperties = (theme: Theme) => {
+    const newThemes = themes.map((t) => (t.name === theme.name ? theme : t));
+    dispatch({ type: 'SET_APP_SETTING', key: 'themes', value: newThemes });
+  };
+
+  return setThemeProperties;
 }
