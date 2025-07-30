@@ -1,20 +1,20 @@
 import {
-  useTheme,
-  useThemes,
-  useThemeProperties,
   defaultTheme,
   useDebouncedThemeProperties,
+  useTheme,
+  useThemeActions,
+  useThemeProperties,
+  useThemes,
 } from '@overline-zebar/config';
 import {
   Button,
-  Card,
-  CardTitle,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@overline-zebar/ui';
+import { useState } from 'react';
 import PanelLayout from '../common/PanelLayout';
 
 export function ThemeEditor() {
@@ -22,6 +22,9 @@ export function ThemeEditor() {
   const [theme, setTheme] = useTheme();
   const setThemeProperties = useThemeProperties();
   const debouncedSetThemeProperties = useDebouncedThemeProperties();
+  const { removeTheme, saveThemeAsNew } = useThemeActions();
+
+  const [newThemeName, setNewThemeName] = useState('');
 
   const handleThemeChange = (themeName: string) => {
     setTheme(themeName);
@@ -38,7 +41,6 @@ export function ThemeEditor() {
       },
     };
 
-    // We use the debounced function here
     debouncedSetThemeProperties(newTheme);
   };
 
@@ -53,14 +55,30 @@ export function ThemeEditor() {
     setThemeProperties(newTheme);
   };
 
+  const handleSaveAsNew = () => {
+    if (!theme || !newThemeName) return;
+    saveThemeAsNew(theme, newThemeName);
+    setNewThemeName('');
+  };
+
+  const handleRemoveTheme = () => {
+    if (!theme || theme.name === defaultTheme.name) return; // Prevent removing default theme
+    removeTheme(theme.name);
+    setTheme(defaultTheme.name); // Switch to default theme after removing
+  };
+
   return (
     <PanelLayout title="Theme">
-      <p>theme editorrrrrrrr asidamsda</p>
       <div className="p-4 space-y-4">
-        <div className="flex justify-between">
-          <Select onValueChange={handleThemeChange} value={theme?.name}>
+        <div className="flex justify-between items-center">
+          <Select
+            onValueChange={handleThemeChange}
+            value={theme?.name || defaultTheme.name}
+          >
             <SelectTrigger>
-              <SelectValue placeholder="Select a theme" />
+              <SelectValue placeholder="Select a value">
+                {(value) => <span>{value}</span>}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {themes.map((theme) => (
@@ -80,16 +98,32 @@ export function ThemeEditor() {
                 <label>{name}</label>
                 <input
                   type="color"
-                  defaultValue={value}
+                  value={value}
                   onChange={(e) => handleColorChange(name, e.target.value)}
                   className="w-16 h-8"
                 />
               </div>
             ))}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="New theme name"
+                value={newThemeName}
+                onChange={(e) => setNewThemeName(e.target.value)}
+                className="flex-grow p-2 border rounded bg-background-deeper border-button-border"
+              />
+              <Button onClick={handleSaveAsNew} disabled={!newThemeName}>
+                Save As New
+              </Button>
+            </div>
+            {theme.name !== defaultTheme.name && (
+              <Button onClick={handleRemoveTheme} className="w-full bg-danger">
+                Remove Theme
+              </Button>
+            )}
           </div>
         )}
       </div>
     </PanelLayout>
   );
 }
-
