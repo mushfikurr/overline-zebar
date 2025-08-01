@@ -88,6 +88,47 @@
           }
         }
       ]
+    },
+    {
+      "name": "config-widget",
+      "htmlPath": "./widgets/config-widget/dist/index.html",
+      "zOrder": "normal",
+      "shownInTaskbar": true,
+      "focused": true,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": [
+        "widgets/config-widget/dist/index.html",
+        "widgets/config-widget/dist/assets/**",
+        "widgets/config/dist/config-widget.json",
+        "widgets/config/dist/geistMono/**",
+        "widgets/config-widget/README.md"
+      ],
+      "caching": {
+        "defaultDuration": 604800,
+        "rules": []
+      },
+      "privileges": {
+        "shellCommands": []
+      },
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "center",
+          "offsetX": "0px",
+          "offsetY": "4px",
+          "width": "1280px",
+          "height": "720px",
+          "monitorSelection": {
+            "type": "all"
+          },
+          "dockToEdge": {
+            "enabled": false,
+            "edge": null,
+            "windowMargin": "0px"
+          }
+        }
+      ]
     }
   ]
 }

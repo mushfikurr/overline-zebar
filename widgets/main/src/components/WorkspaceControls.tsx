@@ -1,4 +1,4 @@
-import { buttonStyles, Chip } from '@overline-zebar/ui';
+import { buttonVariants, Chip } from '@overline-zebar/ui';
 import { motion } from 'framer-motion';
 import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
@@ -73,7 +73,6 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 <motion.span
                   layoutId="bubble"
                   className={cn(
-                    buttonStyles,
                     'bg-primary inset-0 rounded-[0.75rem] border-primary-border drop-shadow-sm absolute -z-10',
                     isFocused && 'hover:bg-primary'
                   )}

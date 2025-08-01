@@ -1,5 +1,6 @@
 import { RootConfig, defaultConfig } from './types';
 import * as zebar from 'zebar';
+import { deepMerge } from './utils/deepMerge';
 
 const STORAGE_KEY = 'overline-zebar-config';
 
@@ -20,7 +21,8 @@ function loadConfig(forceReload = false): RootConfig {
 
     // if (parsed.version < CURRENT_VERSION) parsed = migrate(parsed);
 
-    cachedConfig = { ...defaultConfig, ...parsed };
+    cachedConfig = deepMerge(defaultConfig, parsed);
+
     return cachedConfig;
   } catch {
     cachedConfig = defaultConfig;

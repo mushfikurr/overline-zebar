@@ -8,7 +8,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { CpuOutput, MemoryOutput } from 'zebar';
-import PanelLayout from '../common/PanelLayout';
+import { PanelLayout } from '@overline-zebar/ui';
 
 interface PerformanceProps {
   cpu: CpuOutput | null;

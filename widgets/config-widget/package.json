@@ -1,0 +1,50 @@
+{
+  "name": "@overline-zebar/config-widget",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@overline-zebar/config": "workspace:*",
+    "@overline-zebar/tailwind": "workspace:*",
+    "@overline-zebar/ui": "workspace:*",
+    "@radix-ui/react-slider": "^1.2.2",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.460.0",
+    "react": "catalog:",
+    "react-compiler-runtime": "catalog:",
+    "react-dom": "catalog:",
+    "react-use-measure": "^2.1.1",
+    "tailwind-merge": "^2.5.4",
+    "wouter": "^3.7.1",
+    "zebar": "catalog:"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@overline-zebar/typescript": "workspace:*",
+    "@types/node": "^22.10.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^6.0.0-rc.1",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.11.0",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.10",
+    "vite-plugin-node": "^4.0.0"
+  }
+}

@@ -112,7 +112,28 @@ function App() {
           <Systray systray={output.systray} />
         </div>
 
-        <div className="h-full flex items-center justify-center pr-2.5">
+        <div
+          className="h-full flex items-center justify-center pr-2.5"
+          onClick={() =>
+            zebar.startWidget(
+              'config-widget',
+              {
+                anchor: 'center',
+                offsetX: `0px`,
+                offsetY: `0px`,
+                width: `1280px`,
+                height: `720px`,
+                monitorSelection: { type: 'all' },
+                dockToEdge: {
+                  enabled: false,
+                  edge: null,
+                  windowMargin: `0px`,
+                },
+              },
+              {}
+            )
+          }
+        >
           {output?.date?.formatted ??
             new Intl.DateTimeFormat('en-GB', {
               weekday: 'short', // EEE

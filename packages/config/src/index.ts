@@ -8,7 +8,7 @@ export {
 } from './hooks/useConfig';
 export { useDebouncedThemeProperties } from './hooks/useDebouncedThemeProperties';
 export { useThemeActions } from './hooks/useThemeManagement';
-export { defaultTheme } from './types';
+export { defaultTheme, defaultConfig } from './types';
 export type {
   AppSettings,
   RootConfig,

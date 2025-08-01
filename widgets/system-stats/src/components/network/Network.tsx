@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react';
 import { useSearchParams } from 'wouter';
 import * as zebar from 'zebar';
-import PanelLayout from '../common/PanelLayout';
+import { PanelLayout } from '@overline-zebar/ui';
 import InterfaceDetails from './components/InterfaceDetails';
 import Traffic from './components/Traffic';
 import {
