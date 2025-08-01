@@ -6,6 +6,8 @@ const STORAGE_KEY = 'overline-zebar-config';
 
 let cachedConfig: RootConfig | null = null;
 
+import { generateId } from './utils/generateId';
+
 function loadConfig(forceReload = false): RootConfig {
   if (cachedConfig && !forceReload) return cachedConfig;
 
@@ -18,6 +20,13 @@ function loadConfig(forceReload = false): RootConfig {
 
   try {
     const parsed = JSON.parse(stored) as RootConfig;
+
+    // Ensure all themes have an ID
+    parsed.app.themes.forEach(theme => {
+      if (!theme.id) {
+        theme.id = generateId();
+      }
+    });
 
     // if (parsed.version < CURRENT_VERSION) parsed = migrate(parsed);
 

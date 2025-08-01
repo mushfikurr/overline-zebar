@@ -7,6 +7,7 @@
   "dependencies": {
     "react": "catalog:",
     "react-dom": "catalog:",
+    "use-debounce": "^10.0.5",
     "zebar": "catalog:"
   },
   "devDependencies": {

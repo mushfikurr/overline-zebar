@@ -14,7 +14,7 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
         const mergedArray = [...targetValue];
         (sourceValue as any[]).forEach(sourceItem => {
           const existingItemIndex = (mergedArray as any[]).findIndex(
-            (targetItem) => targetItem.name === sourceItem.name
+            (targetItem) => targetItem.id === sourceItem.id
           );
           if (existingItemIndex !== -1) {
             mergedArray[existingItemIndex] = deepMerge(

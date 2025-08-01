@@ -1,13 +1,7 @@
 export { ConfigProvider } from './ConfigProvider';
-export {
-  useAppSetting,
-  useWidgetSetting,
-  useTheme,
-  useThemes,
-  useThemeProperties,
-} from './hooks/useConfig';
-export { useDebouncedThemeProperties } from './hooks/useDebouncedThemeProperties';
-export { useThemeActions } from './hooks/useThemeManagement';
+export { useThemes } from './hooks/useThemes';
+export { useThemePreview } from './hooks/useThemePreview';
+export { useAppSetting, useWidgetSetting } from './hooks/useConfig';
 export { defaultTheme, defaultConfig } from './types';
 export type {
   AppSettings,

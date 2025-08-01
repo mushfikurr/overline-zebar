@@ -13,7 +13,7 @@
     "typescript": "^5.8.3"
   },
   "private": true,
-    "scripts": {
+  "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter \"@overline-zebar/*\" build",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}",
@@ -22,6 +22,7 @@
     "lint:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix"
   },
   "dependencies": {
-    "react-compiler-runtime": "catalog:"
+    "react-compiler-runtime": "catalog:",
+    "use-debounce": "^10.0.5"
   }
 }

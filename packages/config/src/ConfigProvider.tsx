@@ -53,10 +53,30 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
         const reloaded = configManager.loadConfig(true); // Force reload
         dispatch({ type: 'LOAD_CONFIG', config: reloaded });
       });
+
+      await zebar.currentWidget().tauriWindow.listen('theme-preview-update', (event) => {
+        const previewTheme = event.payload as Theme;
+        if (previewTheme) {
+          Object.entries(previewTheme.colors).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(key, value);
+          });
+        }
+      });
+
+      await zebar.currentWidget().tauriWindow.listen('theme-preview-revert', () => {
+        const theme = state.app.themes.find(
+          (t) => t.id === state.app.currentThemeId
+        );
+        if (theme) {
+          Object.entries(theme.colors).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(key, value);
+          });
+        }
+      });
     };
 
     listen();
-  }, []);
+  }, [state.app.currentThemeId, state.app.themes]);
 
   useEffect(() => {
     const loaded = configManager.loadConfig();
@@ -65,14 +85,14 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const theme = state.app.themes.find(
-      (t) => t.name === state.app.currentTheme
+      (t) => t.id === state.app.currentThemeId
     );
     if (theme) {
       Object.entries(theme.colors).forEach(([key, value]) => {
         document.documentElement.style.setProperty(key, value);
       });
     }
-  }, [state.app.currentTheme, state.app.themes]);
+  }, [state.app.currentThemeId, state.app.themes]);
 
   return (
     <ConfigStateContext.Provider value={state}>
