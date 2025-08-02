@@ -11,7 +11,7 @@ export interface Theme {
 export interface AppSettings {
   flowLauncherPath: string;
   useAutoTiling: boolean;
-  autoTilingWebSocketUri: string;
+  zebarWebsocketUri: string;
   mediaMaxWidth: string;
   themes: Theme[];
   currentThemeId: string;
@@ -32,7 +32,7 @@ export const defaultConfig: RootConfig = {
   app: {
     flowLauncherPath: '',
     useAutoTiling: false,
-    autoTilingWebSocketUri: 'ws://localhost:6123',
+    zebarWebsocketUri: 'ws://localhost:6123',
     mediaMaxWidth: '400',
     themes: [defaultTheme, ...catppuccinThemes],
     currentThemeId: 'default',

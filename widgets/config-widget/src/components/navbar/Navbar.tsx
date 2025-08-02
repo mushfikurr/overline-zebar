@@ -7,6 +7,7 @@ export default function Navbar() {
 
   return (
     <UiNavbar className="rounded-none">
+      <h3 className="px-4 my-3.5 text-text-muted">All Widgets</h3>
       <NavbarItem
         className="rounded-none"
         Icon={Cog}
@@ -27,6 +28,15 @@ export default function Navbar() {
         className="rounded-none"
         Icon={LayoutGrid}
         title="Tiling"
+        href="/tiling"
+        location={location}
+        navigate={navigate}
+      />
+      <h3 className="px-4 my-3.5 text-text-muted">Widget Specific</h3>
+      <NavbarItem
+        className="rounded-none"
+        Icon={LayoutGrid}
+        title="Main (Topbar)"
         href="/tiling"
         location={location}
         navigate={navigate}

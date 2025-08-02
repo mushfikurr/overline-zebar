@@ -9,7 +9,7 @@ export default function TitleBar() {
   };
 
   return (
-    <div className="bg-background-deeper border-border flex items-center justify-between w-full rounded-t-lg">
+    <div className="bg-background-deeper border-b border-border flex items-center justify-between w-full rounded-t-lg">
       <h1 className="pl-4 py-2 font-medium">overline-zebar</h1>
       <button
         onClick={onClose}

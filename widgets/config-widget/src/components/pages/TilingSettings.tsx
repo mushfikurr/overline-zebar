@@ -12,9 +12,7 @@ import PanelHeading from '../PanelHeading';
 
 export function TilingSettings() {
   const [useAutoTiling, setUseAutoTiling] = useAppSetting('useAutoTiling');
-  const [autoTilingWebSocketUri, setAutoTilingWebSocketUri] = useAppSetting(
-    'autoTilingWebSocketUri'
-  );
+  const [websocketUri, setWebsocketUri] = useAppSetting('zebarWebsocketUri');
 
   return (
     <PanelLayout title="Tiling">
@@ -37,17 +35,17 @@ export function TilingSettings() {
             </FieldDescription>
           </FormField>
           <FormField>
-            <FieldTitle>Auto Tiling WebSocket URI</FieldTitle>
+            <FieldTitle>Zebar WebSocket URI</FieldTitle>
             <FieldInput>
               <Input
                 placeholder="e.g., ws://localhost:6123"
-                value={autoTilingWebSocketUri}
-                onChange={(e) => setAutoTilingWebSocketUri(e.target.value)}
+                value={websocketUri}
+                onChange={(e) => setWebsocketUri(e.target.value)}
               />
             </FieldInput>
-            <FieldDescription>
-              The WebSocket URI for the auto-tiling service. Only active when
-              auto-tiling is enabled.
+            <FieldDescription warning>
+              This is the WebSocket URI for the Zebar service. By default Zebar
+              runs on ws://localhost:6123.
             </FieldDescription>
           </FormField>
         </div>

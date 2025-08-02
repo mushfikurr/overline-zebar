@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
+import { AlertTriangle } from 'lucide-react';
 
 interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -31,10 +32,7 @@ export function FormField({
   );
 
   return (
-    <div
-      className={cn(isSwitch ? 'space-y-2' : 'space-y-2', className)}
-      {...props}
-    >
+    <div className={cn(className, 'space-y-3')} {...props}>
       {isSwitch ? (
         <>
           <div className="flex items-center justify-between">
@@ -56,7 +54,7 @@ interface FieldTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export function FieldTitle({ children, className, ...props }: FieldTitleProps) {
   return (
-    <h3 className={cn('text-text font-medium', className)} {...props}>
+    <h3 className={cn('text-text font-medium mb-3', className)} {...props}>
       {children}
     </h3>
   );
@@ -79,17 +77,28 @@ FieldInput.displayName = 'FieldInput';
 interface FieldDescriptionProps
   extends React.HTMLAttributes<HTMLParagraphElement> {
   children: React.ReactNode;
+  warning?: boolean;
 }
 
 export function FieldDescription({
   children,
   className,
+  warning,
   ...props
 }: FieldDescriptionProps) {
   return (
-    <p className={cn('text-text-muted text-sm', className)} {...props}>
-      {children}
-    </p>
+    <div
+      className={cn('text-text-muted text-sm space-y-1', className)}
+      {...props}
+    >
+      {warning && (
+        <span className="flex items-center gap-2 text-text">
+          <AlertTriangle className="text-warning h-5 w-5" strokeWidth={2.5} />
+          Only amend if you know what you are doing
+        </span>
+      )}
+      <p>{children}</p>
+    </div>
   );
 }
 FieldDescription.displayName = 'FieldDescription';
