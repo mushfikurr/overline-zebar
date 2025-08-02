@@ -7,6 +7,7 @@ import {
   FieldDescription,
 } from '@overline-zebar/ui';
 import { useAppSetting } from '@overline-zebar/config';
+import PanelHeading from '../PanelHeading';
 
 export function GeneralSettings() {
   const [flowLauncherPath, setFlowLauncherPath] =
@@ -16,13 +17,10 @@ export function GeneralSettings() {
   return (
     <PanelLayout title="General Settings">
       <div className="px-3 py-1">
-        <div>
-          <h1 className="text-lg">Application Settings</h1>
-          <p className="text-text-muted">
-            Configure general application behavior.
-          </p>
-        </div>
-        <div className="w-full bg-text/10 h-px my-4"></div>
+        <PanelHeading
+          title={'General'}
+          description={'Settings about all overline-zebar widgets.'}
+        />
         <div className="space-y-8">
           <FormField>
             <FieldTitle>Flow Launcher Path</FieldTitle>

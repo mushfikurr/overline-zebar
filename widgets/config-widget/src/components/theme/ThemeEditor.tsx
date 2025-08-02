@@ -1,12 +1,14 @@
 import { useThemePreview, useThemes } from '@overline-zebar/config';
 import {
-    Button, Input, PanelLayout, Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from '@overline-zebar/ui';
 import { useState } from 'react';
 
@@ -86,7 +88,7 @@ function ThemeSelector({
   return (
     <Select onValueChange={onThemeChange} value={currentThemeId}>
       <SelectTrigger>
-        <SelectValue placeholder={isModified ? "Custom" : "Select a theme"} />
+        <SelectValue placeholder={isModified ? 'Custom' : 'Select a theme'} />
       </SelectTrigger>
       <SelectContent>
         {savedThemes.length > 0 && (
@@ -114,13 +116,13 @@ function ThemeSelector({
 
 export function ThemeEditor() {
   const { activeTheme, isDefault, setActiveTheme, deleteTheme } = useThemes();
-  const { 
-    previewTheme, 
-    isPreviewing, 
-    startPreview, 
-    updatePreview, 
-    cancelPreview, 
-    savePreview 
+  const {
+    previewTheme,
+    isPreviewing,
+    startPreview,
+    updatePreview,
+    cancelPreview,
+    savePreview,
   } = useThemePreview();
 
   const handleColorChange = (colorName: string, newColor: string) => {
@@ -157,50 +159,39 @@ export function ThemeEditor() {
   const themeSelectorValue = isPreviewing ? 'custom' : activeTheme?.id || '';
 
   return (
-    <PanelLayout title="Appearance">
-      <div className="px-3 py-1 space-y-6">
-        <div>
-          <h1 className="text-lg">Themes</h1>
-          <p className="text-text-muted">
-            Colour your overline widgets to match your style.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeSelector
-            isModified={isPreviewing}
-            onThemeChange={handleThemeChange}
-            currentThemeId={themeSelectorValue}
-          />
-          {isPreviewing && (
-            <Button onClick={handleReset} className="h-full py-1 px-3">
-              Reset
-            </Button>
-          )}
-        </div>
-
-        {displayedTheme && (
-          <div className="space-y-4">
-            {isPreviewing && (
-              <SaveAsNewInput onSaveAsNew={handleSaveAsNew} />
-            )}
-            {activeTheme && !isDefault(activeTheme.id) && !isPreviewing && (
-              <Button onClick={handleRemoveTheme} className="w-full bg-danger">
-                Remove Theme
-              </Button>
-            )}
-
-            {Object.entries(displayedTheme.colors).map(([name, value]) => (
-              <ThemeColorPicker
-                key={name}
-                name={name}
-                value={value}
-                onColorChange={(newColor) => handleColorChange(name, newColor)}
-              />
-            ))}
-          </div>
+    <div className="space-y-8">
+      <div className="flex items-center gap-3">
+        <ThemeSelector
+          isModified={isPreviewing}
+          onThemeChange={handleThemeChange}
+          currentThemeId={themeSelectorValue}
+        />
+        {isPreviewing && (
+          <Button onClick={handleReset} className="h-full py-1 px-3">
+            Reset
+          </Button>
         )}
       </div>
-    </PanelLayout>
+
+      {displayedTheme && (
+        <div className="space-y-4">
+          {isPreviewing && <SaveAsNewInput onSaveAsNew={handleSaveAsNew} />}
+          {activeTheme && !isDefault(activeTheme.id) && !isPreviewing && (
+            <Button onClick={handleRemoveTheme} className="w-full bg-danger">
+              Remove Theme
+            </Button>
+          )}
+
+          {Object.entries(displayedTheme.colors).map(([name, value]) => (
+            <ThemeColorPicker
+              key={name}
+              name={name}
+              value={value}
+              onColorChange={(newColor) => handleColorChange(name, newColor)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
-

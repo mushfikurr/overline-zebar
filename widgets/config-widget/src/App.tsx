@@ -1,10 +1,10 @@
 import { Route, Router, Switch } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';
 import TitleBar from './components/TitleBar';
-import { ThemeEditor } from './components/theme/ThemeEditor';
 import Navbar from './components/navbar';
-import { GeneralSettings } from './components/GeneralSettings';
-import { TilingSettings } from './components/TilingSettings';
+import AppearanceSettings from './components/pages/AppearanceSettings';
+import { GeneralSettings } from './components/pages/GeneralSettings';
+import { TilingSettings } from './components/pages/TilingSettings';
 
 function App() {
   return (
@@ -18,13 +18,10 @@ function App() {
 
           <Switch>
             <Route path="/">
-              <p>Hello World</p>
-            </Route>
-            <Route path="/general">
               <GeneralSettings />
             </Route>
             <Route path="/appearance">
-              <ThemeEditor />
+              <AppearanceSettings />
             </Route>
             <Route path="/tiling">
               <TilingSettings />

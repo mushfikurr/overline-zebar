@@ -8,6 +8,7 @@ import {
   FieldDescription,
 } from '@overline-zebar/ui';
 import { useAppSetting } from '@overline-zebar/config';
+import PanelHeading from '../PanelHeading';
 
 export function TilingSettings() {
   const [useAutoTiling, setUseAutoTiling] = useAppSetting('useAutoTiling');
@@ -16,15 +17,12 @@ export function TilingSettings() {
   );
 
   return (
-    <PanelLayout title="Tiling Settings">
+    <PanelLayout title="Tiling">
       <div className="px-3 py-1">
-        <div>
-          <h1 className="text-lg">Window Tiling</h1>
-          <p className="text-text-muted">
-            Configure automatic window tiling behavior.
-          </p>
-        </div>
-        <div className="w-full bg-text/10 h-px my-4"></div>
+        <PanelHeading
+          title={'Tiling Settings'}
+          description={'Configure automatic tiling behaviours.'}
+        />
         <div className="space-y-8">
           <FormField switch>
             <FieldTitle>Enable Auto Tiling</FieldTitle>

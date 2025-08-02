@@ -11,7 +11,7 @@ export default function Navbar() {
         className="rounded-none"
         Icon={Cog}
         title="General"
-        href="/general"
+        href="/"
         location={location}
         navigate={navigate}
       />
