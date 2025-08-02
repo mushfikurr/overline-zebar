@@ -48,12 +48,17 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(configReducer, defaultConfig);
 
   useEffect(() => {
-    const listen = async () => {
+    const listenConfigChange = async () => {
       await zebar.currentWidget().tauriWindow.listen('config-changed', () => {
         const reloaded = configManager.loadConfig(true); // Force reload
         dispatch({ type: 'LOAD_CONFIG', config: reloaded });
       });
+    };
+    listenConfigChange();
+  }, []);
 
+  useEffect(() => {
+    const listenThemePreview = async () => {
       await zebar.currentWidget().tauriWindow.listen('theme-preview-update', (event) => {
         const previewTheme = event.payload as Theme;
         if (previewTheme) {
@@ -75,7 +80,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       });
     };
 
-    listen();
+    listenThemePreview();
   }, [state.app.currentThemeId, state.app.themes]);
 
   useEffect(() => {

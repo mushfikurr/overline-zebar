@@ -1,5 +1,5 @@
 import { Navbar as UiNavbar, NavbarItem } from '@overline-zebar/ui';
-import { Palette } from 'lucide-react';
+import { Palette, Cog, LayoutGrid } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Navbar() {
@@ -9,9 +9,25 @@ export default function Navbar() {
     <UiNavbar className="rounded-none">
       <NavbarItem
         className="rounded-none"
+        Icon={Cog}
+        title="General"
+        href="/general"
+        location={location}
+        navigate={navigate}
+      />
+      <NavbarItem
+        className="rounded-none"
         Icon={Palette}
         title="Appearance"
         href="/appearance"
+        location={location}
+        navigate={navigate}
+      />
+      <NavbarItem
+        className="rounded-none"
+        Icon={LayoutGrid}
+        title="Tiling"
+        href="/tiling"
         location={location}
         navigate={navigate}
       />

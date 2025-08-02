@@ -3,6 +3,8 @@ import { useHashLocation } from 'wouter/use-hash-location';
 import TitleBar from './components/TitleBar';
 import { ThemeEditor } from './components/theme/ThemeEditor';
 import Navbar from './components/navbar';
+import { GeneralSettings } from './components/GeneralSettings';
+import { TilingSettings } from './components/TilingSettings';
 
 function App() {
   return (
@@ -18,8 +20,14 @@ function App() {
             <Route path="/">
               <p>Hello World</p>
             </Route>
+            <Route path="/general">
+              <GeneralSettings />
+            </Route>
             <Route path="/appearance">
               <ThemeEditor />
+            </Route>
+            <Route path="/tiling">
+              <TilingSettings />
             </Route>
           </Switch>
         </div>
