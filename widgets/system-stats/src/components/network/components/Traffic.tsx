@@ -6,7 +6,15 @@ type Props = {
   traffic?: NetworkTraffic | null;
 };
 
-const formatDataSize = (measure: any): string => {
+interface DataSizeMeasure {
+  bytes: number;
+  siValue: number;
+  siUnit: string;
+  iecValue: number;
+  iecUnit: string;
+}
+
+const formatDataSize = (measure: DataSizeMeasure): string => {
   if (!measure) return 'N/A';
   return `${measure.iecValue.toFixed(2)} ${measure.iecUnit}`;
 };

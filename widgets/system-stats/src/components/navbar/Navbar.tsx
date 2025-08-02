@@ -1,5 +1,5 @@
 import { Navbar as UiNavbar, NavbarItem } from '@overline-zebar/ui';
-import { BarChart, Globe, HardDrive, Palette, Server } from 'lucide-react';
+import { BarChart, Globe, HardDrive, Server } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Navbar() {
@@ -35,7 +35,6 @@ export default function Navbar() {
         location={location}
         navigate={navigate}
       />
-      
     </UiNavbar>
   );
 }

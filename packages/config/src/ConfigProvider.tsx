@@ -1,11 +1,15 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { RootConfig, defaultConfig } from './types';
+import { RootConfig, Theme, defaultConfig } from './types';
 import { configManager } from './ConfigManager';
 import * as zebar from 'zebar';
 
 type Action =
-  | { type: 'SET_APP_SETTING'; key: keyof RootConfig['app']; value: any }
-  | { type: 'SET_WIDGET_SETTING'; widget: string; key: string; value: any }
+  | {
+      type: 'SET_APP_SETTING';
+      key: keyof RootConfig['app'];
+      value: RootConfig['app'][keyof RootConfig['app']];
+    }
+  | { type: 'SET_WIDGET_SETTING'; widget: string; key: string; value: unknown }
   | { type: 'LOAD_CONFIG'; config: RootConfig };
 
 type Dispatch = (action: Action) => void;
@@ -59,25 +63,29 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const listenThemePreview = async () => {
-      await zebar.currentWidget().tauriWindow.listen('theme-preview-update', (event) => {
-        const previewTheme = event.payload as Theme;
-        if (previewTheme) {
-          Object.entries(previewTheme.colors).forEach(([key, value]) => {
-            document.documentElement.style.setProperty(key, value);
-          });
-        }
-      });
+      await zebar
+        .currentWidget()
+        .tauriWindow.listen('theme-preview-update', (event) => {
+          const previewTheme = event.payload as Theme;
+          if (previewTheme) {
+            Object.entries(previewTheme.colors).forEach(([key, value]) => {
+              document.documentElement.style.setProperty(key, value);
+            });
+          }
+        });
 
-      await zebar.currentWidget().tauriWindow.listen('theme-preview-revert', () => {
-        const theme = state.app.themes.find(
-          (t) => t.id === state.app.currentThemeId
-        );
-        if (theme) {
-          Object.entries(theme.colors).forEach(([key, value]) => {
-            document.documentElement.style.setProperty(key, value);
-          });
-        }
-      });
+      await zebar
+        .currentWidget()
+        .tauriWindow.listen('theme-preview-revert', () => {
+          const theme = state.app.themes.find(
+            (t) => t.id === state.app.currentThemeId
+          );
+          if (theme) {
+            Object.entries(theme.colors).forEach(([key, value]) => {
+              document.documentElement.style.setProperty(key, value);
+            });
+          }
+        });
     };
 
     listenThemePreview();

@@ -1,4 +1,4 @@
-export function isObject(item: any): item is Record<string, any> {
+export function isObject(item: unknown): item is Record<string, unknown> {
   return item && typeof item === 'object' && !Array.isArray(item);
 }
 
@@ -12,9 +12,9 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
 
       if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
         const mergedArray = [...targetValue];
-        (sourceValue as any[]).forEach(sourceItem => {
-          const existingItemIndex = (mergedArray as any[]).findIndex(
-            (targetItem) => targetItem.id === sourceItem.id
+        (sourceValue as unknown[]).forEach((sourceItem) => {
+          const existingItemIndex = (mergedArray as { id: string }[]).findIndex(
+            (targetItem) => targetItem.id === (sourceItem as { id: string }).id
           );
           if (existingItemIndex !== -1) {
             mergedArray[existingItemIndex] = deepMerge(
@@ -25,9 +25,12 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
             mergedArray.push(sourceItem);
           }
         });
-        result[key as keyof T] = mergedArray as any;
+        result[key as keyof T] = mergedArray as T[keyof T];
       } else if (isObject(targetValue) && isObject(sourceValue)) {
-        result[key as keyof T] = deepMerge(targetValue as any, sourceValue as any);
+        result[key as keyof T] = deepMerge(
+          targetValue as Record<string, unknown>,
+          sourceValue as Partial<Record<string, unknown>>
+        ) as T[keyof T];
       } else {
         result[key as keyof T] = sourceValue;
       }

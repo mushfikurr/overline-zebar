@@ -9,10 +9,10 @@ export default function Slider({
   setValue,
 }: {
   value: number;
-  setValue: any;
+  setValue: (value: number) => void;
 }) {
   const ref = useRef<ElementRef<typeof RadixSlider.Root>>(null);
-  const [region, setRegion] = useState('middle');
+  const [_region, setRegion] = useState('middle');
   const clientX = useMotionValue(0);
   const overflow = useMotionValue(0);
 

@@ -16,7 +16,7 @@ export function useWidgetSetting(widgetName: string, key: string) {
   const dispatch = useConfigDispatch();
   return [
     state.widgets[widgetName]?.[key],
-    (value: any) =>
+    (value: unknown) =>
       dispatch({ type: 'SET_WIDGET_SETTING', widget: widgetName, key, value }),
   ] as const;
 }

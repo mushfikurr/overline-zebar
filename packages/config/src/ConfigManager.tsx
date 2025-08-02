@@ -22,7 +22,7 @@ function loadConfig(forceReload = false): RootConfig {
     const parsed = JSON.parse(stored) as RootConfig;
 
     // Ensure all themes have an ID
-    parsed.app.themes.forEach(theme => {
+    parsed.app.themes.forEach((theme) => {
       if (!theme.id) {
         theme.id = generateId();
       }
@@ -55,7 +55,7 @@ function updateAppSetting<K extends keyof RootConfig['app']>(
   saveConfig(config);
 }
 
-function updateWidgetSetting(widgetName: string, key: string, value: any) {
+function updateWidgetSetting(widgetName: string, key: string, value: unknown) {
   const config = loadConfig();
   if (!config.widgets[widgetName]) {
     config.widgets[widgetName] = {};
@@ -70,7 +70,7 @@ function getAppSetting<K extends keyof RootConfig['app']>(
   return loadConfig().app[key];
 }
 
-function getWidgetSetting(widgetName: string, key: string): any {
+function getWidgetSetting(widgetName: string, key: string): unknown {
   return loadConfig().widgets[widgetName]?.[key];
 }
 

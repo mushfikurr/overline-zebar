@@ -2,9 +2,8 @@ import { cn } from '@/utils/cn';
 import { buttonVariants } from '@overline-zebar/ui';
 import { X } from 'lucide-react';
 import * as zebar from 'zebar';
-type Props = {};
 
-export default function TitleBar({}: Props) {
+export default function TitleBar() {
   const onClose = () => {
     zebar.currentWidget().close();
   };

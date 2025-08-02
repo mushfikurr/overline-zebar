@@ -102,8 +102,7 @@ function App() {
 
         <div className="flex items-center h-full">
           <VolumeControl
-            playbackDevice={output.audio?.defaultPlaybackDevice}
-            setVolume={output.audio?.setVolume}
+            audio={output.audio}
             statIconClassnames={statIconClassnames}
           />
         </div>

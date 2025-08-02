@@ -1,4 +1,4 @@
-import { buttonVariants, Chip } from '@overline-zebar/ui';
+import { Chip } from '@overline-zebar/ui';
 import { motion } from 'framer-motion';
 import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';

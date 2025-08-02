@@ -8,7 +8,6 @@ import Storage from './components/storage';
 import Network from './components/network';
 import Performance from './components/performance';
 
-
 const providers = zebar.createProviderGroup({
   cpu: { type: 'cpu' },
   memory: { type: 'memory' },
@@ -63,7 +62,6 @@ function App() {
             <Route path="/network">
               <Network network={output.network} />
             </Route>
-            
           </Switch>
         </div>
       </div>

@@ -11,7 +11,10 @@ export function useThemes() {
   const themes = app.themes;
   const activeTheme = themes.find((t) => t.id === app.currentThemeId);
 
-  const defaultThemeIds = useMemo(() => defaultConfig.app.themes.map(t => t.id), []);
+  const defaultThemeIds = useMemo(
+    () => defaultConfig.app.themes.map((t) => t.id),
+    []
+  );
 
   const isDefault = useCallback(
     (themeId: string) => {
@@ -22,7 +25,11 @@ export function useThemes() {
 
   const setActiveTheme = useCallback(
     (themeId: string) => {
-      dispatch({ type: 'SET_APP_SETTING', key: 'currentThemeId', value: themeId });
+      dispatch({
+        type: 'SET_APP_SETTING',
+        key: 'currentThemeId',
+        value: themeId,
+      });
     },
     [dispatch]
   );
@@ -57,4 +64,3 @@ export function useThemes() {
     deleteTheme,
   };
 }
-

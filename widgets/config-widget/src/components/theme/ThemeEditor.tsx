@@ -159,7 +159,7 @@ export function ThemeEditor() {
   const themeSelectorValue = isPreviewing ? 'custom' : activeTheme?.id || '';
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
         <ThemeSelector
           isModified={isPreviewing}

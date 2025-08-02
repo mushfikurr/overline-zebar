@@ -1,22 +1,40 @@
+import { Chip } from '@overline-zebar/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Volume, Volume1, Volume2 } from 'lucide-react';
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { AudioOutput } from 'zebar';
 import { cn } from '../../utils/cn';
 import Slider from './components/Slider';
-import { Chip } from '@overline-zebar/ui';
 
-// TODO: Investigate AudioDevice type and why it's not exported. For now, just use any.
 export default function VolumeControl({
-  playbackDevice,
   statIconClassnames,
-  setVolume,
+  audio,
 }: {
-  playbackDevice: any;
-  setVolume: any;
   statIconClassnames: string;
+  audio: AudioOutput | null;
 }) {
   const [expanded, setExpanded] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
+
+  // Close the slider when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setExpanded(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  if (!audio) return;
+
+  const { setVolume, defaultPlaybackDevice: playbackDevice } = audio;
+
+  if (!playbackDevice) return;
 
   const handleWheel = (e: React.WheelEvent<HTMLButtonElement>) => {
     if (!playbackDevice) return;
@@ -38,11 +56,11 @@ export default function VolumeControl({
 
   const renderIcon = () => {
     if (!playbackDevice) return null;
-    if (playbackDevice?.volume === 0) {
+    if (playbackDevice.volume === 0) {
       return (
         <Volume className={statIconClassnames} size={16} strokeWidth={3} />
       );
-    } else if (playbackDevice?.volume > 0 && playbackDevice?.volume < 60) {
+    } else if (playbackDevice.volume > 0 && playbackDevice.volume < 60) {
       return (
         <Volume1 className={statIconClassnames} size={16} strokeWidth={3} />
       );
@@ -53,20 +71,7 @@ export default function VolumeControl({
     }
   };
 
-  // Close the slider when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setExpanded(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-  if (!playbackDevice?.volume) return;
+  if (!playbackDevice.volume) return;
 
   return (
     <Chip
@@ -100,7 +105,7 @@ export default function VolumeControl({
           </AnimatePresence>
         </div>
 
-        <p>{playbackDevice?.volume}%</p>
+        <p>{playbackDevice.volume}%</p>
       </div>
     </Chip>
   );

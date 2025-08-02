@@ -6,21 +6,35 @@ interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   switch?: boolean;
 }
 
-export function FormField({ children, className, switch: isSwitch, ...props }: FormFieldProps) {
+export function FormField({
+  children,
+  className,
+  switch: isSwitch,
+  ...props
+}: FormFieldProps) {
   const childrenArray = React.Children.toArray(children);
 
   const title = childrenArray.find(
-    (child) => React.isValidElement(child) && (child.type as any).displayName === 'FieldTitle'
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type as React.FunctionComponent).displayName === 'FieldTitle'
   );
   const input = childrenArray.find(
-    (child) => React.isValidElement(child) && (child.type as any).displayName === 'FieldInput'
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type as React.FunctionComponent).displayName === 'FieldInput'
   );
   const description = childrenArray.find(
-    (child) => React.isValidElement(child) && (child.type as any).displayName === 'FieldDescription'
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type as React.FunctionComponent).displayName === 'FieldDescription'
   );
 
   return (
-    <div className={cn(isSwitch ? 'space-y-2' : 'space-y-2', className)} {...props}>
+    <div
+      className={cn(isSwitch ? 'space-y-2' : 'space-y-2', className)}
+      {...props}
+    >
       {isSwitch ? (
         <>
           <div className="flex items-center justify-between">

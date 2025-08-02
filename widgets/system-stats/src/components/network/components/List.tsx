@@ -1,7 +1,7 @@
 import { CopyToClipboard } from '@/components/common/CopyToClipboard';
 
 type Props = {
-  ips: any[];
+  ips: string[];
 };
 
 export default function List({ ips }: Props) {

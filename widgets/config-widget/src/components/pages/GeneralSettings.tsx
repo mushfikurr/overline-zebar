@@ -23,7 +23,7 @@ export function GeneralSettings() {
         />
         <div className="space-y-8">
           <FormField>
-            <FieldTitle>Flow Launcher Path</FieldTitle>
+            <FieldTitle>Launcher Path</FieldTitle>
             <FieldInput>
               <Input
                 placeholder="e.g., C:\Users\YourUser\AppData\Local\FlowLauncher\Flow.Launcher.exe"
@@ -32,7 +32,8 @@ export function GeneralSettings() {
               />
             </FieldInput>
             <FieldDescription>
-              Specify the full path to your Flow Launcher executable.
+              Specify the full path to your Launcher executable (the search
+              button, leftmost of the topbar widget).
             </FieldDescription>
           </FormField>
           <FormField>
@@ -46,7 +47,7 @@ export function GeneralSettings() {
               />
             </FieldInput>
             <FieldDescription>
-              Set the maximum width for media displayed in the widget.
+              Set the maximum width for media displayed in the topbar widget.
             </FieldDescription>
           </FormField>
         </div>

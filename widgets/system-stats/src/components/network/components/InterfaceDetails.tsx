@@ -40,7 +40,7 @@ export default function InterfaceDetails({ iface }: Props) {
             <CardTitle Icon={ArrowUp}>Transmit</CardTitle>
             <span className="select-all">
               {/* 
-              // @ts-expect-error */}
+              // @ts-expect-error - zebar types are wrong */}
               {formatSpeed(iface.transmitSpeed)}
             </span>
           </Card>

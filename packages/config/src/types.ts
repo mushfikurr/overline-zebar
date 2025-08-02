@@ -18,7 +18,7 @@ export interface AppSettings {
 }
 
 export interface WidgetSettings {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface RootConfig {
@@ -39,4 +39,3 @@ export const defaultConfig: RootConfig = {
   },
   widgets: {},
 };
-

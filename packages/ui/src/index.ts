@@ -21,4 +21,9 @@ export { WindowsIcon } from './components/icons/windows';
 export { Navbar, NavbarItem } from './components/navbar';
 export { default as PanelLayout } from './components/panel-layout/PanelLayout';
 export { Input } from './components/input';
-export { FormField, FieldTitle, FieldInput, FieldDescription } from './components/form-field';
+export {
+  FormField,
+  FieldTitle,
+  FieldInput,
+  FieldDescription,
+} from './components/form-field';

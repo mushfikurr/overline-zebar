@@ -2,9 +2,7 @@ import { PanelLayout } from '@overline-zebar/ui';
 import PanelHeading from '../PanelHeading';
 import { ThemeEditor } from '../theme/ThemeEditor';
 
-type Props = {};
-
-function AppearanceSettings({}: Props) {
+function AppearanceSettings() {
   return (
     <PanelLayout title="Appearance">
       <div className="px-3 py-1">
