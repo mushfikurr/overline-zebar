@@ -24,20 +24,12 @@ export default function Navbar() {
         location={location}
         navigate={navigate}
       />
-      <NavbarItem
-        className="rounded-none"
-        Icon={LayoutGrid}
-        title="Tiling"
-        href="/tiling"
-        location={location}
-        navigate={navigate}
-      />
       <h3 className="px-4 my-3.5 text-text-muted">Widget Specific</h3>
       <NavbarItem
         className="rounded-none"
         Icon={LayoutGrid}
         title="Main (Topbar)"
-        href="/tiling"
+        href="/widget/main"
         location={location}
         navigate={navigate}
       />

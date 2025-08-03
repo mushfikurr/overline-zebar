@@ -1,5 +1,5 @@
 export function isObject(item: unknown): item is Record<string, unknown> {
-  return item && typeof item === 'object' && !Array.isArray(item);
+  return !!(item && typeof item === 'object' && !Array.isArray(item));
 }
 
 export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
@@ -13,15 +13,34 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
       if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
         const mergedArray = [...targetValue];
         (sourceValue as unknown[]).forEach((sourceItem) => {
-          const existingItemIndex = (mergedArray as { id: string }[]).findIndex(
-            (targetItem) => targetItem.id === (sourceItem as { id: string }).id
-          );
-          if (existingItemIndex !== -1) {
-            mergedArray[existingItemIndex] = deepMerge(
-              mergedArray[existingItemIndex],
-              sourceItem
+          // Ensure items being compared have an 'id' property before trying to access it
+          if (
+            isObject(sourceItem) &&
+            'id' in sourceItem &&
+            typeof sourceItem.id === 'string'
+          ) {
+            const existingItemIndex = (mergedArray as unknown[]).findIndex(
+              (targetItem) =>
+                isObject(targetItem) &&
+                'id' in targetItem &&
+                targetItem.id === sourceItem.id
             );
+
+            if (existingItemIndex !== -1) {
+              const targetItem = mergedArray[existingItemIndex];
+              // Both items must be objects to be merged
+              if (isObject(targetItem) && isObject(sourceItem)) {
+                mergedArray[existingItemIndex] = deepMerge(targetItem, sourceItem);
+              } else {
+                // Otherwise, just replace the item
+                mergedArray[existingItemIndex] = sourceItem;
+              }
+            } else {
+              mergedArray.push(sourceItem);
+            }
           } else {
+            // If the source item doesn't have an ID, just add it to the array.
+            // This handles merging arrays of primitives or objects without IDs.
             mergedArray.push(sourceItem);
           }
         });
@@ -31,7 +50,8 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
           targetValue as Record<string, unknown>,
           sourceValue as Partial<Record<string, unknown>>
         ) as T[keyof T];
-      } else {
+      } else if (sourceValue !== undefined) {
+        // Do not overwrite with undefined values
         result[key as keyof T] = sourceValue;
       }
     }

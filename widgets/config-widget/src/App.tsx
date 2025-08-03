@@ -4,7 +4,7 @@ import TitleBar from './components/TitleBar';
 import Navbar from './components/navbar';
 import AppearanceSettings from './components/pages/AppearanceSettings';
 import { GeneralSettings } from './components/pages/GeneralSettings';
-import { TilingSettings } from './components/pages/TilingSettings';
+import { MainSettings } from './components/pages/widgets/MainSettings';
 
 function App() {
   return (
@@ -23,8 +23,8 @@ function App() {
             <Route path="/appearance">
               <AppearanceSettings />
             </Route>
-            <Route path="/tiling">
-              <TilingSettings />
+            <Route path="/widget/main">
+              <MainSettings />
             </Route>
           </Switch>
         </div>

@@ -1,6 +1,7 @@
 import { RootConfig, defaultConfig } from './types';
 import * as zebar from 'zebar';
 import { deepMerge } from './utils/deepMerge';
+import { logger } from './utils/logger';
 
 const STORAGE_KEY = 'overline-zebar-config';
 
@@ -9,10 +10,16 @@ let cachedConfig: RootConfig | null = null;
 import { generateId } from './utils/generateId';
 
 function loadConfig(forceReload = false): RootConfig {
-  if (cachedConfig && !forceReload) return cachedConfig;
+  if (cachedConfig && !forceReload) {
+    logger.log('Returning cached config');
+    return cachedConfig;
+  }
+
+  logger.log(forceReload ? 'Force reloading config' : 'Loading config');
 
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) {
+    logger.log('No config found in storage, using default config');
     cachedConfig = defaultConfig;
     saveConfig(cachedConfig);
     return cachedConfig;
@@ -20,20 +27,24 @@ function loadConfig(forceReload = false): RootConfig {
 
   try {
     const parsed = JSON.parse(stored) as RootConfig;
+    logger.log('Successfully parsed config from storage');
 
     // Ensure all themes have an ID
     parsed.app.themes.forEach((theme) => {
       if (!theme.id) {
         theme.id = generateId();
+        logger.log(`Generated new ID for theme: ${theme.name}`);
       }
     });
 
     // if (parsed.version < CURRENT_VERSION) parsed = migrate(parsed);
 
     cachedConfig = deepMerge(defaultConfig, parsed);
+    logger.log('Successfully merged default config with user config');
 
     return cachedConfig;
-  } catch {
+  } catch (e) {
+    logger.error('Failed to parse config, using default config', e);
     cachedConfig = defaultConfig;
     saveConfig(cachedConfig);
     return cachedConfig;
@@ -43,6 +54,7 @@ function loadConfig(forceReload = false): RootConfig {
 function saveConfig(config: RootConfig) {
   cachedConfig = config;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  logger.log('Successfully saved config to storage');
   zebar.currentWidget().tauriWindow.emit('config-changed');
 }
 

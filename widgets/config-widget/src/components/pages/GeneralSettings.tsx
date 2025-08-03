@@ -1,18 +1,18 @@
 import {
-  PanelLayout,
-  Input,
-  FormField,
-  FieldTitle,
-  FieldInput,
   FieldDescription,
+  FieldInput,
+  FieldTitle,
+  FormField,
+  Input,
+  PanelLayout,
+  Switch,
 } from '@overline-zebar/ui';
-import { useAppSetting } from '@overline-zebar/config';
 import PanelHeading from '../PanelHeading';
+import { useAppSetting } from '@overline-zebar/config';
 
 export function GeneralSettings() {
-  const [flowLauncherPath, setFlowLauncherPath] =
-    useAppSetting('flowLauncherPath');
-  const [mediaMaxWidth, setMediaMaxWidth] = useAppSetting('mediaMaxWidth');
+  const [useAutoTiling, setUseAutoTiling] = useAppSetting('useAutoTiling');
+  const [websocketUri, setWebsocketUri] = useAppSetting('zebarWebsocketUri');
 
   return (
     <PanelLayout title="General Settings">
@@ -22,32 +22,30 @@ export function GeneralSettings() {
           description={'Settings about all overline-zebar widgets.'}
         />
         <div className="space-y-8">
-          <FormField>
-            <FieldTitle>Launcher Path</FieldTitle>
+          <FormField switch>
+            <FieldTitle>Enable Auto Tiling</FieldTitle>
             <FieldInput>
-              <Input
-                placeholder="e.g., C:\Users\YourUser\AppData\Local\FlowLauncher\Flow.Launcher.exe"
-                value={flowLauncherPath}
-                onChange={(e) => setFlowLauncherPath(e.target.value)}
+              <Switch
+                checked={useAutoTiling}
+                onCheckedChange={setUseAutoTiling}
               />
             </FieldInput>
             <FieldDescription>
-              Specify the full path to your Launcher executable (the search
-              button, leftmost of the topbar widget).
+              Toggle to enable or disable automatic window tiling.
             </FieldDescription>
           </FormField>
           <FormField>
-            <FieldTitle>Media Max Width (px)</FieldTitle>
+            <FieldTitle>Zebar WebSocket URI</FieldTitle>
             <FieldInput>
               <Input
-                placeholder="e.g., 400"
-                value={mediaMaxWidth}
-                onChange={(e) => setMediaMaxWidth(e.target.value)}
-                type="number"
+                placeholder="e.g., ws://localhost:6123"
+                value={websocketUri}
+                onChange={(e) => setWebsocketUri(e.target.value)}
               />
             </FieldInput>
-            <FieldDescription>
-              Set the maximum width for media displayed in the topbar widget.
+            <FieldDescription warning>
+              This is the WebSocket URI for the Zebar service. By default Zebar
+              runs on ws://localhost:6123.
             </FieldDescription>
           </FormField>
         </div>
