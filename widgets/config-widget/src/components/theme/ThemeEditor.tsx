@@ -88,7 +88,7 @@ function ThemeSelector({
   return (
     <Select onValueChange={onThemeChange} value={currentThemeId}>
       <SelectTrigger>
-        <SelectValue placeholder={isModified ? 'Custom' : 'Select a theme'} />
+        <SelectValue>{(value) => (isModified ? 'Custom' : value)}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {savedThemes.length > 0 && (

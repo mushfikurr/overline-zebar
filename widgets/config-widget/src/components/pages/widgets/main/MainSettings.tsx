@@ -1,3 +1,4 @@
+import { useAppSetting } from '@overline-zebar/config';
 import {
   FieldDescription,
   FieldInput,
@@ -6,8 +7,8 @@ import {
   Input,
   PanelLayout,
 } from '@overline-zebar/ui';
-import PanelHeading from '../../PanelHeading';
-import { useAppSetting } from '@overline-zebar/config';
+import PanelHeading from '../../../PanelHeading';
+import WeatherThresholds from './components/WeatherThresholds';
 
 type Props = {};
 
@@ -52,6 +53,9 @@ export function MainSettings({}: Props) {
               Set the maximum width for media displayed in the topbar widget.
             </FieldDescription>
           </FormField>
+
+          <h3 className="my-3.5 text-text-muted">Weather Settings</h3>
+          <WeatherThresholds />
         </div>
       </div>
     </PanelLayout>

@@ -3,7 +3,7 @@ import * as zebar from 'zebar';
 import { Center } from './components/Center';
 import Media from './components/media';
 import Stat from './components/stat';
-import { weatherThresholds } from './components/stat/defaults/thresholds';
+
 import Systray from './components/systray';
 import { TilingControl } from './components/TilingControl';
 import VolumeControl from './components/volume';
@@ -13,6 +13,7 @@ import { calculateWidgetPlacementFromRight } from './utils/calculateWidgetPlacem
 import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
 import { Chip } from '@overline-zebar/ui';
+import { useAppSetting } from '@overline-zebar/config';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
@@ -37,6 +38,8 @@ function App() {
 
   const statIconClassnames = 'h-5 w-5 text-icon';
   const chipRef = useRef<HTMLDivElement | null>(null);
+
+  const [weatherThresholds] = useAppSetting('weatherThresholds');
 
   return (
     <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5">
@@ -150,3 +153,4 @@ function App() {
 }
 
 export default App;
+

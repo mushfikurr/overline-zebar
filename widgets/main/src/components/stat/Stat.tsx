@@ -1,24 +1,38 @@
+import { WeatherThreshold } from '@overline-zebar/config';
+import { StatRing, Thresholds } from '@overline-zebar/ui';
 import { StatInline } from './components/StatInline';
-import { weatherThresholds } from './defaults/thresholds';
-import { StatRing, systemStatThresholds, Thresholds } from '@overline-zebar/ui';
 
-interface StatProps {
+interface BaseStatProps {
   Icon: React.ReactNode;
   stat: string;
-  threshold?: Thresholds;
-  type: 'ring' | 'inline';
 }
 
+type StatProps = BaseStatProps &
+  (
+    | { type: 'ring'; threshold?: Thresholds }
+    | { type: 'inline'; threshold?: WeatherThreshold[] }
+  );
+
 export default function Stat(props: StatProps) {
-  const { type, ...p } = props;
-  switch (type) {
+  switch (props.type) {
     case 'ring':
       return (
-        <StatRing {...p} threshold={p.threshold ?? systemStatThresholds} />
+        <StatRing
+          Icon={props.Icon}
+          stat={props.stat}
+          threshold={props.threshold}
+        />
       );
     case 'inline':
-      return <StatInline {...p} threshold={p.threshold ?? weatherThresholds} />;
+      return (
+        <StatInline
+          Icon={props.Icon}
+          stat={props.stat}
+          threshold={props.threshold}
+        />
+      );
     default:
       return null;
   }
 }
+

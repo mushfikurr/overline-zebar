@@ -1,4 +1,4 @@
-import { defaultTheme, catppuccinThemes } from './presets';
+import { catppuccinThemes, defaultTheme } from './presets';
 
 export interface Theme {
   id: string;
@@ -8,6 +8,15 @@ export interface Theme {
   };
 }
 
+export type LabelColor = '--danger' | '--warning' | '--text';
+
+export type WeatherThreshold = {
+  id: string;
+  min: number;
+  max: number;
+  labelColor: LabelColor;
+};
+
 export interface AppSettings {
   flowLauncherPath: string;
   useAutoTiling: boolean;
@@ -15,6 +24,7 @@ export interface AppSettings {
   mediaMaxWidth: string;
   themes: Theme[];
   currentThemeId: string;
+  weatherThresholds: WeatherThreshold[];
 }
 
 export interface WidgetSettings {
@@ -36,6 +46,12 @@ export const defaultConfig: RootConfig = {
     mediaMaxWidth: '400',
     themes: [defaultTheme, ...catppuccinThemes],
     currentThemeId: 'default',
+    weatherThresholds: [
+      { id: 'weather-1', min: -10, max: 0, labelColor: '--danger' },
+      { id: 'weather-2', min: 1, max: 15, labelColor: '--text' },
+      { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
+      { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
+    ],
   },
   widgets: {},
 };

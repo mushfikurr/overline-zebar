@@ -1,29 +1,22 @@
+import { WeatherThreshold } from '@overline-zebar/config';
 import { cn } from '../../../utils/cn';
-import {
-  Thresholds,
-  LabelType,
-  systemStatThresholds as uiSystemStatThresholds,
-} from '@overline-zebar/ui';
 
 interface StatProps {
   Icon: React.ReactNode;
   stat: string;
-  threshold?: Thresholds;
+  threshold?: WeatherThreshold[];
 }
 
-export function StatInline({
-  Icon,
-  stat,
-  threshold = uiSystemStatThresholds,
-}: StatProps) {
+export function StatInline({ Icon, stat, threshold }: StatProps) {
   function getNumbersFromString(str: string) {
     const numbers = str.match(/-?\d+/g)?.map(Number);
     return numbers && numbers.length > 0 ? numbers[0] : NaN;
   }
 
   function getThresholdLabel(value: number) {
+    if (!threshold) return;
     const range = threshold.find((r) => value >= r.min && value <= r.max);
-    return range ? range.label : LabelType.DEFAULT;
+    return range ? range.labelColor : undefined;
   }
 
   const statAsInt = getNumbersFromString(stat);
@@ -31,12 +24,8 @@ export function StatInline({
 
   return (
     <div
-      className={cn(
-        'flex items-center justify-center gap-1.5',
-        thresholdLabel === LabelType.DEFAULT && 'text-text',
-        thresholdLabel === LabelType.WARNING && 'text-warning',
-        thresholdLabel === LabelType.DANGER && 'text-danger'
-      )}
+      className={cn('flex items-center justify-center gap-1.5')}
+      style={{ color: thresholdLabel ? `var(${thresholdLabel})` : undefined }}
     >
       {Icon}
       <p>{stat}</p>

@@ -2,6 +2,16 @@ export function isObject(item: unknown): item is Record<string, unknown> {
   return !!(item && typeof item === 'object' && !Array.isArray(item));
 }
 
+function dedupeById<T extends { id: string }>(arr: T[]): T[] {
+  const seen = new Map<string, T>();
+  for (const item of arr) {
+    if (item && typeof item.id === 'string') {
+      seen.set(item.id, item);
+    }
+  }
+  return Array.from(seen.values());
+}
+
 export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
   const result: T = { ...target };
 
@@ -30,7 +40,10 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
               const targetItem = mergedArray[existingItemIndex];
               // Both items must be objects to be merged
               if (isObject(targetItem) && isObject(sourceItem)) {
-                mergedArray[existingItemIndex] = deepMerge(targetItem, sourceItem);
+                mergedArray[existingItemIndex] = deepMerge(
+                  targetItem,
+                  sourceItem
+                );
               } else {
                 // Otherwise, just replace the item
                 mergedArray[existingItemIndex] = sourceItem;

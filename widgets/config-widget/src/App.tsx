@@ -4,7 +4,7 @@ import TitleBar from './components/TitleBar';
 import Navbar from './components/navbar';
 import AppearanceSettings from './components/pages/AppearanceSettings';
 import { GeneralSettings } from './components/pages/GeneralSettings';
-import { MainSettings } from './components/pages/widgets/MainSettings';
+import { MainSettings } from './components/pages/widgets/main/MainSettings';
 
 function App() {
   return (

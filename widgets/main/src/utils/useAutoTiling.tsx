@@ -5,13 +5,13 @@ import { useAppSetting } from '@overline-zebar/config';
 export const useAutoTiling = () => {
   const queryClient = useQueryClient();
   const [shouldUseAutoTiling] = useAppSetting('useAutoTiling');
-  const [autoTilingWebSocketUri] = useAppSetting('autoTilingWebSocketUri');
+  const [zebarWebsocketUri] = useAppSetting('zebarWebsocketUri');
 
   useEffect(() => {
     // Only connect to WebSocket if auto-tiling is enabled
     if (!shouldUseAutoTiling) return;
 
-    const websocket = new WebSocket(autoTilingWebSocketUri);
+    const websocket = new WebSocket(zebarWebsocketUri);
 
     websocket.onopen = () => {
       websocket.send('sub -e window_managed');
@@ -44,7 +44,7 @@ export const useAutoTiling = () => {
     return () => {
       websocket.close();
     };
-  }, [queryClient, autoTilingWebSocketUri, shouldUseAutoTiling]);
+  }, [queryClient, zebarWebsocketUri, shouldUseAutoTiling]);
 
   return {
     tilingSize: queryClient.getQueryData(['tilingSize']),
