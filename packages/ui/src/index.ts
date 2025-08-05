@@ -27,3 +27,4 @@ export {
   FieldInput,
   FieldDescription,
 } from './components/form-field';
+export { Tabs, TabsTrigger, TabsList, TabsContent } from './components/tabs';

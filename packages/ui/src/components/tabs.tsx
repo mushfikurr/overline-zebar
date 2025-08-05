@@ -52,8 +52,8 @@ function TabsList({
     <BaseTabs.List
       data-slot="tabs-list"
       className={cn(
-        'text-text-muted relative z-0 inline-flex h-9 w-fit items-center justify-center gap-x-1 p-1',
-        variant === 'capsule' ? 'bg-background rounded-lg' : '',
+        'text-text-muted  p-1 relative z-0 inline-flex h-10 w-fit items-center justify-center gap-x-1',
+        variant === 'capsule' ? 'bg-background-deeper rounded-lg' : '',
         className
       )}
       {...props}
@@ -72,7 +72,7 @@ function TabsTrigger({
     <BaseTabs.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "text-text-muted data-selected:text-text focus-visible:ring-ring/50 [&_svg:not([class*='size-'])] z-[1] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm text-nowrap whitespace-nowrap focus-visible:ring-[3px] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "text-text-muted hover:text-text transition-colors ease-in-out duration-300 data-[selected]:text-text focus-visible:ring-primary/50 [&_svg:not([class*='size-'])] z-[1] flex flex-1 items-center justify-center gap-1.5 rounded-md px-3.5 h-full text-sm text-nowrap whitespace-nowrap focus-visible:ring-[3px] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -93,7 +93,7 @@ function TabIndicator({
         'absolute left-0 w-[var(--active-tab-width)] translate-x-[var(--active-tab-left)] -translate-y-1/2 transition-all duration-300 ease-in-out',
         variant === 'underline'
           ? 'bg-primary top-full z-10 h-px'
-          : 'bg-background top-1/2 -z-[1] h-[var(--active-tab-height)] rounded-md border border-border shadow-sm',
+          : 'bg-button top-1/2 -z-[1] h-[var(--active-tab-height)] rounded-md border border-button-border shadow-sm',
         className
       )}
       {...props}

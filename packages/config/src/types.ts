@@ -25,6 +25,7 @@ export interface AppSettings {
   themes: Theme[];
   currentThemeId: string;
   weatherThresholds: WeatherThreshold[];
+  weatherUnit: 'celsius' | 'fahrenheit';
 }
 
 export interface WidgetSettings {
@@ -52,6 +53,7 @@ export const defaultConfig: RootConfig = {
       { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
       { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
     ],
+    weatherUnit: 'celsius',
   },
   widgets: {},
 };

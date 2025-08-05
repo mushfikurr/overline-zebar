@@ -40,6 +40,7 @@ function App() {
   const chipRef = useRef<HTMLDivElement | null>(null);
 
   const [weatherThresholds] = useAppSetting('weatherThresholds');
+  const [weatherUnit] = useAppSetting('weatherUnit');
 
   return (
     <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5">
@@ -95,7 +96,7 @@ function App() {
             {output.weather && (
               <Stat
                 Icon={getWeatherIcon(output.weather, statIconClassnames)}
-                stat={`${Math.round(output.weather.celsiusTemp)}°C`}
+                stat={weatherUnit === 'celsius' ? `${Math.round(output.weather.celsiusTemp)}°C` : `${Math.round(output.weather.fahrenheitTemp)}°F`}
                 threshold={weatherThresholds}
                 type="inline"
               />
@@ -123,7 +124,7 @@ function App() {
                 anchor: 'center',
                 offsetX: `0px`,
                 offsetY: `0px`,
-                width: `1280px`,
+                width: `1100px`,
                 height: `720px`,
                 monitorSelection: { type: 'all' },
                 dockToEdge: {
@@ -153,4 +154,3 @@ function App() {
 }
 
 export default App;
-

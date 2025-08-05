@@ -1,63 +1,40 @@
-import { useAppSetting } from '@overline-zebar/config';
 import {
-  FieldDescription,
-  FieldInput,
-  FieldTitle,
-  FormField,
-  Input,
   PanelLayout,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from '@overline-zebar/ui';
 import PanelHeading from '../../../PanelHeading';
-import WeatherThresholds from './components/WeatherThresholds';
+import GeneralTab from './components/GeneralTab';
+import WeatherTab from './components/WeatherTab';
 
 type Props = {};
 
 export function MainSettings({}: Props) {
-  const [flowLauncherPath, setFlowLauncherPath] =
-    useAppSetting('flowLauncherPath');
-  const [mediaMaxWidth, setMediaMaxWidth] = useAppSetting('mediaMaxWidth');
-
   return (
     <PanelLayout title="Main">
-      <div className="px-3 py-1">
-        <PanelHeading
-          title="Main (Topbar)"
-          description="Customise your main topbar widget."
-        />
-        <div className="space-y-8">
-          <FormField>
-            <FieldTitle>Launcher Path</FieldTitle>
-            <FieldInput>
-              <Input
-                placeholder="e.g., C:\Users\YourUser\AppData\Local\FlowLauncher\Flow.Launcher.exe"
-                value={flowLauncherPath}
-                onChange={(e) => setFlowLauncherPath(e.target.value)}
-              />
-            </FieldInput>
-            <FieldDescription>
-              Specify the full path to your Launcher executable (the search
-              button, leftmost of the topbar widget).
-            </FieldDescription>
-          </FormField>
-          <FormField>
-            <FieldTitle>Media Max Width (px)</FieldTitle>
-            <FieldInput>
-              <Input
-                placeholder="e.g., 400"
-                value={mediaMaxWidth}
-                onChange={(e) => setMediaMaxWidth(e.target.value)}
-                type="number"
-              />
-            </FieldInput>
-            <FieldDescription>
-              Set the maximum width for media displayed in the topbar widget.
-            </FieldDescription>
-          </FormField>
+      <Tabs defaultValue="general">
+        <div className="px-3 py-1">
+          <PanelHeading
+            title="Main (Topbar)"
+            description="Customise your main topbar widget."
+            separator={false}
+          />
+          <TabsList className="mt-4 mb-1">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="weather">Weather</TabsTrigger>
+          </TabsList>
+          <div className="w-full bg-text/5 h-px my-4 mb-6"></div>
 
-          <h3 className="my-3.5 text-text-muted">Weather Settings</h3>
-          <WeatherThresholds />
+          <TabsContent value="general" className="space-y-8">
+            <GeneralTab />
+          </TabsContent>
+          <TabsContent value="weather" className="space-y-8">
+            <WeatherTab />
+          </TabsContent>
         </div>
-      </div>
+      </Tabs>
     </PanelLayout>
   );
 }

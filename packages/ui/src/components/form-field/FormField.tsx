@@ -32,7 +32,7 @@ export function FormField({
   );
 
   return (
-    <div className={cn(className, 'space-y-3')} {...props}>
+    <div className={cn(className, !isSwitch && 'space-y-3')} {...props}>
       {isSwitch ? (
         <>
           <div className="flex items-center justify-between">
