@@ -16,7 +16,7 @@ export function GeneralSettings() {
 
   return (
     <PanelLayout title="General Settings">
-      <div className="px-3 py-1">
+      <div className="px-3 py-1 flex-grow flex flex-col">
         <PanelHeading
           title={'General'}
           description={'Settings about all overline-zebar widgets.'}

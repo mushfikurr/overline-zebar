@@ -14,6 +14,7 @@ interface ExpandingCarouselProps {
   itemWidth?: number;
   gap?: number;
   fadeEdgeOffset?: number;
+  startIndex?: number;
 }
 
 const springConfig = {
@@ -30,11 +31,12 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
   itemWidth = 128,
   gap = 8,
   fadeEdgeOffset = 10,
+  startIndex: customStartIndex,
 }) => {
   const totalItems = items.length;
   const fullWidth = totalItems * itemWidth + (totalItems - 1) * gap;
   const visibleWidth = visibleCount * itemWidth + (visibleCount - 1) * gap;
-  const startIndex = Math.max(0, Math.floor((totalItems - visibleCount) / 2));
+  const startIndex = customStartIndex ?? Math.max(0, Math.floor((totalItems - visibleCount) / 2));
   const initialOffset = -(startIndex * (itemWidth + gap));
 
   const leftEdge = fadeEdgeOffset + '%';

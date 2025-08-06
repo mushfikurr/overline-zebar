@@ -3,7 +3,6 @@ import * as zebar from 'zebar';
 import { Center } from './components/Center';
 import Media from './components/media';
 import Stat from './components/stat';
-
 import Systray from './components/systray';
 import { TilingControl } from './components/TilingControl';
 import VolumeControl from './components/volume';
@@ -96,7 +95,11 @@ function App() {
             {output.weather && (
               <Stat
                 Icon={getWeatherIcon(output.weather, statIconClassnames)}
-                stat={weatherUnit === 'celsius' ? `${Math.round(output.weather.celsiusTemp)}°C` : `${Math.round(output.weather.fahrenheitTemp)}°F`}
+                stat={
+                  weatherUnit === 'celsius'
+                    ? `${Math.round(output.weather.celsiusTemp)}°C`
+                    : `${Math.round(output.weather.fahrenheitTemp)}°F`
+                }
                 threshold={weatherThresholds}
                 type="inline"
               />

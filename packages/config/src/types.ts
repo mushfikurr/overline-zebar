@@ -1,3 +1,4 @@
+import { SystrayIcon } from 'zebar';
 import { catppuccinThemes, defaultTheme } from './presets';
 
 export interface Theme {
@@ -26,6 +27,8 @@ export interface AppSettings {
   currentThemeId: string;
   weatherThresholds: WeatherThreshold[];
   weatherUnit: 'celsius' | 'fahrenheit';
+  pinnedSystrayIcons: SystrayIcon[];
+  pinnedSystrayIconsAmount: number;
 }
 
 export interface WidgetSettings {
@@ -53,6 +56,8 @@ export const defaultConfig: RootConfig = {
       { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
       { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
     ],
+    pinnedSystrayIcons: [],
+    pinnedSystrayIconsAmount: 4,
     weatherUnit: 'celsius',
   },
   widgets: {},

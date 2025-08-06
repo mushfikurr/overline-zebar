@@ -9,7 +9,7 @@ import { MainSettings } from './components/pages/widgets/main/MainSettings';
 function App() {
   return (
     <Router hook={useHashLocation}>
-      <div className="relative flex flex-col shadow-sm items-center bg-background border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
+      <div className="relative flex flex-col shadow-sm items-center bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
         <TitleBar />
         <div className="flex w-full h-full">
           <div className="flex flex-col w-full max-w-sm">
