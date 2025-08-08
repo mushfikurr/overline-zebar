@@ -28,7 +28,6 @@ export interface AppSettings {
   weatherThresholds: WeatherThreshold[];
   weatherUnit: 'celsius' | 'fahrenheit';
   pinnedSystrayIcons: SystrayIcon[];
-  pinnedSystrayIconsAmount: number;
 }
 
 export interface WidgetSettings {
@@ -57,7 +56,6 @@ export const defaultConfig: RootConfig = {
       { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
     ],
     pinnedSystrayIcons: [],
-    pinnedSystrayIconsAmount: 4,
     weatherUnit: 'celsius',
   },
   widgets: {},

@@ -15,8 +15,8 @@ type Props = {};
 export function MainSettings({}: Props) {
   return (
     <PanelLayout title="Main">
-      <Tabs defaultValue="general">
-        <div className="px-3 py-1 flex-grow flex flex-col">
+      <Tabs defaultValue="general" className="flex-grow">
+        <div className="px-3 py-1 flex flex-col flex-grow">
           <PanelHeading
             title="Main (Topbar)"
             description="Customise your main topbar widget."

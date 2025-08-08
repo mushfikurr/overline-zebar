@@ -47,7 +47,7 @@ function SystrayTab({}: Props) {
           between expanded or collapsed.
         </p>
       </div>
-      <div className="space-y-4">
+      <div className="grow space-y-4">
         {icons?.map((i) => (
           <div key={i.iconHash} className="flex items-center justify-between">
             <div className="flex items-center gap-4">

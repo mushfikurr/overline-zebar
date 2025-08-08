@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { SystrayIcon, SystrayOutput } from 'zebar';
 import { ExpandingCarousel } from './components/ExpandingCarousel';
@@ -35,7 +34,6 @@ export default function Systray({ systray }: SystrayProps) {
   const icons = systray.icons;
 
   const [expanded, setExpanded] = useState(false);
-  const ICON_CUTOFF = 4;
 
   // Toggle icon expansion on Shift+Click
   const handleClick = (e: React.MouseEvent) => {
@@ -47,15 +45,25 @@ export default function Systray({ systray }: SystrayProps) {
 
   const [pinnedSystrayIcons] = useAppSetting('pinnedSystrayIcons');
 
+  // Determine the actual pinned icons that are present in the systray
+  const pinnedIconHashes = pinnedSystrayIcons.map((icon) => icon.iconHash);
+  const presentPinnedIcons = icons.filter((icon) =>
+    pinnedIconHashes.includes(icon.iconHash)
+  );
+  const presentPinnedIconsCount = presentPinnedIcons.length;
+
+  // Set a default of 4 visible icons, but expand if there are more pinned icons.
+  const visibleCount = Math.max(4, presentPinnedIconsCount);
+
   const arrangedIcons = arrangeIconsWithPinnedCenter(pinnedSystrayIcons, icons);
 
-  const unpinnedCount = icons.length - pinnedSystrayIcons.length;
+  const unpinnedCount = icons.length - presentPinnedIconsCount;
   const firstPinnedIndex = Math.ceil(unpinnedCount / 2);
 
   let startIndex;
-  if (pinnedSystrayIcons.length > 0) {
+  if (presentPinnedIconsCount > 0) {
     startIndex = Math.floor(
-      firstPinnedIndex - (ICON_CUTOFF - pinnedSystrayIcons.length) / 2
+      firstPinnedIndex - (visibleCount - presentPinnedIconsCount) / 2
     );
   }
 
@@ -70,7 +78,7 @@ export default function Systray({ systray }: SystrayProps) {
         expanded={expanded}
         gap={6}
         itemWidth={16}
-        visibleCount={ICON_CUTOFF}
+        visibleCount={visibleCount}
         startIndex={startIndex}
       />
     </div>
