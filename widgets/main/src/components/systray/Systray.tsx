@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SystrayIcon, SystrayOutput } from 'zebar';
 import { ExpandingCarousel } from './components/ExpandingCarousel';
 import { SystrayItem } from './components/SystrayItem';
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 
 type SystrayProps = {
   systray: SystrayOutput | null;
@@ -43,7 +43,7 @@ export default function Systray({ systray }: SystrayProps) {
     }
   };
 
-  const [pinnedSystrayIcons] = useAppSetting('pinnedSystrayIcons');
+  const [pinnedSystrayIcons] = useWidgetSetting('main', 'pinnedSystrayIcons');
 
   // Determine the actual pinned icons that are present in the systray
   const pinnedIconHashes = pinnedSystrayIcons.map((icon) => icon.iconHash);

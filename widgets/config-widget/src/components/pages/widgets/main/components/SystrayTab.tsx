@@ -1,4 +1,4 @@
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 import { Switch } from '@overline-zebar/ui';
 import { useEffect, useMemo, useState } from 'react';
 import * as zebar from 'zebar';
@@ -12,7 +12,7 @@ const providers = zebar.createProviderGroup({
 function SystrayTab({}: Props) {
   const [output, setOutput] = useState(providers.outputMap);
   const [pinnedSystrayIcons, setPinnedSystrayIcons] =
-    useAppSetting('pinnedSystrayIcons');
+    useWidgetSetting('main', 'pinnedSystrayIcons');
 
   useEffect(() => {
     providers.onOutput(() => setOutput(providers.outputMap));

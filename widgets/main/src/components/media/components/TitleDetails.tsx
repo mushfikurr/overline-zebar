@@ -2,7 +2,7 @@ import { AnimatePresence, MotionProps, motion } from 'framer-motion';
 import React from 'react';
 import { cn } from '../../../utils/cn';
 import useMeasure from 'react-use-measure';
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 
 export function TitleDetails({
   title,
@@ -22,7 +22,7 @@ export function TitleDetails({
     null
   );
 
-  const [mediaMaxWidth] = useAppSetting('mediaMaxWidth');
+  const [mediaMaxWidth] = useWidgetSetting('main', 'mediaMaxWidth');
 
   React.useEffect(() => {
     if (artistWidth === 0 || titleWidth === 0) return;

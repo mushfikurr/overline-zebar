@@ -1,4 +1,4 @@
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 import {
   FieldDescription,
   FieldInput,
@@ -10,9 +10,9 @@ import {
 type Props = {};
 
 function GeneralTab({}: Props) {
-  const [mediaMaxWidth, setMediaMaxWidth] = useAppSetting('mediaMaxWidth');
+  const [mediaMaxWidth, setMediaMaxWidth] = useWidgetSetting('main', 'mediaMaxWidth');
   const [flowLauncherPath, setFlowLauncherPath] =
-    useAppSetting('flowLauncherPath');
+    useWidgetSetting('main', 'flowLauncherPath');
 
   return (
     <>

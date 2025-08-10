@@ -12,7 +12,7 @@ import { calculateWidgetPlacementFromRight } from './utils/calculateWidgetPlacem
 import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
 import { Chip } from '@overline-zebar/ui';
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
@@ -38,8 +38,8 @@ function App() {
   const statIconClassnames = 'h-5 w-5 text-icon';
   const chipRef = useRef<HTMLDivElement | null>(null);
 
-  const [weatherThresholds] = useAppSetting('weatherThresholds');
-  const [weatherUnit] = useAppSetting('weatherUnit');
+  const [weatherThresholds] = useWidgetSetting('main', 'weatherThresholds');
+  const [weatherUnit] = useWidgetSetting('main', 'weatherUnit');
 
   return (
     <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5">

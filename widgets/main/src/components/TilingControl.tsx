@@ -3,14 +3,14 @@ import { cn } from '../utils/cn';
 import { Button } from '@overline-zebar/ui';
 import { GlazeWmOutput } from 'zebar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 
 interface TilingControlProps {
   glazewm: GlazeWmOutput | null;
 }
 
 export function TilingControl({ glazewm }: TilingControlProps) {
-  const [flowLauncherPath] = useAppSetting('flowLauncherPath');
+  const [flowLauncherPath] = useWidgetSetting('main', 'flowLauncherPath');
 
   if (!glazewm) return null;
 

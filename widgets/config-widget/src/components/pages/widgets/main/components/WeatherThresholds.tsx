@@ -1,6 +1,6 @@
 import {
   LabelColor,
-  useAppSetting,
+  useWidgetSetting,
   WeatherThreshold,
 } from '@overline-zebar/config';
 import {
@@ -17,7 +17,7 @@ import { NumberInput } from '../../../../NumberInput';
 type Props = {};
 
 export function WeatherThresholds({}: Props) {
-  const [thresholds] = useAppSetting('weatherThresholds');
+  const [thresholds] = useWidgetSetting('main', 'weatherThresholds');
 
   return (
     <div className="w-full space-y-4">
@@ -38,7 +38,7 @@ type ThresholdInputProps = {
 };
 
 function ThresholdInput({ threshold, minOrMax }: ThresholdInputProps) {
-  const [thresholds, setThresholds] = useAppSetting('weatherThresholds');
+  const [thresholds, setThresholds] = useWidgetSetting('main', 'weatherThresholds');
 
   const handleChange = (newValue: number) => {
     const newThresholds = thresholds.map((t) =>
@@ -62,7 +62,7 @@ type ThresholdColorSelectProps = {
 };
 
 function ThresholdColorSelect({ threshold }: ThresholdColorSelectProps) {
-  const [thresholds, setThresholds] = useAppSetting('weatherThresholds');
+  const [thresholds, setThresholds] = useWidgetSetting('main', 'weatherThresholds');
 
   const handleColorChange = (newValue: unknown) => {
     const newThresholds = thresholds.map((t) =>

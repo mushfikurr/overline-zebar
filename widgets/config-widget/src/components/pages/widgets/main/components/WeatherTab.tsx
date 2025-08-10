@@ -6,12 +6,12 @@ import {
   Switch,
 } from '@overline-zebar/ui';
 import WeatherThresholds from './WeatherThresholds';
-import { useAppSetting } from '@overline-zebar/config';
+import { useWidgetSetting } from '@overline-zebar/config';
 
 type Props = {};
 
 export default function WeatherTab({}: Props) {
-  const [weatherUnit, setWeatherUnit] = useAppSetting('weatherUnit');
+  const [weatherUnit, setWeatherUnit] = useWidgetSetting('main', 'weatherUnit');
 
   return (
     <>

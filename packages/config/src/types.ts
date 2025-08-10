@@ -19,44 +19,50 @@ export type WeatherThreshold = {
 };
 
 export interface AppSettings {
-  flowLauncherPath: string;
   useAutoTiling: boolean;
   zebarWebsocketUri: string;
-  mediaMaxWidth: string;
   themes: Theme[];
   currentThemeId: string;
+}
+
+export interface MainWidgetSettings {
+  flowLauncherPath: string;
+  mediaMaxWidth: string;
   weatherThresholds: WeatherThreshold[];
   weatherUnit: 'celsius' | 'fahrenheit';
   pinnedSystrayIcons: SystrayIcon[];
 }
 
-export interface WidgetSettings {
-  [key: string]: unknown;
+export interface AllWidgetSettings {
+  main: MainWidgetSettings;
 }
 
 export interface RootConfig {
   version: number;
   app: AppSettings;
-  widgets: Record<string, WidgetSettings>;
+  widgets: Partial<AllWidgetSettings>;
 }
 
 export const defaultConfig: RootConfig = {
   version: 1,
   app: {
-    flowLauncherPath: '',
     useAutoTiling: false,
     zebarWebsocketUri: 'ws://localhost:6123',
-    mediaMaxWidth: '400',
     themes: [defaultTheme, ...catppuccinThemes],
     currentThemeId: 'default',
-    weatherThresholds: [
-      { id: 'weather-1', min: -10, max: 0, labelColor: '--danger' },
-      { id: 'weather-2', min: 1, max: 15, labelColor: '--text' },
-      { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
-      { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
-    ],
-    pinnedSystrayIcons: [],
-    weatherUnit: 'celsius',
   },
-  widgets: {},
+  widgets: {
+    main: {
+      flowLauncherPath: '',
+      mediaMaxWidth: '400',
+      weatherThresholds: [
+        { id: 'weather-1', min: -10, max: 0, labelColor: '--danger' },
+        { id: 'weather-2', min: 1, max: 15, labelColor: '--text' },
+        { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
+        { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
+      ],
+      pinnedSystrayIcons: [],
+      weatherUnit: 'celsius',
+    },
+  },
 };
