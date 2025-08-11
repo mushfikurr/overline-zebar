@@ -3,16 +3,16 @@ import { Switch } from '@overline-zebar/ui';
 import { useEffect, useMemo, useState } from 'react';
 import * as zebar from 'zebar';
 
-type Props = {};
-
 const providers = zebar.createProviderGroup({
   systray: { type: 'systray' },
 });
 
-function SystrayTab({}: Props) {
+function SystrayTab() {
   const [output, setOutput] = useState(providers.outputMap);
-  const [pinnedSystrayIcons, setPinnedSystrayIcons] =
-    useWidgetSetting('main', 'pinnedSystrayIcons');
+  const [pinnedSystrayIcons, setPinnedSystrayIcons] = useWidgetSetting(
+    'main',
+    'pinnedSystrayIcons'
+  );
 
   useEffect(() => {
     providers.onOutput(() => setOutput(providers.outputMap));
@@ -21,16 +21,16 @@ function SystrayTab({}: Props) {
   const icons = useMemo(() => output.systray?.icons, [output.systray]);
 
   const isIconPinned = (icon: zebar.SystrayIcon) => {
-    return !!pinnedSystrayIcons.find((i) => icon.iconHash === i.iconHash);
+    return !!pinnedSystrayIcons.find((i: string) => icon.iconHash === i);
   };
 
   const handleCheckedChange = (toPin: zebar.SystrayIcon) => {
     if (isIconPinned(toPin)) {
       setPinnedSystrayIcons(
-        pinnedSystrayIcons.filter((i) => i.iconHash !== toPin.iconHash)
+        pinnedSystrayIcons.filter((i: string) => i !== toPin.iconHash)
       );
     } else {
-      setPinnedSystrayIcons([...pinnedSystrayIcons, toPin]);
+      setPinnedSystrayIcons([...pinnedSystrayIcons, toPin.iconHash]);
     }
   };
 

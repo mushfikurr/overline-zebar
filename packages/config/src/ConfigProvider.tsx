@@ -2,6 +2,8 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { RootConfig, Theme, defaultConfig } from './types';
 import { configManager } from './ConfigManager';
 import * as zebar from 'zebar';
+import { RootConfigSchema } from './zod-types';
+import { deepMerge } from './utils/deepMerge';
 
 type Action =
   | {
@@ -93,7 +95,13 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const loaded = configManager.loadConfig();
-    dispatch({ type: 'LOAD_CONFIG', config: loaded });
+    const validation = RootConfigSchema.safeParse(loaded);
+    if (validation.success) {
+      dispatch({ type: 'LOAD_CONFIG', config: validation.data });
+    } else {
+      const mergedConfig = deepMerge(defaultConfig, loaded);
+      dispatch({ type: 'LOAD_CONFIG', config: mergedConfig });
+    }
   }, []);
 
   useEffect(() => {

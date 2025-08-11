@@ -10,9 +10,7 @@ import GeneralTab from './components/GeneralTab';
 import WeatherTab from './components/WeatherTab';
 import SystrayTab from './components/SystrayTab';
 
-type Props = {};
-
-export function MainSettings({}: Props) {
+export function MainSettings() {
   return (
     <PanelLayout title="Main">
       <Tabs defaultValue="general" className="flex-grow">

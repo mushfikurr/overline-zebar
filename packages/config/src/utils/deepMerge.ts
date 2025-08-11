@@ -2,7 +2,7 @@ export function isObject(item: unknown): item is Record<string, unknown> {
   return !!(item && typeof item === 'object' && !Array.isArray(item));
 }
 
-function dedupeById<T extends { id: string }>(arr: T[]): T[] {
+function _dedupeById<T extends { id?: string }>(arr: T[]): T[] {
   const seen = new Map<string, T>();
   for (const item of arr) {
     if (item && typeof item.id === 'string') {

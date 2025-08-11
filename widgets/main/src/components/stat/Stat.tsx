@@ -35,4 +35,3 @@ export default function Stat(props: StatProps) {
       return null;
   }
 }
-

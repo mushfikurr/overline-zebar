@@ -36,7 +36,9 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
   const totalItems = items.length;
   const fullWidth = totalItems * itemWidth + (totalItems - 1) * gap;
   const visibleWidth = visibleCount * itemWidth + (visibleCount - 1) * gap;
-  const startIndex = customStartIndex ?? Math.max(0, Math.floor((totalItems - visibleCount) / 2));
+  const startIndex =
+    customStartIndex ??
+    Math.max(0, Math.floor((totalItems - visibleCount) / 2));
   const initialOffset = -(startIndex * (itemWidth + gap));
 
   const leftEdge = fadeEdgeOffset + '%';

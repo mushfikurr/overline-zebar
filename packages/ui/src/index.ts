@@ -28,3 +28,11 @@ export {
   FieldDescription,
 } from './components/form-field';
 export { Tabs, TabsTrigger, TabsList, TabsContent } from './components/tabs';
+export { ColorPicker } from './components/color-picker';
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverPopup,
+  PopoverPortal,
+  PopoverPositioner,
+} from './components/popover/Popover';

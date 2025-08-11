@@ -1,47 +1,22 @@
-import { SystrayIcon } from 'zebar';
+import { z } from 'zod';
 import { catppuccinThemes, defaultTheme } from './presets';
+import {
+  ThemeSchema,
+  LabelColorSchema,
+  WeatherThresholdSchema,
+  AppSettingsSchema,
+  MainWidgetSettingsSchema,
+  AllWidgetSettingsSchema,
+  RootConfigSchema,
+} from './zod-types';
 
-export interface Theme {
-  id: string;
-  name: string;
-  colors: {
-    [key: string]: string;
-  };
-}
-
-export type LabelColor = '--danger' | '--warning' | '--text';
-
-export type WeatherThreshold = {
-  id: string;
-  min: number;
-  max: number;
-  labelColor: LabelColor;
-};
-
-export interface AppSettings {
-  useAutoTiling: boolean;
-  zebarWebsocketUri: string;
-  themes: Theme[];
-  currentThemeId: string;
-}
-
-export interface MainWidgetSettings {
-  flowLauncherPath: string;
-  mediaMaxWidth: string;
-  weatherThresholds: WeatherThreshold[];
-  weatherUnit: 'celsius' | 'fahrenheit';
-  pinnedSystrayIcons: SystrayIcon[];
-}
-
-export interface AllWidgetSettings {
-  main: MainWidgetSettings;
-}
-
-export interface RootConfig {
-  version: number;
-  app: AppSettings;
-  widgets: Partial<AllWidgetSettings>;
-}
+export type Theme = z.infer<typeof ThemeSchema>;
+export type LabelColor = z.infer<typeof LabelColorSchema>;
+export type WeatherThreshold = z.infer<typeof WeatherThresholdSchema>;
+export type AppSettings = z.infer<typeof AppSettingsSchema>;
+export type MainWidgetSettings = z.infer<typeof MainWidgetSettingsSchema>;
+export type AllWidgetSettings = z.infer<typeof AllWidgetSettingsSchema>;
+export type RootConfig = z.infer<typeof RootConfigSchema>;
 
 export const defaultConfig: RootConfig = {
   version: 1,

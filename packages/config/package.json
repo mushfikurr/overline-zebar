@@ -8,7 +8,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "use-debounce": "^10.0.5",
-    "zebar": "catalog:"
+    "zebar": "catalog:",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@overline-zebar/tailwind": "workspace:*",

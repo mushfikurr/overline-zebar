@@ -9,6 +9,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  ColorPicker,
 } from '@overline-zebar/ui';
 import { useState } from 'react';
 
@@ -60,12 +61,7 @@ function ThemeColorPicker({
   return (
     <div key={name} className="flex items-center justify-between">
       <label>{name}</label>
-      <input
-        type="color"
-        value={value}
-        onChange={(e) => onColorChange(e.target.value)}
-        className="w-16 h-8"
-      />
+      <ColorPicker value={value} onChange={onColorChange} />
     </div>
   );
 }
@@ -142,7 +138,9 @@ export function ThemeEditor() {
   };
 
   const handleReset = () => {
+    if (!activeTheme) return;
     cancelPreview();
+    setActiveTheme(activeTheme.id);
   };
 
   const handleSaveAsNew = (newThemeName: string) => {

@@ -9,10 +9,10 @@ type SystrayProps = {
 };
 
 function arrangeIconsWithPinnedCenter(
-  pinnedIcons: SystrayIcon[],
+  pinnedIcons: string[],
   icons: SystrayIcon[]
 ) {
-  const pinnedHashes = pinnedIcons.map((icon) => icon.iconHash);
+  const pinnedHashes = pinnedIcons;
 
   const pinned = icons
     .filter((icon) => pinnedHashes.includes(icon.iconHash))
@@ -46,9 +46,8 @@ export default function Systray({ systray }: SystrayProps) {
   const [pinnedSystrayIcons] = useWidgetSetting('main', 'pinnedSystrayIcons');
 
   // Determine the actual pinned icons that are present in the systray
-  const pinnedIconHashes = pinnedSystrayIcons.map((icon) => icon.iconHash);
   const presentPinnedIcons = icons.filter((icon) =>
-    pinnedIconHashes.includes(icon.iconHash)
+    pinnedSystrayIcons.includes(icon.iconHash)
   );
   const presentPinnedIconsCount = presentPinnedIcons.length;
 

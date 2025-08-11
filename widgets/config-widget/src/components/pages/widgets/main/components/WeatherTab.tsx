@@ -8,9 +8,7 @@ import {
 import WeatherThresholds from './WeatherThresholds';
 import { useWidgetSetting } from '@overline-zebar/config';
 
-type Props = {};
-
-export default function WeatherTab({}: Props) {
+export default function WeatherTab() {
   const [weatherUnit, setWeatherUnit] = useWidgetSetting('main', 'weatherUnit');
 
   return (

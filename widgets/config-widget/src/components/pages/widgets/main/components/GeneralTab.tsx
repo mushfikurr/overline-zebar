@@ -7,12 +7,15 @@ import {
   Input,
 } from '@overline-zebar/ui';
 
-type Props = {};
-
-function GeneralTab({}: Props) {
-  const [mediaMaxWidth, setMediaMaxWidth] = useWidgetSetting('main', 'mediaMaxWidth');
-  const [flowLauncherPath, setFlowLauncherPath] =
-    useWidgetSetting('main', 'flowLauncherPath');
+function GeneralTab() {
+  const [mediaMaxWidth, setMediaMaxWidth] = useWidgetSetting(
+    'main',
+    'mediaMaxWidth'
+  );
+  const [flowLauncherPath, setFlowLauncherPath] = useWidgetSetting(
+    'main',
+    'flowLauncherPath'
+  );
 
   return (
     <>

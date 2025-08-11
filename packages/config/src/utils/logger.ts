@@ -1,13 +1,30 @@
+export enum LogLevel {
+  None = 0,
+  Error = 1,
+  Warn = 2,
+  Log = 3,
+}
+
 const PREFIX = '[overline-zebar/config]';
 
 export const logger = {
-  log: (message: string, ...args: any[]) => {
-    console.log(`${PREFIX} ${message}`, ...args);
+  level: LogLevel.Log,
+
+  log(...args: unknown[]) {
+    if (this.level >= LogLevel.Log) {
+      console.log(PREFIX, ...args);
+    }
   },
-  warn: (message: string, ...args: any[]) => {
-    console.warn(`${PREFIX} ${message}`, ...args);
+
+  warn(...args: unknown[]) {
+    if (this.level >= LogLevel.Warn) {
+      console.warn(PREFIX, ...args);
+    }
   },
-  error: (message: string, ...args: any[]) => {
-    console.error(`${PREFIX} ${message}`, ...args);
+
+  error(...args: unknown[]) {
+    if (this.level >= LogLevel.Error) {
+      console.error(PREFIX, ...args);
+    }
   },
 };

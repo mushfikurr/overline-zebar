@@ -1,6 +1,6 @@
 {
   "extends": "@overline-zebar/typescript/react-library.json",
-  "include": ["src"],
+  "include": ["src", "types"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "outDir": "dist"

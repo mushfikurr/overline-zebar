@@ -14,9 +14,7 @@ import {
 } from '@overline-zebar/ui';
 import { NumberInput } from '../../../../NumberInput';
 
-type Props = {};
-
-export function WeatherThresholds({}: Props) {
+export function WeatherThresholds() {
   const [thresholds] = useWidgetSetting('main', 'weatherThresholds');
 
   return (
@@ -38,7 +36,10 @@ type ThresholdInputProps = {
 };
 
 function ThresholdInput({ threshold, minOrMax }: ThresholdInputProps) {
-  const [thresholds, setThresholds] = useWidgetSetting('main', 'weatherThresholds');
+  const [thresholds, setThresholds] = useWidgetSetting(
+    'main',
+    'weatherThresholds'
+  );
 
   const handleChange = (newValue: number) => {
     const newThresholds = thresholds.map((t) =>
@@ -62,7 +63,10 @@ type ThresholdColorSelectProps = {
 };
 
 function ThresholdColorSelect({ threshold }: ThresholdColorSelectProps) {
-  const [thresholds, setThresholds] = useWidgetSetting('main', 'weatherThresholds');
+  const [thresholds, setThresholds] = useWidgetSetting(
+    'main',
+    'weatherThresholds'
+  );
 
   const handleColorChange = (newValue: unknown) => {
     const newThresholds = thresholds.map((t) =>

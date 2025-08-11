@@ -13,7 +13,7 @@ export function useAppSetting<K extends keyof RootConfig['app']>(key: K) {
 
 export function useWidgetSetting<
   T extends keyof AllWidgetSettings,
-  K extends keyof AllWidgetSettings[T]
+  K extends keyof AllWidgetSettings[T],
 >(widgetName: T, key: K) {
   const state = useConfigState();
   const dispatch = useConfigDispatch();
