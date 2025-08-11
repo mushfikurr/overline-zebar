@@ -1,4 +1,4 @@
-import { RootConfig, defaultConfig } from './types';
+import { AllWidgetSettings, RootConfig, defaultConfig } from './types';
 import * as zebar from 'zebar';
 import { deepMerge } from './utils/deepMerge';
 import { logger } from './utils/logger';
@@ -9,6 +9,7 @@ let cachedConfig: RootConfig | null = null;
 
 import { generateId } from './utils/generateId';
 import { AllWidgetSettingsSchema } from './zod-types';
+import { z } from 'zod';
 
 function loadConfig(forceReload = false): RootConfig {
   if (cachedConfig && !forceReload) {
@@ -69,7 +70,7 @@ function updateAppSetting<K extends keyof RootConfig['app']>(
 }
 
 function updateWidgetSetting(
-  widgetName: typeof AllWidgetSettingsSchema,
+  widgetName: keyof AllWidgetSettings,
   key: string,
   value: unknown
 ) {
