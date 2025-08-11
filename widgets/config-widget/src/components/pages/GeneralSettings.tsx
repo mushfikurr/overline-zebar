@@ -31,7 +31,8 @@ export function GeneralSettings() {
               />
             </FieldInput>
             <FieldDescription>
-              Toggle to enable or disable automatic window tiling.
+              Will automatically change the tiling direction when the window
+              size becomes less than half.
             </FieldDescription>
           </FormField>
           <FormField>

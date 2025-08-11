@@ -1,7 +1,5 @@
-'use client';
-
 import * as React from 'react';
-import { RgbaStringColorPicker } from 'react-colorful';
+import { HexAlphaColorPicker } from 'react-colorful';
 import {
   Popover,
   PopoverTrigger,
@@ -47,29 +45,6 @@ const ColorPicker = React.forwardRef<HTMLButtonElement, ColorPickerProps>(
       }
     };
 
-    const parseColor = (colorString: string) => {
-      const rgbaMatch = colorString.match(
-        /rgba?\((\d+), (\d+), (\d+)(, ([0-9.]+))?\)/
-      );
-      if (rgbaMatch) {
-        return {
-          r: parseInt(rgbaMatch[1] || '0'),
-          g: parseInt(rgbaMatch[2] || '0'),
-          b: parseInt(rgbaMatch[3] || '0'),
-          a: rgbaMatch[5] ? parseFloat(rgbaMatch[5]) : 1,
-        };
-      }
-      return { r: 0, g: 0, b: 0, a: 1 };
-    };
-
-    const { r, g, b, a } = parseColor(color);
-
-    const handleAlphaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newAlpha = parseFloat(e.target.value);
-      const newColor = `rgba(${r}, ${g}, ${b}, ${newAlpha})`;
-      handleColorChange(newColor);
-    };
-
     return (
       <Popover>
         <PopoverTrigger>
@@ -92,23 +67,12 @@ const ColorPicker = React.forwardRef<HTMLButtonElement, ColorPickerProps>(
         <PopoverPortal>
           <PopoverPositioner>
             <PopoverPopup className="w-64 p-4">
-              <RgbaStringColorPicker
+              <HexAlphaColorPicker
                 color={color}
                 onChange={handleColorChange}
                 className="!w-full"
               />
-              <div className="mt-4">
-                <label className="text-sm text-text-muted">Alpha</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={a}
-                  onChange={handleAlphaChange}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-              </div>
+
               <div className="mt-4 flex items-center gap-2">
                 <Input
                   className="h-9"

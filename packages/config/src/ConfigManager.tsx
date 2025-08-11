@@ -8,6 +8,7 @@ const STORAGE_KEY = 'overline-zebar-config';
 let cachedConfig: RootConfig | null = null;
 
 import { generateId } from './utils/generateId';
+import { AllWidgetSettingsSchema } from './zod-types';
 
 function loadConfig(forceReload = false): RootConfig {
   if (cachedConfig && !forceReload) {
@@ -67,7 +68,11 @@ function updateAppSetting<K extends keyof RootConfig['app']>(
   saveConfig(config);
 }
 
-function updateWidgetSetting(widgetName: string, key: string, value: unknown) {
+function updateWidgetSetting(
+  widgetName: typeof AllWidgetSettingsSchema,
+  key: string,
+  value: unknown
+) {
   const config = loadConfig();
   if (!config.widgets[widgetName]) {
     config.widgets[widgetName] = {};
