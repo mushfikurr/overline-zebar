@@ -13,6 +13,7 @@ import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
 import { Chip } from '@overline-zebar/ui';
 import { useWidgetSetting } from '@overline-zebar/config';
+import { cn } from './utils/cn';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
@@ -40,10 +41,21 @@ function App() {
 
   const [weatherThresholds] = useWidgetSetting('main', 'weatherThresholds');
   const [weatherUnit] = useWidgetSetting('main', 'weatherUnit');
+  const [marginX] = useWidgetSetting('main', 'marginX');
+  const [paddingX] = useWidgetSetting('main', 'paddingX');
 
   return (
-    <div className="relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5">
-      <div className="flex items-center gap-2 h-full z-10 pl-2">
+    <div
+      className={cn(
+        'relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5',
+        marginX > 0 && 'rounded-lg border border-border'
+      )}
+      style={{ margin: `0 ${marginX}px` }}
+    >
+      <div
+        className="flex items-center gap-2 h-full z-10"
+        style={{ paddingLeft: `${paddingX}px` }}
+      >
         <div className="flex items-center gap-1.5 h-full py-0.5">
           <TilingControl glazewm={output.glazewm} />
         </div>
@@ -119,7 +131,8 @@ function App() {
         </div>
 
         <div
-          className="h-full flex items-center justify-center pr-2.5"
+          className="h-full flex items-center justify-center"
+          style={{ paddingRight: `${paddingX + 2}px` }}
           onClick={() =>
             zebar.startWidget(
               'config-widget',

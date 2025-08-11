@@ -8,11 +8,14 @@ import {
   Switch,
 } from '@overline-zebar/ui';
 import PanelHeading from '../PanelHeading';
-import { useAppSetting } from '@overline-zebar/config';
+import { useAppSetting, useWidgetSetting } from '@overline-zebar/config';
+import { NumberInput } from '../NumberInput';
 
 export function GeneralSettings() {
   const [useAutoTiling, setUseAutoTiling] = useAppSetting('useAutoTiling');
   const [websocketUri, setWebsocketUri] = useAppSetting('zebarWebsocketUri');
+  const [marginX, setMarginX] = useWidgetSetting('main', 'marginX');
+  const [paddingX, setPaddingX] = useWidgetSetting('main', 'paddingX');
 
   return (
     <PanelLayout title="General Settings">
@@ -22,6 +25,25 @@ export function GeneralSettings() {
           description={'Settings about all overline-zebar widgets.'}
         />
         <div className="space-y-8">
+          <FormField>
+            <FieldTitle>Horizontal Margin</FieldTitle>
+            <FieldInput>
+              <NumberInput value={marginX} onChange={setMarginX} min={0} />
+            </FieldInput>
+            <FieldDescription>
+              Sets the outside space (left and right). Good for a "floating"
+              appearance.
+            </FieldDescription>
+          </FormField>
+          <FormField>
+            <FieldTitle>Horizontal Padding</FieldTitle>
+            <FieldInput>
+              <NumberInput value={paddingX} onChange={setPaddingX} min={0} />
+            </FieldInput>
+            <FieldDescription>
+              Sets the inner space (left and right).
+            </FieldDescription>
+          </FormField>
           <FormField switch>
             <FieldTitle>Enable Auto Tiling</FieldTitle>
             <FieldInput>

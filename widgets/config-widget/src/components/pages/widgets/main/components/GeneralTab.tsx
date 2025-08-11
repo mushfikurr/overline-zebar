@@ -1,3 +1,4 @@
+import { NumberInput } from '@/components/NumberInput';
 import { useWidgetSetting } from '@overline-zebar/config';
 import {
   FieldDescription,
@@ -16,6 +17,7 @@ function GeneralTab() {
     'main',
     'flowLauncherPath'
   );
+  const [marginX, setMarginX] = useWidgetSetting('main', 'marginX');
 
   return (
     <>
@@ -32,6 +34,16 @@ function GeneralTab() {
           Specify the full path to your Launcher executable (the search button,
           leftmost of the topbar widget).
         </FieldDescription>
+      </FormField>
+      <FormField>
+        <FieldTitle>Vertical Margin (px)</FieldTitle>
+        <FieldInput>
+          <NumberInput
+            placeholder="16"
+            value={marginX}
+            onChange={(n) => setMarginX(n)}
+          />
+        </FieldInput>
       </FormField>
       <FormField>
         <FieldTitle>Media Max Width (px)</FieldTitle>

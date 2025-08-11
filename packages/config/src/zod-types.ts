@@ -34,6 +34,8 @@ export const MainWidgetSettingsSchema = z.object({
   weatherThresholds: z.array(WeatherThresholdSchema),
   weatherUnit: z.union([z.literal('celsius'), z.literal('fahrenheit')]),
   pinnedSystrayIcons: z.array(SystrayIconSchema),
+  marginX: z.number(),
+  paddingX: z.number(),
 });
 
 export const AllWidgetSettingsSchema = z.object({

@@ -38,6 +38,8 @@ export const defaultConfig: RootConfig = {
       ],
       pinnedSystrayIcons: [],
       weatherUnit: 'celsius',
+      marginX: 0,
+      paddingX: 4,
     },
   },
 };
