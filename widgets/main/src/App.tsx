@@ -42,7 +42,8 @@ function App() {
   const [weatherThresholds] = useWidgetSetting('main', 'weatherThresholds');
   const [weatherUnit] = useWidgetSetting('main', 'weatherUnit');
   const [marginX] = useWidgetSetting('main', 'marginX');
-  const [paddingX] = useWidgetSetting('main', 'paddingX');
+  const [paddingLeft] = useWidgetSetting('main', 'paddingLeft');
+  const [paddingRight] = useWidgetSetting('main', 'paddingRight');
 
   return (
     <div
@@ -54,7 +55,7 @@ function App() {
     >
       <div
         className="flex items-center gap-2 h-full z-10"
-        style={{ paddingLeft: `${paddingX}px` }}
+        style={{ paddingLeft: `${paddingLeft}px` }}
       >
         <div className="flex items-center gap-1.5 h-full py-0.5">
           <TilingControl glazewm={output.glazewm} />
@@ -132,7 +133,7 @@ function App() {
 
         <div
           className="h-full flex items-center justify-center"
-          style={{ paddingRight: `${paddingX + 2}px` }}
+          style={{ paddingRight: `${paddingRight}px` }}
           onClick={() =>
             zebar.startWidget(
               'config-widget',

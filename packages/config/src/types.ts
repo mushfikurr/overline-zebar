@@ -25,6 +25,7 @@ export const defaultConfig: RootConfig = {
     zebarWebsocketUri: 'ws://localhost:6123',
     themes: [defaultTheme, ...catppuccinThemes],
     currentThemeId: 'default',
+    radius: '0.5rem',
   },
   widgets: {
     main: {
@@ -38,8 +39,10 @@ export const defaultConfig: RootConfig = {
       ],
       pinnedSystrayIcons: [],
       weatherUnit: 'celsius',
+      dynamicWorkspaceIndicator: false,
       marginX: 0,
-      paddingX: 4,
+      paddingLeft: 4,
+      paddingRight: 4,
     },
   },
 };

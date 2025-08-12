@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NumberInput } from '@/components/NumberInput';
 import { useWidgetSetting } from '@overline-zebar/config';
 import {
@@ -6,6 +7,8 @@ import {
   FieldTitle,
   FormField,
   Input,
+  Switch,
+  Button, // Added Button import
 } from '@overline-zebar/ui';
 
 function GeneralTab() {
@@ -18,6 +21,21 @@ function GeneralTab() {
     'flowLauncherPath'
   );
   const [marginX, setMarginX] = useWidgetSetting('main', 'marginX');
+  const [paddingLeft, setPaddingLeft] = useWidgetSetting('main', 'paddingLeft');
+  const [paddingRight, setPaddingRight] = useWidgetSetting(
+    'main',
+    'paddingRight'
+  );
+  const [isPaddingLinked, setIsPaddingLinked] = useState(
+    paddingLeft === paddingRight
+  );
+  const [dynamicWorkspaceIndicator, setDynamicWorkspaceIndicator] =
+    useWidgetSetting('main', 'dynamicWorkspaceIndicator');
+
+  const handleLinkedPaddingChange = (value: number) => {
+    setPaddingLeft(value);
+    setPaddingRight(value);
+  };
 
   return (
     <>
@@ -35,15 +53,61 @@ function GeneralTab() {
           leftmost of the topbar widget).
         </FieldDescription>
       </FormField>
-      <FormField>
-        <FieldTitle>Vertical Margin (px)</FieldTitle>
+      <FormField switch>
+        <FieldTitle>Allow Dynamic Workspace Indicators</FieldTitle>
         <FieldInput>
-          <NumberInput
-            placeholder="16"
-            value={marginX}
-            onChange={(n) => setMarginX(n)}
+          <Switch
+            checked={dynamicWorkspaceIndicator}
+            onCheckedChange={setDynamicWorkspaceIndicator}
           />
         </FieldInput>
+        <FieldDescription>
+          Allow workspace indicators to be named after the first opened window.
+        </FieldDescription>
+      </FormField>
+      <FormField>
+        <FieldTitle>Horizontal Margin</FieldTitle>
+        <FieldInput>
+          <NumberInput value={marginX} onChange={setMarginX} min={0} />
+        </FieldInput>
+        <FieldDescription>
+          Sets the outside space (left and right). Good for a "floating"
+          appearance.
+        </FieldDescription>
+      </FormField>
+      <FormField>
+        <FieldTitle>Horizontal Padding</FieldTitle>
+        <FieldInput className="flex items-center gap-3">
+          {isPaddingLinked ? (
+            <NumberInput
+              value={paddingLeft}
+              onChange={handleLinkedPaddingChange}
+              min={0}
+              className="flex-grow"
+            />
+          ) : (
+            <>
+              <NumberInput
+                value={paddingLeft}
+                onChange={setPaddingLeft}
+                min={0}
+                className="flex-grow"
+              />
+              <NumberInput
+                value={paddingRight}
+                onChange={setPaddingRight}
+                min={0}
+                className="flex-grow"
+              />
+            </>
+          )}
+          <Button onClick={() => setIsPaddingLinked(!isPaddingLinked)}>
+            {isPaddingLinked ? 'Unlink' : 'Link'}
+          </Button>
+        </FieldInput>
+        <FieldDescription>
+          Sets the inner space (left and right).
+        </FieldDescription>
       </FormField>
       <FormField>
         <FieldTitle>Media Max Width (px)</FieldTitle>

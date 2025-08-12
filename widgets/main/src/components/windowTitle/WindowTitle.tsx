@@ -71,28 +71,32 @@ export enum ContainerType {
 const SPLIT_WINDOW_PROCESS_EXCLUSIONS = ['Spotify'];
 const SPLIT_WINDOW_TITLE_REGEX = /[-—]/;
 
+export const formatWindowTitle = (title: string, process: string) => {
+  const isExcluded =
+    typeof title === 'string' &&
+    SPLIT_WINDOW_PROCESS_EXCLUSIONS.some((exclusion) =>
+      process.startsWith(exclusion)
+    );
+
+  const splitWindowTitle =
+    title?.split(SPLIT_WINDOW_TITLE_REGEX) || [];
+
+  const lastSplitWindowTitle = isExcluded
+    ? process
+    : (splitWindowTitle.at(-1) ?? title);
+
+  return lastSplitWindowTitle;
+};
+
 const getWindowTitle = (glazewm: GlazeWmOutput): string | null => {
   const focusedWorkspace = glazewm.focusedWorkspace;
   const focusedContainer = glazewm.focusedContainer;
 
   if (focusedContainer.type === ContainerType.WINDOW) {
-    const focusedContainerTitle = focusedContainer.title;
-    const focusedContainerProcess = focusedContainer.processName;
-
-    const isExcluded =
-      typeof focusedContainerProcess === 'string' &&
-      SPLIT_WINDOW_PROCESS_EXCLUSIONS.some((exclusion) =>
-        focusedContainerProcess.startsWith(exclusion)
-      );
-
-    const splitWindowTitle =
-      focusedContainerTitle?.split(SPLIT_WINDOW_TITLE_REGEX) || [];
-
-    const lastSplitWindowTitle = isExcluded
-      ? focusedContainerProcess
-      : (splitWindowTitle.at(-1) ?? focusedContainerTitle);
-
-    return lastSplitWindowTitle;
+    return formatWindowTitle(
+      focusedContainer.title,
+      focusedContainer.processName
+    );
   }
 
   // If the focused container is not a window, return workspace displayName. If displayName is not available, fallback to workspace name.

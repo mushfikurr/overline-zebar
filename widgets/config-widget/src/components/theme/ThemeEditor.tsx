@@ -180,14 +180,16 @@ export function ThemeEditor() {
             </Button>
           )}
 
-          {Object.entries(displayedTheme.colors).map(([name, value]) => (
-            <ThemeColorPicker
-              key={name}
-              name={name}
-              value={value}
-              onColorChange={(newColor) => handleColorChange(name, newColor)}
-            />
-          ))}
+          <div className="grid grid-cols-2 w-full gap-y-3 gap-x-6">
+            {Object.entries(displayedTheme.colors).map(([name, value]) => (
+              <ThemeColorPicker
+                key={name}
+                name={name}
+                value={value}
+                onColorChange={(newColor) => handleColorChange(name, newColor)}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

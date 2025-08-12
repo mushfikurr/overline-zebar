@@ -19,12 +19,12 @@ body,
 
 *::-webkit-scrollbar-track {
   background: var(--sb-track-color);
-  border-radius: 3px;
+  border-radius: calc(var(--radius) * 0.375);
 }
 
 *::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
-  border-radius: 3px;
+  border-radius: calc(var(--radius) * 0.375);
 }
 
 @supports not selector(::-webkit-scrollbar) {

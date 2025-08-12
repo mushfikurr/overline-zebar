@@ -1,164 +1,170 @@
 # overline-zebar
 
-A fully featured custom widget for [Zebar](https://github.com/glzr-io/zebar).
+A fully featured, highly customizable widget pack for [Zebar](https://github.com/glzr-io/zebar).
 
 ![Screenshot of overline-zebar in use with GlazeWM, Zen Browser underneath](https://github.com/user-attachments/assets/333feb9c-225d-4be9-84db-cbdc7010e698)
 
+To install: [Installation](#installation)
+
+## About The Project
+
+This repository is a monorepo containing multiple widgets and packages that work together to provide a seamless and feature-rich experience for Zebar.
+
+### Project Structure
+
+The project is organized into two main directories:
+
+- `packages/`: Contains shared code and components used across different widgets.
+  - `config`: Manages configuration for all widgets.
+  - `ui`: A component library with shared React components.
+  - `tailwind`: Shared Tailwind CSS configuration.
+  - `typescript`: Shared TypeScript configuration.
+- `widgets/`: Contains the individual widgets that can be used with Zebar.
+  - `main`: The main topbar widget.
+  - `system-stats`: A widget to display system statistics.
+  - `config-widget`: A graphical user interface to configure all widgets.
+
 ## Features
 
-- **Media Controls**
-  - Click to **play/pause**
-  - Shift + Click to **go to the previous track**
-  - Ctrl + Click to **go to the next track**
-- **Workspace Display**
-  - Click to **focus on a workspace**
-  - Scroll to **switch between workspaces**
-- **System Tray**
-  - Interact with left and right click
-  - Expand the tray with Shift + Click
-- **Search and Tiling Direction Controls**
-- **Volume Control**
-  - Click to **open volume slider**
-  - Scroll to **adjust volume**
-  - Shift + Click to **toggle mute**
-- **Current Window Display**
-  - Click to **reveal window controls**
-  - Hover over controls to see their function
+### Main Widget
 
----
+The main widget is a topbar that provides a variety of features:
+
+- **Media Controls**: Play/pause, skip tracks, and cycle through media sessions.
+- **Workspace Display**: View and switch between workspaces, with an option for dynamic workspace names.
+- **System Tray**: Interact with system tray icons, with the ability to pin icons.
+- **Search and Tiling Direction Controls**: Quickly access your launcher and toggle tiling direction.
+- **Volume Control**: Adjust volume, mute/unmute, and open a volume slider.
+- **Current Window Display**: View the current window title and access window controls.
+- **System Stats**: A summary of CPU, RAM, and weather information, which opens the `system-stats` widget on click.
+- **Date/Time**: Displays the current date and time, and opens the `config-widget` on click.
+
+### System-Stats Widget
+
+This widget provides a detailed view of your system's statistics, including:
+
+- **Host Information**: OS, hostname, uptime, and battery information.
+- **Storage**: A list of all connected drives with their usage.
+- **Performance**: CPU and memory usage details.
+- **Network**: Detailed information about network interfaces, traffic, and addresses.
+
+### Config Widget
+
+A comprehensive GUI for configuring all aspects of the widgets, from appearance to functionality. See the [Configuration](#configuration) section for more details.
 
 ## Installation
 
-**For releases older than Zebar v3, refer to [this branch](https://github.com/mushfikurr/overline-zebar/tree/old/zebar-v2).**
+### Option 1: The Zebar Marketplace (Recommended)
 
-Note: If you have local branches from the older branch, the layout has changed:
-
-```
-main -> old/zebar-v2
-migrate/zebar-v3 -> main
-```
-
-### Option 1: The Zebar Marketplace
-
-1. Right-click the Zebar tray icon, and click **Browse Widgets**
-2. Search for **"overline-zebar"**
-3. Click **Install**
-4. Continue to the [Configuration](#configuration) section
+1.  Right-click the Zebar tray icon, and click **Browse Widgets**.
+2.  Search for **"overline-zebar"**.
+3.  Click **Install**.
+4.  Continue to the [Configuration](#configuration) section.
 
 ### Option 2: Build from Source
 
-Choose this option if you want to:
-
-- Customize the widget's functionality beyond what is possible with the pre-built version
-- Modify the source code to add new features or change existing ones
-- Contribute to the development of overline-zebar
-- Use the latest development version with unreleased features
+Choose this option if you want to customize the widget's functionality, modify the source code, or contribute to the development.
 
 **Prerequisites:**
 
 - [Node.js](https://nodejs.org/) (v16 or newer)
+- [pnpm](https://pnpm.io/)
 - [Git](https://git-scm.com/)
 
 **Steps:**
 
-1. Clone the repository to your local machine inside the `.glzr` directory (e.g., `C:/Users/<USER>/.glzr/zebar` on Windows):
+1.  Clone the repository to your local machine inside the `.glzr` directory (e.g., `C:/Users/<USER>/.glzr/zebar` on Windows):
 
-   ```sh
-   git clone https://github.com/mushfikurr/overline-zebar.git
-   cd overline-zebar
-   ```
+    ```sh
+    git clone https://github.com/mushfikurr/overline-zebar.git
+    cd overline-zebar
+    ```
 
-2. Install all required dependencies:
+2.  Install all required dependencies using pnpm:
 
-   ```sh
-   npm install
-   ```
+    ```sh
+    pnpm install
+    ```
 
-   This will install React, Vite, TailwindCSS, and all other dependencies needed for development.
+3.  Build the project for production:
 
-3. See the [Configuration](#configuration) section below for details on how to customize the widget by editing the `public/config.json` file.
+    ```sh
+    pnpm -r build
+    ```
 
-4. Build the project for production:
+    This creates a `dist` folder in each widget's directory, containing the compiled widget ready for use.
 
-   ```sh
-   npm run build
-   ```
-
-   This creates a `dist` folder containing the compiled widget ready for use.
-
----
+4.  See the [Configuration](#configuration) section below for details on how to customize the widgets.
 
 ## Configuration
 
-You can customize various aspects of overline-zebar by editing the `config.json` file. This allows you to change settings without modifying the source code.
+`overline-zebar` is highly configurable through the **config-widget**. To open it, simply click on the date and time in the main topbar widget.
 
-### General Configuration
+### (!) For Zebar specific settings
 
-For general Zebar widget configuration:
+To configure zebar specific settings when downloading from marketplace, you must copy the downloaded widget from:
 
-- Right-click the Zebar tray icon
-- Go to **Widget Packs > overline-zebar > Pack Settings**
+`%appdata%/zebar/downloads` -> `C:/Users/<username>/.glzr/zebar/`
 
-**Recommended:** Adapt the width of Zebar to your gap and screen resolution.
+This will save the widget to a custom pack. You will now be able to configure the widget through the Zebar GUI, for Zebar specific settings, such as offsetY.
 
-### overline-zebar Configuration
+The config-widget itself provides a user-friendly interface to manage all widget settings. Here's a breakdown of the available options:
 
-- **For pre-built version users**, navigate to:
+### General
 
-  ```
-  C:\Users\<username>\.glzr\zebar\overline-zebar\dist\public\
-  ```
+- **Enable Auto Tiling**: Automatically changes the tiling direction when a window reaches half its size.
+- **Zebar WebSocket URI**: The address where Zebar listens for events from GlazeWM.
 
-- **For developers building from source**, navigate to:
+### Appearance
 
-  ```
-  public/
-  ```
+- **Border Radius**: Adjust the roundness of elements.
+- **Theme**: Choose from a list of preset themes (including Catppuccin variants) or create your own. The theme editor allows you to:
+  - Select, add, and delete themes.
+  - Customize every color in the theme with a color picker and eye-dropper.
+  - Preview changes in real-time.
 
-#### Configuration Values
+### Config Management
 
-```json
-"FLOW_LAUNCHER_PATH": "C:\\Users\\msy\\AppData\\Local\\FlowLauncher\\Flow.Launcher.exe",
-"USE_AUTOTILING": true,
-"AUTOTILING_WEBSOCKET_URI": "ws://localhost:6123",
-"MEDIA_MAX_WIDTH": "300"
+- **Export Configuration**: Download your current settings as a JSON file.
+- **Import Configuration**: Load settings from a JSON file.
+- **Reset Configuration**: Restore all settings to their default values.
+
+### Widget Specific > Main (Topbar)
+
+#### General
+
+- **Launcher Path**: The file path to your preferred application launcher (e.g., Flow Launcher, PowerToys Run).
+- **Allow Dynamic Workspace Indicators**: If enabled, workspace indicators will be named after the first opened window in that workspace.
+- **Horizontal Margin**: Adds space to the left and right of the topbar for a "floating" look.
+- **Horizontal Padding**: Adjusts the inner spacing on the left and right of the topbar.
+- **Media Max Width**: Sets the maximum width for the media display.
+
+#### Weather
+
+- **Toggle Fahrenheit**: Switch between Celsius and Fahrenheit.
+- **Thresholds**: Define temperature ranges and their corresponding colors (Danger, Warning, Text).
+
+#### System Tray
+
+- **Pinned Icons**: Select which icons should remain visible when the system tray is collapsed. You can toggle the collapsed state by Shift-clicking the system tray icons.
+
+## Development
+
+To see live changes during development, follow the steps to build from source:
+
+```sh
+pnpm run build
 ```
 
-- `FLOW_LAUNCHER_PATH` - `string`: Path to the `.exe` for the "search button" to open. This can be any launcher (e.g., Powertoys Run).
-- `USE_AUTOTILING` - `boolean`: Defaults to `true`. Changes tiling direction when a window reaches half its size.
-- `AUTOTILING_WEBSOCKET_URI` - `string`: Defaults to `ws://localhost:6123`. Where Zebar listens for events from GlazeWM.
-- `MEDIA_MAX_WIDTH` - `string`: Defaults to `400`. Max width of the Media widget (now playing display) in pixels. Recommended to be greater than 100.
+This command will build all monorepo packages and widgets. To work on a specific widget, run:
 
-### Fonts (Development Only)
+```sh
+pnpm run build:watch --filter <widget-name>
+```
 
-Fonts are defined in [`src/styles/fonts.css`](src/styles/fonts.css).
-
-- Use system fonts directly
-- Or download fonts to the `public/` folder and reference them in `fonts.css`
-- By default it targets monospaced fonts, but this can be changed in `App.tsx`
-- [Font reference](https://developer.mozilla.org/en-US/docs/Web/CSS/font)
-
-### Colors (Development Only)
-
-- Edit [`tailwind.config.js`](tailwind.config.js) and [`src/styles/theme.css`](src/styles/theme.css) to customize colors
-
----
-
-## See Live Changes to Zebar (Development Only)
-
-Follow the steps to build the project from source.
-
-1. Start the build process with hot reloading:
-
-   ```sh
-   npm run build:watch
-   ```
-
-2. Edit code — Zebar will automatically restart on save (if the widget is selected in Zebar).
-3. Enable auto-save in your text editor for faster iteration.
-
----
+This will start the development server for all widgets with hot reloading. Zebar will automatically restart on save if the widget is selected.
 
 ## Contributions
 
 Pull requests are welcome. If you find any issues or have feature suggestions, feel free to open an issue on GitHub.
+

@@ -105,6 +105,10 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
+    document.documentElement.style.setProperty('--radius', state.app.radius);
+  }, [state.app.radius]);
+
+  useEffect(() => {
     const theme = state.app.themes.find(
       (t) => t.id === state.app.currentThemeId
     );

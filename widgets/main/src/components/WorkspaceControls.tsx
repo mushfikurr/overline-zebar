@@ -1,8 +1,10 @@
+import { useAppSetting, useWidgetSetting } from '@overline-zebar/config';
 import { Chip } from '@overline-zebar/ui';
 import { motion } from 'framer-motion';
 import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
 import { cn } from '../utils/cn';
+import { ContainerType, formatWindowTitle } from './windowTitle/WindowTitle';
 
 type WorkspaceControlsProps = {
   glazewm: GlazeWmOutput | null;
@@ -10,6 +12,10 @@ type WorkspaceControlsProps = {
 export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
   if (!glazewm) return;
   const workspaces = glazewm.currentWorkspaces;
+  const [dynamicWorkspaceIndicator] = useWidgetSetting(
+    'main',
+    'dynamicWorkspaceIndicator'
+  );
 
   const [ref, { width }] = useMeasure();
   const springConfig = {
@@ -17,6 +23,33 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
     stiffness: 120,
     damping: 20,
     mass: 0.8,
+  };
+
+  const getDynamicWorkspaceName = (currentWorkspaceId: string) => {
+    if (dynamicWorkspaceIndicator) {
+      const workspaces = glazewm.allWorkspaces;
+      const findWorkspace = workspaces.find((f) => f.id === currentWorkspaceId);
+
+      if (!findWorkspace) {
+        return undefined;
+      }
+
+      const windows = findWorkspace.children.filter(
+        (w) => w.type === ContainerType.WINDOW
+      );
+
+      if (!windows || !windows.length) {
+        return undefined;
+      }
+
+      const lastWindow = windows[0]; // fixed index
+      const lastWindowTitle = lastWindow?.title;
+
+      if (lastWindowTitle && lastWindow?.processName) {
+        return formatWindowTitle(lastWindowTitle, lastWindow.processName);
+      }
+    }
+    return undefined;
   };
 
   const handleWheel = (e: React.WheelEvent<HTMLButtonElement>) => {
@@ -33,6 +66,8 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
     }
   };
 
+  const [radius] = useAppSetting('radius');
+
   return (
     <motion.div
       key="workspace-control-panel"
@@ -45,7 +80,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center select-none overflow-hidden p-1 h-full'
+          'flex items-center select-none overflow-hidden p-0 pl-1 pr-[0.313rem] py-1 h-full'
         )}
         as="div"
         ref={ref}
@@ -73,15 +108,21 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 <motion.span
                   layoutId="bubble"
                   className={cn(
-                    'bg-primary inset-0 rounded-[0.75rem] border-primary-border drop-shadow-sm absolute -z-10',
+                    'bg-primary inset-0 border-primary-border drop-shadow-sm absolute -z-10',
                     isFocused && 'hover:bg-primary'
                   )}
+                  style={{
+                    borderRadius:
+                      parseFloat(radius) > 0 ? `calc(${radius} + 0.25rem)` : 0,
+                  }}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
 
-              <p className={cn('z-10')}>
-                {workspace.displayName ?? workspace.name}
+              <p className={cn('z-10 max-w-40 truncate')}>
+                {getDynamicWorkspaceName(workspace.id) ??
+                  workspace.displayName ??
+                  workspace.name}
               </p>
             </button>
           );

@@ -30,6 +30,15 @@ const config: Omit<Config, 'content'> = {
       fontFamily: {
         mono: ['Geist Mono', 'monospace'],
       },
+      borderRadius: {
+        sm: 'calc(var(--radius) * 0.75)',
+        md: 'var(--radius)',
+        lg: 'calc(var(--radius) * 1.25)',
+        xl: 'calc(var(--radius) * 1.5)',
+        '2xl': 'calc(var(--radius) * 2)',
+        '3xl': 'calc(var(--radius) * 2.5)',
+        DEFAULT: 'var(--radius)',
+      },
     },
   },
   plugins: [],

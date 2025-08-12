@@ -26,6 +26,7 @@ export const AppSettingsSchema = z.object({
   zebarWebsocketUri: z.string(),
   themes: z.array(ThemeSchema),
   currentThemeId: z.string(),
+  radius: z.string(), // Added radius setting
 });
 
 export const MainWidgetSettingsSchema = z.object({
@@ -35,7 +36,9 @@ export const MainWidgetSettingsSchema = z.object({
   weatherUnit: z.union([z.literal('celsius'), z.literal('fahrenheit')]),
   pinnedSystrayIcons: z.array(SystrayIconSchema),
   marginX: z.number(),
-  paddingX: z.number(),
+  paddingLeft: z.number(),
+  paddingRight: z.number(),
+  dynamicWorkspaceIndicator: z.boolean(),
 });
 
 export const AllWidgetSettingsSchema = z.object({
