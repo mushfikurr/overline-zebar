@@ -1,8 +1,11 @@
+![Screenshot of overline-zebar in use with GlazeWM, previewing multiple themes and rounded settings](https://github.com/user-attachments/assets/08b4be9a-e405-4217-814b-aac7acd6e0f5)
+
 # overline-zebar
 
-A fully featured, highly customizable widget pack for [Zebar](https://github.com/glzr-io/zebar).
+A fully featured, highly customizable widget pack for [Zebar](https://github.com/glzr-io/zebar). Works in tandem with GlazeWM, perfect for making Windows look great 🌠
 
-![Screenshot of overline-zebar in use with GlazeWM, Zen Browser underneath](https://github.com/user-attachments/assets/333feb9c-225d-4be9-84db-cbdc7010e698)
+<img width="2124" height="437" alt="System stats widget, hovering from the main widget" src="https://github.com/user-attachments/assets/2846a6ec-8268-4fc0-bed4-1ff6bdb4df55" />
+<img width="1145" height="785" alt="Config widget window, centered on the screen" src="https://github.com/user-attachments/assets/e7536236-3e15-4066-b996-b90eb4f183d7" />
 
 To install: [Installation](#installation)
 
@@ -106,9 +109,11 @@ To configure zebar specific settings when downloading from marketplace, you must
 
 `%appdata%/zebar/downloads` -> `C:/Users/<username>/.glzr/zebar/`
 
-This will save the widget to a custom pack. You will now be able to configure the widget through the Zebar GUI, for Zebar specific settings, such as offsetY.
+This will save the widget to a custom pack. You will now be able to configure the widget through the `zpack.json` file.
 
-The config-widget itself provides a user-friendly interface to manage all widget settings. Here's a breakdown of the available options:
+The config-widget itself provides a user-friendly interface to manage internal widget settings. Keep in mind it is not 1:1 with the Zebar settings. 
+
+Here's a breakdown of the available options:
 
 ### General
 
