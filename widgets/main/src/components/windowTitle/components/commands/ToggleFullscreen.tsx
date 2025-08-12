@@ -1,6 +1,7 @@
 import { Maximize, Minimize } from 'lucide-react';
 import { IconButton } from '../IconButton';
 import { CommandProps } from './types/command';
+import { isWindow } from './isWindow';
 
 // TODO: Make issue to GlazeWM to export window types.
 enum WindowType {
@@ -10,20 +11,22 @@ enum WindowType {
   FULLSCREEN = 'fullscreen',
 }
 
-export const Floating = ({ glazewm }: CommandProps) => {
+export const ToggleFullscreen = ({ glazewm }: CommandProps) => {
   const tooltipText = 'Toggle fullscreen state of window';
-  const isFloating =
-    glazewm?.focusedContainer.state.type === WindowType.FLOATING;
-  const command = isFloating ? 'set-tiling' : 'set-floating';
-  console.log(glazewm?.focusedContainer.state.type);
+  if (!glazewm) return null;
+  if (!isWindow(glazewm.focusedContainer)) return null;
+
+  const isFullscreen =
+    glazewm.focusedContainer.state.type === WindowType.FULLSCREEN;
+  const command = 'toggle-fullscreen';
 
   return (
     <IconButton
-      animateKey={isFloating ? 'maximise' : 'minimise'}
+      animateKey={isFullscreen ? 'maximise' : 'minimise'}
       key={command}
       title={tooltipText}
       onClick={() => glazewm?.runCommand(command)}
-      icon={isFloating ? Minimize : Maximize}
+      icon={isFullscreen ? Minimize : Maximize}
     />
   );
 };

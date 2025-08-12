@@ -80,7 +80,8 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center select-none overflow-hidden p-0 pl-1 pr-[0.313rem] py-1 h-full'
+          'flex items-center select-none overflow-hidden p-0 pl-1 pr-1 py-1 h-full',
+          workspaces.length > 1 && 'pr-[0.313rem]'
         )}
         as="div"
         ref={ref}
@@ -95,7 +96,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 glazewm.runCommand(`focus --workspace ${workspace.name}`)
               }
               className={cn(
-                'relative px-2.5 transition duration-500 ease-in-out text-text-muted h-full',
+                'relative px-2 transition duration-500 ease-in-out text-text-muted h-full',
                 isFocused ? '' : 'hover:text-text',
                 isFocused &&
                   'text-text duration-700 transition-all ease-in-out font-medium'

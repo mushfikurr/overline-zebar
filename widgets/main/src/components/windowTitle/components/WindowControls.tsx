@@ -2,8 +2,9 @@ import React from 'react';
 import { GlazeWmOutput } from 'zebar';
 import { ConditionalPanel } from '../../common/ConditionalPanel';
 import { CopyProcessName } from './commands/CopyProcessName';
-import { ToggleFloating } from './commands/CycleFocus';
+import { ToggleFloating } from './commands/ToggleFloating';
 import { Chip } from '@overline-zebar/ui';
+import { ToggleFullscreen } from './commands/ToggleFullscreen';
 
 interface WindowControlsProps {
   show: boolean;
@@ -19,7 +20,7 @@ export function WindowControls({ glazewm, ...props }: WindowControlsProps) {
     <ConditionalPanel sessionActive={props.show}>
       <Chip
         as="button"
-        className="mx-2.5 h-fit py-1"
+        className="mx-2.5 h-fit py-2"
         ref={ref}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
@@ -39,7 +40,7 @@ export function WindowControls({ glazewm, ...props }: WindowControlsProps) {
  * I am currently avoiding tracking any state locally and then replicating it to GlazeWM, as it could cause desync issues.
  */
 const ControlList = ({ glazewm }: { glazewm: GlazeWmOutput | null }) => {
-  const controls = [CopyProcessName, ToggleFloating];
+  const controls = [CopyProcessName, ToggleFloating, ToggleFullscreen];
 
   return (
     <div className="flex items-center gap-1.5">
