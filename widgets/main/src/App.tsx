@@ -53,6 +53,7 @@ function App() {
       )}
       style={{ margin: `0 ${marginX}px` }}
     >
+      {/* Left */}
       <div
         className="flex items-center gap-2 h-full z-10"
         style={{ paddingLeft: `${paddingLeft}px` }}
@@ -74,6 +75,7 @@ function App() {
         </Center>
       </div>
 
+      {/* Right */}
       <div className="flex gap-2 items-center h-full z-10">
         <div className="flex items-center h-full">
           {/* TODO: Extract to component */}

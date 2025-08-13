@@ -75,7 +75,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       animate={{ width: width || 'auto', opacity: 1 }}
       exit={{ width: 0, opacity: 0 }}
       transition={springConfig}
-      className="relative overflow-hidden h-full"
+      className="relative overflow-hidden h-full rounded-2xl"
     >
       <Chip
         className={cn(

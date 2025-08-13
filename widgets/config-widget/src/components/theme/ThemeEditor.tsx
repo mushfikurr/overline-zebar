@@ -1,7 +1,7 @@
 import { useThemePreview, useThemes } from '@overline-zebar/config';
 import {
   Button,
-  Input,
+  ColorPicker,
   Select,
   SelectContent,
   SelectGroup,
@@ -9,43 +9,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  ColorPicker,
 } from '@overline-zebar/ui';
-import { useState } from 'react';
-
-function SaveAsNewInput({
-  onSaveAsNew,
-}: {
-  onSaveAsNew: (newThemeName: string) => void;
-}) {
-  const [newThemeName, setNewThemeName] = useState('');
-
-  const handleSaveAsNew = () => {
-    if (!newThemeName) return;
-    onSaveAsNew(newThemeName);
-    setNewThemeName('');
-  };
-
-  return (
-    <div className="flex items-center gap-2 h-10">
-      <Input
-        type="text"
-        placeholder="New theme name"
-        value={newThemeName}
-        onChange={(e) => setNewThemeName(e.target.value)}
-        inputContainerClassName="h-full"
-        className="h-full"
-      />
-      <Button
-        className="h-full"
-        onClick={handleSaveAsNew}
-        disabled={!newThemeName}
-      >
-        Save As New
-      </Button>
-    </div>
-  );
-}
+import SaveAsNewDialog from './SaveAsNewDialog';
 
 interface ThemeColorPickerProps {
   name: string;
@@ -84,7 +49,11 @@ function ThemeSelector({
   return (
     <Select onValueChange={onThemeChange} value={currentThemeId}>
       <SelectTrigger>
-        <SelectValue>{(value) => (isModified ? 'Custom' : value)}</SelectValue>
+        <SelectValue>
+          {(value) =>
+            isModified ? 'Custom' : themes.find((f) => f.id == value)?.name
+          }
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {savedThemes.length > 0 && (
@@ -111,7 +80,8 @@ function ThemeSelector({
 }
 
 export function ThemeEditor() {
-  const { activeTheme, isDefault, setActiveTheme, deleteTheme } = useThemes();
+  const { activeTheme, isDefault, setActiveTheme, deleteTheme, updateTheme } =
+    useThemes();
   const {
     previewTheme,
     isPreviewing,
@@ -147,6 +117,13 @@ export function ThemeEditor() {
     savePreview(newThemeName);
   };
 
+  const handleSaveEdit = () => {
+    if (!previewTheme) return;
+    updateTheme(previewTheme);
+    setActiveTheme(previewTheme.id);
+    cancelPreview();
+  };
+
   const handleRemoveTheme = () => {
     if (activeTheme && !isDefault(activeTheme.id)) {
       deleteTheme(activeTheme.id);
@@ -158,38 +135,42 @@ export function ThemeEditor() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
         <ThemeSelector
           isModified={isPreviewing}
           onThemeChange={handleThemeChange}
           currentThemeId={themeSelectorValue}
         />
-        {isPreviewing && (
-          <Button onClick={handleReset} className="h-full py-1 px-3">
-            Reset
-          </Button>
-        )}
+        <div className="flex gap-3 items-center">
+          {isPreviewing && (
+            <Button onClick={handleReset} className="h-full py-1 px-3">
+              Reset
+            </Button>
+          )}
+          {isPreviewing && (
+            <>
+              <SaveAsNewDialog onSaveAsNew={handleSaveAsNew} />
+              {activeTheme && !isDefault(activeTheme.id) && (
+                <Button onClick={handleSaveEdit}>Save Edit</Button>
+              )}
+            </>
+          )}
+          {activeTheme && !isDefault(activeTheme.id) && !isPreviewing && (
+            <Button onClick={handleRemoveTheme}>Remove Theme</Button>
+          )}
+        </div>
       </div>
 
       {displayedTheme && (
-        <div className="space-y-4">
-          {isPreviewing && <SaveAsNewInput onSaveAsNew={handleSaveAsNew} />}
-          {activeTheme && !isDefault(activeTheme.id) && !isPreviewing && (
-            <Button onClick={handleRemoveTheme} className="w-full bg-danger">
-              Remove Theme
-            </Button>
-          )}
-
-          <div className="grid grid-cols-2 w-full gap-y-3 gap-x-6">
-            {Object.entries(displayedTheme.colors).map(([name, value]) => (
-              <ThemeColorPicker
-                key={name}
-                name={name}
-                value={value}
-                onColorChange={(newColor) => handleColorChange(name, newColor)}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-2 w-full gap-y-3 gap-x-6">
+          {Object.entries(displayedTheme.colors).map(([name, value]) => (
+            <ThemeColorPicker
+              key={name}
+              name={name}
+              value={value}
+              onColorChange={(newColor) => handleColorChange(name, newColor)}
+            />
+          ))}
         </div>
       )}
     </div>

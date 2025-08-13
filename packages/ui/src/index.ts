@@ -36,3 +36,4 @@ export {
   PopoverPortal,
   PopoverPositioner,
 } from './components/popover/Popover';
+export * from './components/dialog';

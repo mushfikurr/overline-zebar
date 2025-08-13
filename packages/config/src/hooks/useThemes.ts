@@ -37,22 +37,27 @@ export function useThemes() {
   const addTheme = useCallback(
     (themeData: Omit<Theme, 'id'>): Theme => {
       const newTheme = { ...themeData, id: generateId() };
-      const newThemes = [...themes, newTheme];
-      dispatch({ type: 'SET_APP_SETTING', key: 'themes', value: newThemes });
+      dispatch({ type: 'ADD_THEME', theme: newTheme });
       return newTheme;
     },
-    [dispatch, themes]
+    [dispatch]
+  );
+
+  const updateTheme = useCallback(
+    (theme: Theme) => {
+      dispatch({ type: 'UPDATE_THEME', theme });
+    },
+    [dispatch]
   );
 
   const deleteTheme = useCallback(
     (themeId: string) => {
-      const newThemes = themes.filter((t) => t.id !== themeId);
-      dispatch({ type: 'SET_APP_SETTING', key: 'themes', value: newThemes });
+      dispatch({ type: 'DELETE_THEME', themeId });
       if (app.currentThemeId === themeId) {
         setActiveTheme(defaultConfig.app.currentThemeId);
       }
     },
-    [dispatch, themes, app.currentThemeId, setActiveTheme]
+    [dispatch, app.currentThemeId, setActiveTheme]
   );
 
   return {
@@ -61,6 +66,7 @@ export function useThemes() {
     isDefault,
     setActiveTheme,
     addTheme,
+    updateTheme,
     deleteTheme,
   };
 }

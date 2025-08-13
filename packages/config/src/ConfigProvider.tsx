@@ -8,11 +8,14 @@ import { deepMerge } from './utils/deepMerge';
 type Action =
   | {
       type: 'SET_APP_SETTING';
-      key: keyof RootConfig['app'];
-      value: RootConfig['app'][keyof RootConfig['app']];
+      key: Exclude<keyof RootConfig['app'], 'themes'>;
+      value: RootConfig['app'][Exclude<keyof RootConfig['app'], 'themes'>];
     }
   | { type: 'SET_WIDGET_SETTING'; widget: string; key: string; value: unknown }
-  | { type: 'LOAD_CONFIG'; config: RootConfig };
+  | { type: 'LOAD_CONFIG'; config: RootConfig }
+  | { type: 'ADD_THEME'; theme: Theme }
+  | { type: 'UPDATE_THEME'; theme: Theme }
+  | { type: 'DELETE_THEME'; themeId: string };
 
 type Dispatch = (action: Action) => void;
 
@@ -29,6 +32,35 @@ function configReducer(state: State, action: Action): State {
       const newState = {
         ...state,
         app: { ...state.app, [action.key]: action.value },
+      };
+      configManager.saveConfig(newState);
+      return newState;
+    }
+    case 'ADD_THEME': {
+      const newThemes = [...state.app.themes, action.theme];
+      const newState = {
+        ...state,
+        app: { ...state.app, themes: newThemes },
+      };
+      configManager.saveConfig(newState);
+      return newState;
+    }
+    case 'UPDATE_THEME': {
+      const newThemes = state.app.themes.map((t) =>
+        t.id === action.theme.id ? action.theme : t
+      );
+      const newState = {
+        ...state,
+        app: { ...state.app, themes: newThemes },
+      };
+      configManager.saveConfig(newState);
+      return newState;
+    }
+    case 'DELETE_THEME': {
+      const newThemes = state.app.themes.filter((t) => t.id !== action.themeId);
+      const newState = {
+        ...state,
+        app: { ...state.app, themes: newThemes },
       };
       configManager.saveConfig(newState);
       return newState;
