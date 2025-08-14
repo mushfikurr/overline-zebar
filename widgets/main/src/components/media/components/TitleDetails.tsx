@@ -1,7 +1,6 @@
 import { AnimatePresence, MotionProps, motion } from 'framer-motion';
 import React from 'react';
 import { cn } from '../../../utils/cn';
-import useMeasure from 'react-use-measure';
 import { useWidgetSetting } from '@overline-zebar/config';
 
 export function TitleDetails({
@@ -13,23 +12,8 @@ export function TitleDetails({
 }) {
   const artistKey = artist ?? undefined;
   const titleKey = title ?? undefined;
-  const [artistRef, { width: artistWidth }] = useMeasure();
-  const [titleRef, { width: titleWidth }] = useMeasure();
-  // This allows us to truncate the longer of the two fully, to fit in the max width.
-  // i.e. REALLY_LONG_ARTIS... - title
-  // artist - REALLY_LONG_TI...
-  const [truncateArtist, setTruncateArtist] = React.useState<boolean | null>(
-    null
-  );
 
   const [mediaMaxWidth] = useWidgetSetting('main', 'mediaMaxWidth');
-
-  React.useEffect(() => {
-    if (artistWidth === 0 || titleWidth === 0) return;
-    if (Math.abs(artistWidth - titleWidth) < 2) return;
-
-    setTruncateArtist(artistWidth > titleWidth);
-  }, [artistWidth, titleWidth]);
 
   return (
     <div
@@ -39,16 +23,8 @@ export function TitleDetails({
       )}
     >
       <AnimatePresence mode="popLayout">
-        <div
-          className={cn(
-            truncateArtist === null
-              ? 'flex-shrink-0' // Initial safe default
-              : truncateArtist
-                ? 'flex-grow min-w-0'
-                : 'flex-shrink-0'
-          )}
-        >
-          <MotionText key={artistKey} ref={artistRef} className="truncate">
+        <div className="flex-shrink min-w-0">
+          <MotionText key={artistKey} className="truncate">
             {artist}
           </MotionText>
         </div>
@@ -57,16 +33,8 @@ export function TitleDetails({
       {artist && title && <p className="flex-shrink-0">-</p>}
 
       <AnimatePresence mode="popLayout">
-        <div
-          className={cn(
-            truncateArtist === null
-              ? 'flex-shrink-0'
-              : !truncateArtist
-                ? 'flex-grow min-w-0'
-                : 'flex-shrink-0'
-          )}
-        >
-          <MotionText key={titleKey} ref={titleRef} className="truncate">
+        <div className="flex-shrink min-w-0">
+          <MotionText key={titleKey} className="truncate">
             {title}
           </MotionText>
         </div>
