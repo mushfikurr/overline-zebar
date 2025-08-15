@@ -4,7 +4,11 @@
   "version": "0.0.0",
   "description": "Fully featured topbar using React+Vite, Tailwind & Framer Motion. ",
   "tags": [],
-  "previewImages": ["resources/preview-image-1.png"],
+  "previewImages": [
+    "resources/preview-image-1.png",
+    "resources/preview-image-2.png",
+    "resources/preview-image-3.png"
+  ],
   "repositoryUrl": "https://github.com/mushfikurr/overline-zebar",
   "widgets": [
     {
@@ -32,7 +36,7 @@
       "presets": [
         {
           "name": "default",
-          "anchor": "top_left",
+          "anchor": "top_center",
           "offsetX": "0px",
           "offsetY": "2px",
           "width": "100%",
