@@ -16,6 +16,15 @@ import { ThemeEditor } from '../theme/ThemeEditor';
 
 function AppearanceSettings() {
   const [radius, setRadius] = useAppSetting('radius');
+
+  const selectOptions = [
+    { label: 'None', value: '0rem' },
+    { label: 'Small', value: '0.25rem' },
+    { label: 'Medium', value: '0.5rem' },
+    { label: 'Large', value: '0.75rem' },
+    { label: 'X-Large', value: '1rem' },
+  ];
+
   return (
     <PanelLayout title="Appearance">
       <div className="px-3 py-1 flex-grow flex flex-col">
@@ -30,16 +39,24 @@ function AppearanceSettings() {
               <Select
                 onValueChange={(value) => setRadius(value as any)}
                 defaultValue={radius}
+                items={selectOptions}
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>
+                    {(value: string) => {
+                      const option = selectOptions.find(
+                        (opt) => opt.value === value
+                      );
+                      return option ? option.label : '';
+                    }}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0rem">None</SelectItem>
-                  <SelectItem value="0.25rem">Small</SelectItem>
-                  <SelectItem value="0.5rem">Medium</SelectItem>
-                  <SelectItem value="0.75rem">Large</SelectItem>
-                  <SelectItem value="1rem">X-Large</SelectItem>
+                  {selectOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FieldInput>
