@@ -29,6 +29,12 @@ export const AppSettingsSchema = z.object({
   radius: z.string(), // Added radius setting
 });
 
+export const ProviderSettingsSchema = z.object({
+  cpu: z.boolean().default(true),
+  memory: z.boolean().default(true),
+  weather: z.boolean().default(true),
+});
+
 export const MainWidgetSettingsSchema = z.object({
   flowLauncherPath: z.string(),
   mediaMaxWidth: z.string(),
@@ -39,6 +45,7 @@ export const MainWidgetSettingsSchema = z.object({
   paddingLeft: z.number(),
   paddingRight: z.number(),
   dynamicWorkspaceIndicator: z.boolean(),
+  providers: ProviderSettingsSchema.default({}),
 });
 
 export const AllWidgetSettingsSchema = z.object({

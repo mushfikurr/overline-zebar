@@ -8,6 +8,7 @@ import {
   MainWidgetSettingsSchema,
   AllWidgetSettingsSchema,
   RootConfigSchema,
+  ProviderSettingsSchema,
 } from './zod-types';
 
 export type Theme = z.infer<typeof ThemeSchema>;
@@ -17,6 +18,7 @@ export type AppSettings = z.infer<typeof AppSettingsSchema>;
 export type MainWidgetSettings = z.infer<typeof MainWidgetSettingsSchema>;
 export type AllWidgetSettings = z.infer<typeof AllWidgetSettingsSchema>;
 export type RootConfig = z.infer<typeof RootConfigSchema>;
+export type ProviderSettings = z.infer<typeof ProviderSettingsSchema>;
 
 export const defaultConfig: RootConfig = {
   version: 1,
@@ -43,6 +45,11 @@ export const defaultConfig: RootConfig = {
       marginX: 0,
       paddingLeft: 4,
       paddingRight: 4,
+      providers: {
+        cpu: true,
+        memory: true,
+        weather: true,
+      },
     },
   },
 };

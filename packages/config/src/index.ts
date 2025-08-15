@@ -12,4 +12,5 @@ export type {
   AllWidgetSettings,
   Theme,
   LabelColor,
+  ProviderSettings,
 } from './types';

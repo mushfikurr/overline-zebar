@@ -44,6 +44,11 @@ function App() {
   const [marginX] = useWidgetSetting('main', 'marginX');
   const [paddingLeft] = useWidgetSetting('main', 'paddingLeft');
   const [paddingRight] = useWidgetSetting('main', 'paddingRight');
+  const [statProviders] = useWidgetSetting('main', 'providers');
+
+  const allProvidersDisabled = Object.values(statProviders || {}).every(
+    (p) => !p
+  );
 
   return (
     <div
@@ -78,48 +83,49 @@ function App() {
       {/* Right */}
       <div className="flex gap-2 items-center h-full z-10">
         <div className="flex items-center h-full">
-          {/* TODO: Extract to component */}
-          <Chip
-            ref={chipRef}
-            className="flex items-center gap-3 h-full"
-            as="button"
-            onClick={async () => {
-              const widgetPlacement = await calculateWidgetPlacementFromRight(
-                chipRef,
-                { width: 400, height: 200 }
-              );
-              zebar.startWidget('system-stats', widgetPlacement, {});
-            }}
-          >
-            {output.cpu && (
-              <Stat
-                Icon={<p className="font-medium text-icon">CPU</p>}
-                stat={`${Math.round(output.cpu.usage)}%`}
-                type="ring"
-              />
-            )}
+          {!allProvidersDisabled && (
+            <Chip
+              ref={chipRef}
+              className="flex items-center gap-3 h-full"
+              as="button"
+              onClick={async () => {
+                const widgetPlacement = await calculateWidgetPlacementFromRight(
+                  chipRef,
+                  { width: 400, height: 200 }
+                );
+                zebar.startWidget('system-stats', widgetPlacement, {});
+              }}
+            >
+              {statProviders.cpu && output.cpu && (
+                <Stat
+                  Icon={<p className="font-medium text-icon">CPU</p>}
+                  stat={`${Math.round(output.cpu.usage)}%`}
+                  type="ring"
+                />
+              )}
 
-            {output.memory && (
-              <Stat
-                Icon={<p className="font-medium text-icon">RAM</p>}
-                stat={`${Math.round(output.memory.usage)}%`}
-                type="ring"
-              />
-            )}
+              {statProviders.memory && output.memory && (
+                <Stat
+                  Icon={<p className="font-medium text-icon">RAM</p>}
+                  stat={`${Math.round(output.memory.usage)}%`}
+                  type="ring"
+                />
+              )}
 
-            {output.weather && (
-              <Stat
-                Icon={getWeatherIcon(output.weather, statIconClassnames)}
-                stat={
-                  weatherUnit === 'celsius'
-                    ? `${Math.round(output.weather.celsiusTemp)}°C`
-                    : `${Math.round(output.weather.fahrenheitTemp)}°F`
-                }
-                threshold={weatherThresholds}
-                type="inline"
-              />
-            )}
-          </Chip>
+              {statProviders.weather && output.weather && (
+                <Stat
+                  Icon={getWeatherIcon(output.weather, statIconClassnames)}
+                  stat={
+                    weatherUnit === 'celsius'
+                      ? `${Math.round(output.weather.celsiusTemp)}°C`
+                      : `${Math.round(output.weather.fahrenheitTemp)}°F`
+                  }
+                  threshold={weatherThresholds}
+                  type="inline"
+                />
+              )}
+            </Chip>
+          )}
         </div>
 
         <div className="flex items-center h-full">
