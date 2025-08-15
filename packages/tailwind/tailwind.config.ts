@@ -20,6 +20,7 @@ const config: Omit<Config, 'content'> = {
         'button-border': withOpacity('--button-border'),
         primary: withOpacity('--primary'),
         'primary-border': withOpacity('--primary-border'),
+        'primary-text': withOpacity('--primary-text'),
         text: withOpacity('--text'),
         'text-muted': withOpacity('--text-muted'),
         icon: withOpacity('--icon'),

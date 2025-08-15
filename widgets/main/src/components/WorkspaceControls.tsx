@@ -9,6 +9,7 @@ import { ContainerType, formatWindowTitle } from './windowTitle/WindowTitle';
 type WorkspaceControlsProps = {
   glazewm: GlazeWmOutput | null;
 };
+
 export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
   if (!glazewm) return;
   const workspaces = glazewm.currentWorkspaces;
@@ -80,8 +81,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center select-none overflow-hidden p-0 pl-1 pr-1 py-1 h-full',
-          workspaces.length > 1 && 'pr-[0.313rem]'
+          'flex items-center select-none overflow-hidden p-0 px-1 py-1 h-full'
         )}
         as="div"
         ref={ref}
@@ -97,9 +97,11 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
               }
               className={cn(
                 'relative px-2 transition duration-500 ease-in-out text-text-muted h-full',
-                isFocused ? '' : 'hover:text-text',
+                isFocused
+                  ? 'text-primary-text hover:text-primary-text'
+                  : 'hover:text-text',
                 isFocused &&
-                  'text-text duration-700 transition-all ease-in-out font-medium'
+                  'duration-700 transition-all ease-in-out font-medium'
               )}
               style={{
                 WebkitTapHighlightColor: 'transparent',
@@ -120,7 +122,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 />
               )}
 
-              <p className={cn('z-10 max-w-40 truncate')}>
+              <p className="z-10 max-w-40 truncate">
                 {getDynamicWorkspaceName(workspace.id) ??
                   workspace.displayName ??
                   workspace.name}
