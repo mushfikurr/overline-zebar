@@ -47,12 +47,12 @@ function SystrayTab() {
           between expanded or collapsed.
         </p>
       </div>
-      <div className="grow grid grid-cols-2 gap-y-3 gap-x-6">
+      <div className="grow grid grid-cols-2 gap-y-3 gap-x-6 max-w-full">
         {icons?.map((i) => (
           <div key={i.iconHash} className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img className="h-6 w-6" src={i.iconUrl} />
-              <p>{i.tooltip}</p>
+              <p className="max-w-full truncate">{i.tooltip}</p>
             </div>
             <Switch
               checked={isIconPinned(i)}

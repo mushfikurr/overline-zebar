@@ -71,7 +71,7 @@ export default function VolumeControl({
     }
   };
 
-  if (!playbackDevice.volume) return;
+  if (!playbackDevice) return;
 
   return (
     <Chip
