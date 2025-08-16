@@ -60,6 +60,11 @@ export default function VolumeControl({
     setExpanded(!expanded);
   };
 
+  const handleDoubleClick = () => {
+    if (!playbackDevice) return;
+    setVolume(100);
+  };
+
   const renderIcon = () => {
     if (!playbackDevice) return null;
     if (playbackDevice.volume === 0) {
@@ -85,6 +90,7 @@ export default function VolumeControl({
       as="button"
       onClick={handleClick}
       onWheel={handleWheel}
+      onDoubleClick={handleDoubleClick}
       className="outline-none pr-4"
     >
       <div className="flex items-center">
