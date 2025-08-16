@@ -14,6 +14,7 @@ export default function VolumeControl({
   audio: AudioOutput | null;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [preMuteVolume, setPreMuteVolume] = useState(50);
   const ref = useRef<HTMLButtonElement>(null);
 
   // Close the slider when clicking outside
@@ -47,7 +48,12 @@ export default function VolumeControl({
     if (!playbackDevice) return;
 
     if (e.shiftKey) {
-      setVolume(playbackDevice.volume === 0 ? 100 : 0);
+      if (playbackDevice.volume > 0) {
+        setPreMuteVolume(playbackDevice.volume);
+        setVolume(0);
+      } else {
+        setVolume(preMuteVolume);
+      }
       return;
     }
 
