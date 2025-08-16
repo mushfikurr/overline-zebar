@@ -34,13 +34,13 @@ export function FormField({
   return (
     <div className={cn(className, !isSwitch && 'space-y-3')} {...props}>
       {isSwitch ? (
-        <>
-          <div className="flex items-center justify-between">
-            {title}
-            {input}
+        <div className={cn('flex gap-4', !description && 'items-center')}>
+          {input}
+          <div className="space-y-1.5">
+            <h1 className="leading-none">{title}</h1>
+            {description}
           </div>
-          {description}
-        </>
+        </div>
       ) : (
         children
       )}
@@ -54,7 +54,7 @@ interface FieldTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export function FieldTitle({ children, className, ...props }: FieldTitleProps) {
   return (
-    <h3 className={cn('text-text font-medium mb-3', className)} {...props}>
+    <h3 className={cn('text-text font-medium', className)} {...props}>
       {children}
     </h3>
   );

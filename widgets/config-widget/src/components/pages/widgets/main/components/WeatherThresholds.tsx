@@ -18,9 +18,9 @@ export function WeatherThresholds() {
   const [thresholds] = useWidgetSetting('main', 'weatherThresholds');
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-3">
       {(thresholds ?? []).map((t) => (
-        <div className="flex items-center gap-4 w-full" key={t.id}>
+        <div className="flex items-center gap-4 w-full">
           <ThresholdInput threshold={t} minOrMax="min" />
           <ThresholdInput threshold={t} minOrMax="max" />
           <ThresholdColorSelect threshold={t} />

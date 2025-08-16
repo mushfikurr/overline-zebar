@@ -20,7 +20,7 @@ export const calculateWidgetPlacementFromRight = async (
     offsetY: `${windowSize.height + 6}px`,
     width: `${size.width}px`,
     height: `${size.height}px`,
-    monitorSelection: { type: 'all' },
+    monitorSelection: { type: 'primary' },
     dockToEdge: {
       enabled: false,
       edge: 'top',
@@ -43,7 +43,7 @@ export const calculateWidgetPlacementFromLeft = async (
     offsetY: `${windowSize.height + 6}px`,
     width: `${size.width}px`,
     height: `${size.height}px`,
-    monitorSelection: { type: 'all' },
+    monitorSelection: { type: 'primary' },
     dockToEdge: {
       enabled: false,
       edge: 'top',

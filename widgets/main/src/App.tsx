@@ -151,7 +151,7 @@ function App() {
                 offsetY: `0px`,
                 width: `1100px`,
                 height: `720px`,
-                monitorSelection: { type: 'all' },
+                monitorSelection: { type: 'primary' },
                 dockToEdge: {
                   enabled: false,
                   edge: null,

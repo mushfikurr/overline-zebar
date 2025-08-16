@@ -10,6 +10,7 @@ import {
 } from '@overline-zebar/ui';
 import { useState } from 'react';
 import PanelHeading from '../PanelHeading';
+import { Separator } from '../common/Separator';
 
 export function ConfigManagement() {
   const { resetConfig, importConfig, exportConfig } = useManageRootConfig();
@@ -69,7 +70,7 @@ export function ConfigManagement() {
           title={'Config Management'}
           description={'Manage overline-zebar configuration.'}
         />
-        <div className="space-y-8 pb-1">
+        <div className="pb-1">
           {feedback && (
             <div
               className={`px-3 py-1.5 rounded-md  border border-border ${feedback.type === 'success' ? 'bg-background' : 'bg-danger'}`}
@@ -83,7 +84,7 @@ export function ConfigManagement() {
               <Button onClick={handleDownload}>Download Config</Button>
             </FieldInput>
           </FormField>
-
+          <Separator />
           <FormField>
             <FieldTitle>Import Configuration</FieldTitle>
             <FieldInput>
@@ -93,7 +94,7 @@ export function ConfigManagement() {
               Select a JSON file to import your configuration.
             </FieldDescription>
           </FormField>
-
+          <Separator />
           <FormField>
             <FieldTitle>Reset Configuration</FieldTitle>
             <FieldInput>

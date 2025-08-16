@@ -1,3 +1,4 @@
+import { Separator } from '@/components/common/Separator';
 import { useState } from 'react';
 import { NumberInput } from '@/components/NumberInput';
 import { useWidgetSetting } from '@overline-zebar/config';
@@ -53,6 +54,7 @@ function GeneralTab() {
           leftmost of the topbar widget).
         </FieldDescription>
       </FormField>
+      <Separator />
       <FormField switch>
         <FieldTitle>Allow Dynamic Workspace Indicators</FieldTitle>
         <FieldInput>
@@ -65,6 +67,7 @@ function GeneralTab() {
           Allow workspace indicators to be named after the first opened window.
         </FieldDescription>
       </FormField>
+      <Separator />
       <FormField>
         <FieldTitle>Horizontal Margin</FieldTitle>
         <FieldInput>
@@ -75,6 +78,7 @@ function GeneralTab() {
           appearance.
         </FieldDescription>
       </FormField>
+      <Separator />
       <FormField>
         <FieldTitle>Horizontal Padding</FieldTitle>
         <FieldInput className="flex items-center gap-3">
@@ -109,6 +113,7 @@ function GeneralTab() {
           Sets the inner space (left and right).
         </FieldDescription>
       </FormField>
+      <Separator />
       <FormField>
         <FieldTitle>Media Max Width (px)</FieldTitle>
         <FieldInput>

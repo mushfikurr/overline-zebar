@@ -13,6 +13,7 @@ import {
 import { useAppSetting } from '@overline-zebar/config';
 import PanelHeading from '../PanelHeading';
 import { ThemeEditor } from '../theme/ThemeEditor';
+import { Separator } from '../common/Separator';
 
 function AppearanceSettings() {
   const [radius, setRadius] = useAppSetting('radius');
@@ -32,7 +33,7 @@ function AppearanceSettings() {
           title="Apperance"
           description="Customise your overline-zebar widgets to suit you."
         />
-        <div className="space-y-8 h-full">
+        <div className="h-full">
           <FormField>
             <FieldTitle>Border Radius</FieldTitle>
             <FieldInput>
@@ -64,7 +65,7 @@ function AppearanceSettings() {
               Changes how "rounded" elements are.
             </FieldDescription>
           </FormField>
-
+          <Separator />
           <FormField>
             <FieldTitle>Theme</FieldTitle>
             <FieldInput>

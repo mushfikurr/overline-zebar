@@ -9,6 +9,7 @@ import {
   Switch,
 } from '@overline-zebar/ui';
 import PanelHeading from '../PanelHeading';
+import { Separator } from '../common/Separator';
 
 export function GeneralSettings() {
   const [useAutoTiling, setUseAutoTiling] = useAppSetting('useAutoTiling');
@@ -21,7 +22,7 @@ export function GeneralSettings() {
           title={'General'}
           description={'Settings about all overline-zebar widgets.'}
         />
-        <div className="space-y-8">
+        <div>
           <FormField switch>
             <FieldTitle>Enable Auto Tiling</FieldTitle>
             <FieldInput>
@@ -35,6 +36,7 @@ export function GeneralSettings() {
               size becomes less than half.
             </FieldDescription>
           </FormField>
+          <Separator />
           <FormField>
             <FieldTitle>Zebar WebSocket URI</FieldTitle>
             <FieldInput>

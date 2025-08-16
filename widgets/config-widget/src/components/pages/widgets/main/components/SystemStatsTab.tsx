@@ -7,6 +7,7 @@ import {
 } from '@overline-zebar/ui';
 import WeatherThresholds from './WeatherThresholds';
 import { useWidgetSetting, ProviderSettings } from '@overline-zebar/config';
+import { Separator } from '@/components/common/Separator';
 
 export default function SystemStatsTab() {
   const [providers, setProviders] = useWidgetSetting('main', 'providers');
@@ -22,50 +23,52 @@ export default function SystemStatsTab() {
   return (
     <>
       {/* Provider Toggles */}
-      <div className="space-y-4">
-        <div className="space-y-0.5">
+      <div>
+        <div className="space-y-0.5 mb-4">
           <h1 className="text-text">Providers</h1>
           <p className="text-text-muted">
             Enable or disable individual system stat providers.
           </p>
         </div>
-        <FormField switch>
-          <FieldTitle>CPU Usage</FieldTitle>
-          <FieldInput>
-            <Switch
-              checked={providers.cpu}
-              onCheckedChange={(checked) =>
-                handleProviderToggle('cpu', checked)
-              }
-            />
-          </FieldInput>
-        </FormField>
-        <FormField switch>
-          <FieldTitle>Memory Usage</FieldTitle>
-          <FieldInput>
-            <Switch
-              checked={providers.memory}
-              onCheckedChange={(checked) =>
-                handleProviderToggle('memory', checked)
-              }
-            />
-          </FieldInput>
-        </FormField>
-        <FormField switch>
-          <FieldTitle>Weather</FieldTitle>
-          <FieldInput>
-            <Switch
-              checked={providers.weather}
-              onCheckedChange={(checked) =>
-                handleProviderToggle('weather', checked)
-              }
-            />
-          </FieldInput>
-        </FormField>
+        <div className="space-y-3">
+          <FormField switch>
+            <FieldTitle>CPU Usage</FieldTitle>
+            <FieldInput>
+              <Switch
+                checked={providers.cpu}
+                onCheckedChange={(checked) =>
+                  handleProviderToggle('cpu', checked)
+                }
+              />
+            </FieldInput>
+          </FormField>
+          <FormField switch>
+            <FieldTitle>Memory Usage</FieldTitle>
+            <FieldInput>
+              <Switch
+                checked={providers.memory}
+                onCheckedChange={(checked) =>
+                  handleProviderToggle('memory', checked)
+                }
+              />
+            </FieldInput>
+          </FormField>
+          <FormField switch>
+            <FieldTitle>Weather</FieldTitle>
+            <FieldInput>
+              <Switch
+                checked={providers.weather}
+                onCheckedChange={(checked) =>
+                  handleProviderToggle('weather', checked)
+                }
+              />
+            </FieldInput>
+          </FormField>
+        </div>
       </div>
 
       {/* Divider */}
-      <div className="w-full bg-text/5 h-px my-6"></div>
+      <Separator />
 
       {/* Weather Specific Settings */}
       {providers.weather && (
