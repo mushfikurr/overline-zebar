@@ -37,3 +37,8 @@ export {
   PopoverPositioner,
 } from './components/popover/Popover';
 export * from './components/dialog';
+export {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from './components/collapsible';
