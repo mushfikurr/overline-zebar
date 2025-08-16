@@ -144,10 +144,11 @@ Here's a breakdown of the available options:
 - **Horizontal Padding**: Adjusts the inner spacing on the left and right of the topbar.
 - **Media Max Width**: Sets the maximum width for the media display.
 
-#### Weather
+#### Stats
 
-- **Toggle Fahrenheit**: Switch between Celsius and Fahrenheit.
-- **Thresholds**: Define temperature ranges and their corresponding colors (Danger, Warning, Text).
+- **Providers**: Enable or disable individual system stat providers (CPU, Memory, Weather).
+- **Toggle Fahrenheit**: Switch between Celsius and Fahrenheit for the weather display.
+- **Thresholds**: Customize the display colors for different temperature ranges. By default, there are four configurable thresholds, each with a minimum and maximum temperature value. The available colors (Danger, Warning, and Text) are derived from your chosen theme.
 
 #### System Tray
 
