@@ -22,7 +22,7 @@ export function MainSettings() {
           />
           <TabsList className="mt-4 mb-1">
             <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="system-stats">System Stats</TabsTrigger>
+            <TabsTrigger value="system-stats">Stats</TabsTrigger>
             <TabsTrigger value="systray">System Tray</TabsTrigger>
           </TabsList>
           <div className="w-full bg-text/5 h-px my-4 mb-6"></div>
