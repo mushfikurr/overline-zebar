@@ -142,25 +142,7 @@ function App() {
         <div
           className="h-full flex items-center justify-center"
           style={{ paddingRight: `${paddingRight}px` }}
-          onClick={() =>
-            zebar.startWidget(
-              'config-widget',
-              {
-                anchor: 'center',
-                offsetX: `0px`,
-                offsetY: `0px`,
-                width: `1100px`,
-                height: `720px`,
-                monitorSelection: { type: 'primary' },
-                dockToEdge: {
-                  enabled: false,
-                  edge: null,
-                  windowMargin: `0px`,
-                },
-              },
-              {}
-            )
-          }
+          onClick={() => zebar.startWidgetPreset('config-widget', 'default')}
         >
           {output?.date?.formatted ??
             new Intl.DateTimeFormat('en-GB', {
