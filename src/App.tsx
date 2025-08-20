@@ -20,7 +20,7 @@ const providers = zebar.createProviderGroup({
   network: { type: "network" },
   glazewm: { type: "glazewm" },
   cpu: { type: "cpu" },
-  date: { type: "date", formatting: "EEE d MMM t", locale: "en-GB" },
+  date: { type: "date", formatting: "EEE d MMM t", locale: "en-US" },
   memory: { type: "memory" },
   weather: { type: "weather" },
   audio: { type: "audio" },
