@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { Navbar as UiNavbar, NavbarItem } from '@overline-zebar/ui';
 import { BarChart, Globe, HardDrive, Server } from 'lucide-react';
 import { useLocation } from 'wouter';

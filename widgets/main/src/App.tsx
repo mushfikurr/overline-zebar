@@ -1,7 +1,10 @@
+import { useWidgetSetting } from '@overline-zebar/config';
+import { Chip } from '@overline-zebar/ui';
 import { useEffect, useRef, useState } from 'react';
 import * as zebar from 'zebar';
 import { Center } from './components/Center';
 import Media from './components/media';
+import RightButtons from './components/rightButtons/RightButtons';
 import Stat from './components/stat';
 import Systray from './components/systray';
 import { TilingControl } from './components/TilingControl';
@@ -9,11 +12,9 @@ import VolumeControl from './components/volume';
 import { WindowTitle } from './components/windowTitle/WindowTitle';
 import { WorkspaceControls } from './components/WorkspaceControls';
 import { calculateWidgetPlacementFromRight } from './utils/calculateWidgetPlacement';
+import { cn } from './utils/cn';
 import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
-import { Chip } from '@overline-zebar/ui';
-import { useWidgetSetting } from '@overline-zebar/config';
-import { cn } from './utils/cn';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
@@ -86,7 +87,7 @@ function App() {
           {!allProvidersDisabled && (
             <Chip
               ref={chipRef}
-              className="flex items-center gap-3 h-full"
+              className="flex items-center gap-3 h-full pl-3.5 pr-3"
               as="button"
               onClick={async () => {
                 const widgetPlacement = await calculateWidgetPlacementFromRight(
@@ -127,23 +128,16 @@ function App() {
             </Chip>
           )}
         </div>
-
         <div className="flex items-center h-full">
           <VolumeControl
             audio={output.audio}
             statIconClassnames={statIconClassnames}
           />
         </div>
-
-        <div className="h-full flex items-center px-0.5 pr-1">
+        <div className="h-full flex items-center px-0.5">
           <Systray systray={output.systray} />
         </div>
-
-        <div
-          className="h-full flex items-center justify-center"
-          style={{ paddingRight: `${paddingRight}px` }}
-          onClick={() => zebar.startWidgetPreset('config-widget', 'default')}
-        >
+        <div className="h-full flex items-center justify-center px-1">
           {output?.date?.formatted ??
             new Intl.DateTimeFormat('en-GB', {
               weekday: 'short', // EEE
@@ -154,6 +148,9 @@ function App() {
             })
               .format(new Date())
               .replace(/,/g, '')}
+        </div>
+        <div style={{ paddingRight: `${paddingRight}px` }}>
+          <RightButtons />
         </div>
       </div>
     </div>

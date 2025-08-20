@@ -82,6 +82,7 @@ export default function Media({ media }: MediaProps) {
             title={currentSession?.title}
             artist={currentSession?.artist}
           />
+
           <ProgressBar currentSession={currentSession} />
         </Chip>
       </ConditionalPanel>

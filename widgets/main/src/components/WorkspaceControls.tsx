@@ -5,6 +5,7 @@ import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
 import { cn } from '../utils/cn';
 import { ContainerType, formatWindowTitle } from './windowTitle/WindowTitle';
+import { tailwindConfig } from '../main';
 
 type WorkspaceControlsProps = {
   glazewm: GlazeWmOutput | null;
@@ -17,6 +18,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
     'main',
     'dynamicWorkspaceIndicator'
   );
+  const borderRadius = tailwindConfig.theme.borderRadius['2xl'];
 
   const [ref, { width }] = useMeasure();
   const springConfig = {
@@ -81,7 +83,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center select-none overflow-hidden p-0 px-1 py-1 h-full space-x-1'
+          'flex items-center select-none overflow-hidden px-1 py-1 h-full space-x-0.5'
         )}
         as="div"
         ref={ref}
@@ -111,22 +113,24 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 <motion.span
                   layoutId="bubble"
                   className={cn(
-                    'bg-primary inset-0 border-primary-border drop-shadow-sm absolute -z-10',
+                    'bg-primary inset-0 border border-primary-border drop-shadow-sm absolute -z-10',
                     isFocused && 'hover:bg-primary'
                   )}
                   style={{
                     borderRadius:
-                      parseFloat(radius) > 0 ? `calc(${radius} + 0.25rem)` : 0,
+                      parseFloat(radius) > 0
+                        ? `calc(${borderRadius} - 0.25rem)`
+                        : 0,
                   }}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
 
-              <p className="z-10 max-w-40 truncate px-2">
+              <span className="z-10 max-w-40 truncate px-2 flex items-center leading-none">
                 {getDynamicWorkspaceName(workspace.id) ??
                   workspace.displayName ??
                   workspace.name}
-              </p>
+              </span>
             </button>
           );
         })}

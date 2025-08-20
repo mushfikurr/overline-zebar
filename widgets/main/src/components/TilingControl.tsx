@@ -24,7 +24,7 @@ export function TilingControl({ glazewm }: TilingControlProps) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15, ease: 'easeInOut' }}
             exit={{ opacity: 0 }}
-            className="h-full"
+            className="flex items-center h-full"
           >
             <Button>{bindingMode.displayName ?? bindingMode.name}</Button>
           </motion.div>
@@ -35,10 +35,7 @@ export function TilingControl({ glazewm }: TilingControlProps) {
         size="icon"
         onClick={() => {
           if (flowLauncherPath) {
-            console.log('Flow Launcher path:', flowLauncherPath);
             glazewm.runCommand(`shell-exec ${flowLauncherPath}`);
-          } else {
-            console.warn('Flow Launcher path not configured in config.json');
           }
         }}
       >

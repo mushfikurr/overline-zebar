@@ -31,7 +31,12 @@
         "rules": []
       },
       "privileges": {
-        "shellCommands": []
+        "shellCommands": [
+          {
+            "program": "shutdown",
+            "argsRegex": ".*"
+          }
+        ]
       },
       "presets": [
         {

@@ -7,6 +7,10 @@ import '@overline-zebar/ui/index.css';
 import '@overline-zebar/ui/theme.css';
 import App from './App';
 import { ConfigProvider } from '@overline-zebar/config';
+import tailwind from '../tailwind.config';
+import resolveConfig from 'tailwindcss/resolveConfig';
+
+export const tailwindConfig = resolveConfig(tailwind);
 
 const queryClient = new QueryClient();
 

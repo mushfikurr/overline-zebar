@@ -1,14 +1,15 @@
-import { Navbar as UiNavbar, NavbarItem } from '@overline-zebar/ui';
-import { Palette, Cog, LayoutGrid, DatabaseZap } from 'lucide-react';
+import { NavbarItem, Navbar as UiNavbar } from '@overline-zebar/ui';
+import { Cog, DatabaseZap, LayoutGrid, Palette } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { Separator } from '../common/Separator';
 
 export default function Navbar() {
   const [location, navigate] = useLocation();
 
   return (
     <UiNavbar className="rounded-none">
-      <h3 className="px-4 mt-4 mb-2 text-text-muted">All Widgets</h3>
+      <h3 className="px-4 mt-3.5 mb-1.5 text-text-muted font-medium">
+        All Widgets
+      </h3>
       <NavbarItem
         className="rounded-none"
         Icon={Cog}
@@ -33,8 +34,9 @@ export default function Navbar() {
         location={location}
         navigate={navigate}
       />
-      <Separator />
-      <h3 className="px-4 mb-2 text-text-muted">Widget Specific</h3>
+      <h3 className="px-4 mt-4 mb-1.5 text-text-muted font-medium">
+        Widget Specific
+      </h3>
       <NavbarItem
         className="rounded-none"
         Icon={LayoutGrid}
