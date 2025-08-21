@@ -15,7 +15,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "pnpm --filter \"@overline-zebar/*\" build",
+    "build": "pnpm --filter \"@overline-zebar/*\"  build",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",

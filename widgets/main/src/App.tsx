@@ -11,7 +11,10 @@ import { TilingControl } from './components/TilingControl';
 import VolumeControl from './components/volume';
 import { WindowTitle } from './components/windowTitle/WindowTitle';
 import { WorkspaceControls } from './components/WorkspaceControls';
-import { calculateWidgetPlacementFromRight } from './utils/calculateWidgetPlacement';
+import {
+  calculateWidgetPlacementFromLeft,
+  calculateWidgetPlacementFromRight,
+} from './utils/calculateWidgetPlacement';
 import { cn } from './utils/cn';
 import { useAutoTiling } from './utils/useAutoTiling';
 import { getWeatherIcon } from './utils/weatherIcons';
@@ -94,7 +97,7 @@ function App() {
                   chipRef,
                   { width: 400, height: 200 }
                 );
-                zebar.startWidget('system-stats', widgetPlacement, {});
+                await zebar.startWidget('system-stats', widgetPlacement, {});
               }}
             >
               {statProviders.cpu && output.cpu && (

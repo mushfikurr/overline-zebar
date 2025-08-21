@@ -1,18 +1,33 @@
-import { ChevronRight, Search } from 'lucide-react';
-import { cn } from '../utils/cn';
+import { sendWidgetAction } from '@overline-zebar/config';
+import * as zebar from 'zebar';
 import { Button } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronRight, LayoutGrid } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { GlazeWmOutput } from 'zebar';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useWidgetSetting } from '@overline-zebar/config';
+import { calculateWidgetPlacementFromLeft } from '../utils/calculateWidgetPlacement';
+import { cn } from '../utils/cn';
 
 interface TilingControlProps {
   glazewm: GlazeWmOutput | null;
 }
 
 export function TilingControl({ glazewm }: TilingControlProps) {
-  const [flowLauncherPath] = useWidgetSetting('main', 'flowLauncherPath');
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const calculatePlacementFromRef = async () => {
+    return await calculateWidgetPlacementFromLeft(buttonRef, {
+      width: 400,
+      height: 400,
+    });
+  };
 
   if (!glazewm) return null;
+
+  const handleOpenAppLauncher = async () => {
+    const placement = await calculatePlacementFromRef();
+    sendWidgetAction('app-launcher', 'toggle', placement);
+  };
 
   return (
     <>
@@ -31,15 +46,8 @@ export function TilingControl({ glazewm }: TilingControlProps) {
         ))}
       </AnimatePresence>
 
-      <Button
-        size="icon"
-        onClick={() => {
-          if (flowLauncherPath) {
-            glazewm.runCommand(`shell-exec ${flowLauncherPath}`);
-          }
-        }}
-      >
-        <Search strokeWidth={3} className="h-4 w-4" />
+      <Button size="icon" ref={buttonRef} onClick={handleOpenAppLauncher}>
+        <LayoutGrid strokeWidth={3} className="h-4 w-4" />
       </Button>
 
       <Button

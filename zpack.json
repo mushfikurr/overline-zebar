@@ -99,12 +99,58 @@
       ]
     },
     {
+      "name": "app-launcher",
+      "htmlPath": "./widgets/app-launcher/dist/index.html",
+      "zOrder": "normal",
+      "shownInTaskbar": false,
+      "focused": true,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": [
+        "widgets/app-launcher/dist/index.html",
+        "widgets/app-launcher/dist/assets/**",
+        "widgets/app-launcher/dist/config.json",
+        "widgets/app-launcher/dist/geistMono/**",
+        "widgets/app-launcher/README.md"
+      ],
+      "caching": {
+        "defaultDuration": 604800,
+        "rules": []
+      },
+      "privileges": {
+        "shellCommands": [
+          {
+            "program": "shutdown",
+            "argsRegex": ".*"
+          }
+        ]
+      },
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "top_left",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "width": "400px",
+          "height": "400px",
+          "monitorSelection": {
+            "type": "primary"
+          },
+          "dockToEdge": {
+            "enabled": false,
+            "edge": null,
+            "windowMargin": "0px"
+          }
+        }
+      ]
+    },
+    {
       "name": "config-widget",
       "htmlPath": "./widgets/config-widget/dist/index.html",
       "zOrder": "normal",
       "shownInTaskbar": true,
       "focused": true,
-      "resizable": false,
+      "resizable": true,
       "transparent": true,
       "includeFiles": [
         "widgets/config-widget/dist/index.html",
