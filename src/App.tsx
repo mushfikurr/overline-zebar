@@ -4,7 +4,7 @@ import { Center } from "./components/Center";
 import { Chip } from "./components/common/Chip";
 import Media from "./components/media";
 import Stat from "./components/stat";
-import { weatherThresholds } from "./components/stat/defaults/thresholds";
+import { batteryThresholds, weatherThresholds } from "./components/stat/defaults/thresholds";
 import { TilingControl } from "./components/TilingControl";
 import VolumeControl from "./components/volume";
 import { WindowTitle } from "./components/windowTitle/WindowTitle";
@@ -22,6 +22,7 @@ const providers = zebar.createProviderGroup({
   date: { type: "date", formatting: "EEE d MMM t", locale: "en-GB" },
   memory: { type: "memory" },
   weather: { type: "weather" },
+  battery: { type: "battery" },
   audio: { type: "audio" },
   systray: { type: "systray" },
 });
@@ -71,6 +72,7 @@ function App() {
               <Stat
                 Icon={<p className="font-medium text-icon">CPU</p>}
                 stat={`${Math.round(output.cpu.usage)}%`}
+                preset="system"
                 type="ring"
               />
             )}
@@ -79,7 +81,17 @@ function App() {
               <Stat
                 Icon={<p className="font-medium text-icon">RAM</p>}
                 stat={`${Math.round(output.memory.usage)}%`}
+                preset="system"
                 type="ring"
+              />
+            )}
+
+            {output.battery && (
+              <Stat
+                Icon={<p className="font-medium text-icon">Battery</p>}
+                stat={`${Math.round(output.battery.chargePercent)}%`}
+                preset="battery"
+                type="inline"
               />
             )}
 
@@ -87,7 +99,7 @@ function App() {
               <Stat
                 Icon={getWeatherIcon(output.weather, statIconClassnames)}
                 stat={`${Math.round(output.weather.celsiusTemp)}°C`}
-                threshold={weatherThresholds}
+                preset="weather"
                 type="inline"
               />
             )}
