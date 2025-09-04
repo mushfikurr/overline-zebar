@@ -99,19 +99,19 @@
       ]
     },
     {
-      "name": "app-launcher",
-      "htmlPath": "./widgets/app-launcher/dist/index.html",
+      "name": "script-launcher",
+      "htmlPath": "./widgets/script-launcher/dist/index.html",
       "zOrder": "normal",
       "shownInTaskbar": false,
       "focused": true,
       "resizable": false,
       "transparent": true,
       "includeFiles": [
-        "widgets/app-launcher/dist/index.html",
-        "widgets/app-launcher/dist/assets/**",
-        "widgets/app-launcher/dist/config.json",
-        "widgets/app-launcher/dist/geistMono/**",
-        "widgets/app-launcher/README.md"
+        "widgets/script-launcher/dist/index.html",
+        "widgets/script-launcher/dist/assets/**",
+        "widgets/script-launcher/dist/config.json",
+        "widgets/script-launcher/dist/geistMono/**",
+        "widgets/script-launcher/README.md"
       ],
       "caching": {
         "defaultDuration": 604800,

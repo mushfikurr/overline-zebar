@@ -1,14 +1,17 @@
 import { useWidgetSetting } from '@overline-zebar/config';
+import { UpdateScriptModal } from '@overline-zebar/config-widget';
 import { LauncherCommand } from '@overline-zebar/config/src/types';
+import { generateId } from '@overline-zebar/config/src/utils/generateId';
 import { logger } from '@overline-zebar/config/src/utils/logger';
 import { Button } from '@overline-zebar/ui';
 import {
-  Search,
-  Settings,
   AppWindow,
   FileCode,
   LucideIcon,
-} from 'lucide-react'; // Added AppWindow, FileCode, LucideIcon
+  Plus,
+  Search,
+  Settings,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import * as zebar from 'zebar';
 
@@ -29,7 +32,19 @@ const getLucideIcon = (iconName: string): LucideIcon | null => {
 
 function App() {
   const [output, setOutput] = useState(providers.outputMap);
-  const [applications] = useWidgetSetting('app-launcher', 'applications');
+  const [applications, setApplications] = useWidgetSetting(
+    'script-launcher',
+    'applications'
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newApp, setNewApp] = useState<LauncherCommand>({
+    id: '',
+    title: '',
+    command: '',
+    args: [],
+    icon: 'Search',
+  });
+
   useEffect(() => {
     providers.onOutput(() => setOutput(providers.outputMap));
 
@@ -42,10 +57,32 @@ function App() {
     zebar.startWidgetPreset('config-widget', 'default');
   };
 
+  const handleAddOrUpdate = () => {
+    setApplications([
+      ...applications,
+      { ...newApp, id: generateId(), args: newApp.args },
+    ]);
+    setNewApp({ id: '', title: '', command: '', args: [], icon: 'Search' });
+    setIsModalOpen(false);
+  };
+
+  const handleOpenModalForAdd = () => {
+    setNewApp({ id: '', title: '', command: '', args: [], icon: 'Search' });
+    setIsModalOpen(true);
+  };
+
   if (!applications.length) return null;
 
   return (
     <div className="relative shadow-sm bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
+      <UpdateScriptModal
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        newApp={newApp}
+        setNewApp={setNewApp}
+        editingId={null} // Not used for adding
+        onAddOrUpdate={handleAddOrUpdate}
+      />
       <div className="flex flex-col h-full w-full min-h-0 gap-1">
         <div className="grid grow grid-cols-3 grid-rows-4 gap-2 w-full p-2">
           {applications.map((application: LauncherCommand) => (
@@ -56,7 +93,10 @@ function App() {
             />
           ))}
         </div>
-        <div className="flex bg-background rounded-md rounded-t-none justify-end items-center border-t border-border/60 p-2">
+        <div className="flex bg-background rounded-md rounded-t-none justify-end items-center border-t border-border/60 p-2 gap-2">
+          <Button onClick={handleOpenModalForAdd} size="icon">
+            <Plus className="h-5 w-5" strokeWidth={2.5} />
+          </Button>
           <Button onClick={handleOnSettingsClick} size="icon">
             <Settings className="h-5 w-5" strokeWidth={2.5} />
           </Button>

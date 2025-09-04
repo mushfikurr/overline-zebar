@@ -59,13 +59,14 @@ export const LauncherCommandSchema = z.object({
   icon: z.string().optional(),
 });
 
-export const AppLauncherWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
-  applications: z.array(LauncherCommandSchema),
-});
+export const ScriptLauncherWidgetSettingsSchema =
+  BaseWidgetSettingsSchema.extend({
+    applications: z.array(LauncherCommandSchema),
+  });
 
 export const AllWidgetSettingsSchema = z.object({
   main: MainWidgetSettingsSchema,
-  'app-launcher': AppLauncherWidgetSettingsSchema,
+  'script-launcher': ScriptLauncherWidgetSettingsSchema,
   'config-widget': z.object({}),
 });
 

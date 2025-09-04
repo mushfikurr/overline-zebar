@@ -48,8 +48,8 @@ export default function Navbar() {
       <NavbarItem
         className="rounded-none"
         Icon={LayoutGrid}
-        title="App Launcher"
-        href="/widget/app-launcher"
+        title="Script Launcher"
+        href="/widget/script-launcher"
         location={location}
         navigate={navigate}
       />

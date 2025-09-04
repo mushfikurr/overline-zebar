@@ -29,9 +29,9 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
     );
   };
 
-  const handleOpenAppLauncher = async () => {
+  const handleOpenScriptLauncher = async () => {
     const placement = await calculatePlacementFromRef();
-    await zebar.startWidget('app-launcher', placement, {});
+    await zebar.startWidget('script-launcher', placement, {});
   };
 
   return (
@@ -51,7 +51,7 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
         ))}
       </AnimatePresence>
 
-      <Button size="icon" ref={buttonRef} onClick={handleOpenAppLauncher}>
+      <Button size="icon" ref={buttonRef} onClick={handleOpenScriptLauncher}>
         <LayoutGrid strokeWidth={3} className="h-4 w-4" />
       </Button>
 

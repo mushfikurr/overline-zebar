@@ -5,8 +5,8 @@ import Navbar from './components/navbar';
 import AppearanceSettings from './components/pages/AppearanceSettings';
 import { GeneralSettings } from './components/pages/GeneralSettings';
 import { MainSettings } from './components/pages/widgets/main/MainSettings';
-import { AppLauncherSettings } from './components/pages/widgets/app-launcher/AppLauncherSettings';
 import { ConfigManagement } from './components/pages/ConfigManagement';
+import { ScriptLauncherSettings } from './components/pages/widgets/script-launcher/ScriptLauncherSettings';
 
 function App() {
   return (
@@ -32,8 +32,8 @@ function App() {
               <Route path="/widget/main">
                 <MainSettings />
               </Route>
-              <Route path="/widget/app-launcher">
-                <AppLauncherSettings />
+              <Route path="/widget/script-launcher">
+                <ScriptLauncherSettings />
               </Route>
             </Switch>
           </div>
@@ -44,3 +44,4 @@ function App() {
 }
 
 export default App;
+App;

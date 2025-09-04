@@ -1,5 +1,5 @@
 {
-  "name": "@overline-zebar/app-launcher",
+  "name": "@overline-zebar/script-launcher",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@overline-zebar/config": "workspace:*",
+    "@overline-zebar/config-widget": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
     "lucide-react": "^0.460.0",

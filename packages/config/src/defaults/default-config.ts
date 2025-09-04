@@ -33,7 +33,7 @@ export const defaultConfig: RootConfig = {
         battery: true,
       },
     },
-    'app-launcher': {
+    'script-launcher': {
       applications: [
         { id: 'default-launcher', title: 'Launcher', command: '', args: [] },
       ],
