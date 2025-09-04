@@ -34,9 +34,7 @@ export const defaultConfig: RootConfig = {
       },
     },
     'script-launcher': {
-      applications: [
-        { id: 'default-launcher', title: 'Launcher', command: '', args: [] },
-      ],
+      applications: [],
     },
   },
 };

@@ -1,3 +1,5 @@
+import { ContextMenu } from './components/context-menu';
+
 export { Button, buttonVariants } from './components/button';
 export { StatRing } from './components/stat-ring/StatRing';
 export { LabelType } from './components/stat-ring/types/labelType';
@@ -42,5 +44,4 @@ export {
   CollapsibleTrigger,
   CollapsibleContent,
 } from './components/collapsible';
-
-
+export * from './components/context-menu';

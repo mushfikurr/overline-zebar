@@ -3,7 +3,15 @@ import { UpdateScriptModal } from '@overline-zebar/config-widget';
 import { LauncherCommand } from '@overline-zebar/config/src/types';
 import { generateId } from '@overline-zebar/config/src/utils/generateId';
 import { logger } from '@overline-zebar/config/src/utils/logger';
-import { Button } from '@overline-zebar/ui';
+import {
+  Button,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuTrigger,
+} from '@overline-zebar/ui';
 import {
   AppWindow,
   FileCode,
@@ -37,6 +45,7 @@ function App() {
     'applications'
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [newApp, setNewApp] = useState<LauncherCommand>({
     id: '',
     title: '',
@@ -58,20 +67,38 @@ function App() {
   };
 
   const handleAddOrUpdate = () => {
-    setApplications([
-      ...applications,
-      { ...newApp, id: generateId(), args: newApp.args },
-    ]);
+    if (editingId) {
+      setApplications(
+        applications.map((app) => (app.id === editingId ? newApp : app))
+      );
+    } else {
+      setApplications([
+        ...applications,
+        { ...newApp, id: generateId(), args: newApp.args },
+      ]);
+    }
     setNewApp({ id: '', title: '', command: '', args: [], icon: 'Search' });
+    setEditingId(null);
     setIsModalOpen(false);
   };
 
   const handleOpenModalForAdd = () => {
+    setEditingId(null);
     setNewApp({ id: '', title: '', command: '', args: [], icon: 'Search' });
     setIsModalOpen(true);
   };
 
-  if (!applications.length) return null;
+  const handleOpenModalForEdit = (appToEdit: LauncherCommand) => {
+    setEditingId(appToEdit.id);
+    setNewApp(appToEdit);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setApplications(
+      applications.filter((app: LauncherCommand) => app.id !== id)
+    );
+  };
 
   return (
     <div className="relative shadow-sm bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
@@ -80,19 +107,32 @@ function App() {
         setOpen={setIsModalOpen}
         newApp={newApp}
         setNewApp={setNewApp}
-        editingId={null} // Not used for adding
+        editingId={editingId}
         onAddOrUpdate={handleAddOrUpdate}
       />
       <div className="flex flex-col h-full w-full min-h-0 gap-1">
-        <div className="grid grow grid-cols-3 grid-rows-4 gap-2 w-full p-2">
-          {applications.map((application: LauncherCommand) => (
-            <LauncherButton
-              key={application.id}
-              glazewm={output.glazewm}
-              application={application}
-            />
-          ))}
-        </div>
+        {applications.length == 0 && (
+          <div className="grow flex flex-col gap-2 items-center justify-center p-2">
+            <h1 className="text-center">Scripts you add will show up here</h1>
+            <p className="text-text-muted text-center">
+              These can be .exe paths, AHK scripts you commonly use, or
+              generally just any shell command.
+            </p>
+          </div>
+        )}
+        {applications.length > 0 && (
+          <div className="grid grow grid-cols-3 grid-rows-4 gap-2 w-full p-2">
+            {applications.map((application: LauncherCommand) => (
+              <LauncherButton
+                key={application.id}
+                glazewm={output.glazewm}
+                application={application}
+                onEdit={() => handleOpenModalForEdit(application)}
+                onDelete={() => handleDelete(application.id)}
+              />
+            ))}
+          </div>
+        )}
         <div className="flex bg-background rounded-md rounded-t-none justify-end items-center border-t border-border/60 p-2 gap-2">
           <Button onClick={handleOpenModalForAdd} size="icon">
             <Plus className="h-5 w-5" strokeWidth={2.5} />
@@ -109,9 +149,13 @@ function App() {
 function LauncherButton({
   glazewm,
   application,
+  onEdit,
+  onDelete,
 }: {
   glazewm: zebar.GlazeWmOutput | null;
   application: LauncherCommand;
+  onEdit: () => void;
+  onDelete: () => void;
 }) {
   const handleOnLauncherClick = async () => {
     if (!glazewm) return;
@@ -126,16 +170,27 @@ function LauncherButton({
     : Search;
 
   return (
-    <Button
-      className="h-full w-full flex flex-col gap-1.5 p-2"
-      variant="ghost"
-      onClick={handleOnLauncherClick}
-    >
-      {IconComponent && (
-        <IconComponent strokeWidth={3} className="h-full w-full grow" />
-      )}
-      <span>{application.title}</span>
-    </Button>
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <Button
+          className="h-full w-full flex flex-col gap-1.5 p-2"
+          variant="ghost"
+          onClick={handleOnLauncherClick}
+        >
+          {IconComponent && (
+            <IconComponent strokeWidth={3} className="h-full w-full grow" />
+          )}
+          <span>{application.title}</span>
+        </Button>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuGroup>
+          <ContextMenuLabel>{application.title}</ContextMenuLabel>
+          <ContextMenuItem onClick={onEdit}>Edit</ContextMenuItem>
+          <ContextMenuItem onClick={onDelete}>Delete</ContextMenuItem>
+        </ContextMenuGroup>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }
 

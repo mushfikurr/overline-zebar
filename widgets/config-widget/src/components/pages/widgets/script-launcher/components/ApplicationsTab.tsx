@@ -29,13 +29,13 @@ function ScriptItem({
           <div className="flex flex-col gap-1">
             <h1 className="font-semibold">{app.title}</h1>
             {app.command && (
-              <div className="mt-1 text-sm text-text/80 flex flex-wrap gap-1">
+              <div className="mt-1 text-sm text-text/80 flex flex-col flex-wrap gap-2">
                 {app.command && <h2>{app.command}</h2>}
-                {!!app.args.length &&
+                {app.args.length > 0 &&
                   app.args.map((arg, index) => (
                     <span
                       key={index}
-                      className="bg-button text-text px-2 py-1 rounded-md"
+                      className="bg-button w-fit text-text px-2 py-1 rounded-md"
                     >
                       {arg}
                     </span>
