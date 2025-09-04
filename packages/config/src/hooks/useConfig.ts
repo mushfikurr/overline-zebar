@@ -1,5 +1,5 @@
-import { useConfigState, useConfigDispatch } from '../ConfigProvider';
 import { AllWidgetSettings, RootConfig } from '../types';
+import { useConfigDispatch, useConfigState } from './useConfigContext';
 
 export function useAppSetting<K extends keyof RootConfig['app']>(key: K) {
   const state = useConfigState();

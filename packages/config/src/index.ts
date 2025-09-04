@@ -1,19 +1,18 @@
 export { ConfigProvider } from './ConfigProvider';
-export { useThemes } from './hooks/useThemes';
-export { useThemePreview } from './hooks/useThemePreview';
+export { configService } from './ConfigService';
+export { defaultConfig } from './defaults/default-config';
+export { defaultTheme } from './defaults/theme-presets';
 export { useAppSetting, useWidgetSetting } from './hooks/useConfig';
+export { useConfigDispatch, useConfigState } from './hooks/useConfigContext';
 export { useManageRootConfig } from './hooks/useManageRootConfig';
-export { usePersistentWidget } from './hooks/usePersistentWidget';
-export { defaultConfig } from './types';
-export { defaultTheme } from './presets';
-export { sendWidgetAction } from './ipc';
+export { useThemePreview } from './hooks/useThemePreview';
+export { useThemes } from './hooks/useThemes';
 export type {
-  AppSettings,
-  WeatherThreshold,
-  RootConfig,
   AllWidgetSettings,
-  Theme,
+  AppSettings,
   LabelColor,
   ProviderSettings,
+  RootConfig,
+  Theme,
+  WeatherThreshold,
 } from './types';
-export type { WidgetIpcAction, WidgetIpcPayload } from './ipc-types';

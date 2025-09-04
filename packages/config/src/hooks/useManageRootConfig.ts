@@ -1,14 +1,14 @@
-import { configManager } from '../ConfigManager';
-import { useConfigDispatch, useConfigState } from '../ConfigProvider';
-import { defaultConfig } from '../types';
+import { configService } from '../ConfigService';
+import { defaultConfig } from '../defaults/default-config';
 import { RootConfigSchema } from '../zod-types';
+import { useConfigDispatch, useConfigState } from './useConfigContext';
 
 export function useManageRootConfig() {
   const dispatch = useConfigDispatch();
   const state = useConfigState();
 
   const resetConfig = () => {
-    configManager.saveConfig(defaultConfig);
+    configService.saveConfig(defaultConfig);
     dispatch({ type: 'LOAD_CONFIG', config: defaultConfig });
   };
 
@@ -21,7 +21,7 @@ export function useManageRootConfig() {
       const parsed = JSON.parse(jsonString);
       const validationResult = RootConfigSchema.safeParse(parsed);
       if (validationResult.success) {
-        configManager.saveConfig(validationResult.data);
+        configService.saveConfig(validationResult.data);
         dispatch({ type: 'LOAD_CONFIG', config: validationResult.data });
         return { success: true };
       } else {

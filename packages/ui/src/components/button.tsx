@@ -7,7 +7,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-all duration-200 outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-all duration-200 outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -15,9 +15,9 @@ const buttonVariants = cva(
           'bg-button text-text hover:bg-background/90 active:bg-background focus-visible:border-primary border border-button-border shadow-xs',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs',
-        ghost: 'text-text-muted hover:bg-background/80 hover:text-text',
+        ghost: 'text-text-muted hover:bg-background-deeper hover:text-text',
         outline:
-          'border bg-transparent text-foreground hover:bg-accent/80 hover:text-accent-foreground shadow-xs',
+          'border border-button-border/60 hover:border-button-border bg-transparent text-text shadow-xs',
         link: 'text-foreground hover:underline',
         destructive:
           'bg-button border border-button-border text-text hover:bg-danger/80 focus-visible:ring-danger/50 shadow-xs',
@@ -43,24 +43,23 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     useRender.ComponentProps<'button'> {}
 
-function Button({
-  className,
-  variant,
-  size,
-  render = <button />,
-  ...props
-}: ButtonProps) {
-  const defaultProps = {
-    'data-slot': 'button',
-    className: cn(buttonVariants({ variant, size, className })),
-  } as const;
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, render = <button />, ...props }, ref) => {
+    const defaultProps = {
+      ref,
+      'data-slot': 'button',
+      className: cn(buttonVariants({ variant, size, className })),
+    } as const;
 
-  const element = useRender({
-    render,
-    props: mergeProps<'button'>(defaultProps, props),
-  });
+    const element = useRender({
+      render,
+      props: mergeProps<'button'>(defaultProps, props),
+    });
 
-  return element;
-}
+    return element;
+  }
+);
+
+Button.displayName = 'Button';
 
 export { Button, buttonVariants };

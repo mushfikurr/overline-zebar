@@ -15,7 +15,8 @@ export const Chip = React.forwardRef<HTMLElement, ChipProps>(
       <Component
         ref={ref}
         className={cn(
-          'flex items-center gap-2 px-3.5 py-1 bg-background-deeper rounded-2xl h-full drop-shadow-sm',
+          'flex items-center gap-2 rounded-2xl h-full drop-shadow-sm',
+          'px-3.5 py-1 bg-background-deeper ',
           'border border-border',
           'hover:border-button-border transition-colors ease-in-out duration-200',
           className

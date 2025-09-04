@@ -1,3 +1,4 @@
+import { useConfigDispatch, useWidgetSetting } from '@overline-zebar/config';
 import { useEffect, useState } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { useHashLocation } from 'wouter/use-hash-location';

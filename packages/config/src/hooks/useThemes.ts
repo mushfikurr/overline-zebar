@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
-import { useConfigState, useConfigDispatch } from '../ConfigProvider';
 import { Theme } from '../types';
-import { defaultConfig } from '../types';
 import { generateId } from '../utils/generateId';
+import { defaultConfig } from '../defaults/default-config';
+import { useConfigDispatch, useConfigState } from './useConfigContext';
 
 export function useThemes() {
   const { app } = useConfigState();

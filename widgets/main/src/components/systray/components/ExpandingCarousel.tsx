@@ -53,6 +53,7 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
   return (
     <div className="w-full flex justify-center items-center">
       <motion.div
+        layout
         className="relative overflow-hidden"
         initial={false}
         animate={{ width: expanded ? fullWidth : visibleWidth }}

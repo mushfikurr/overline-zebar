@@ -81,6 +81,7 @@ export function SelectContent({
       <SelectPositioner
         sideOffset={sideOffset}
         alignItemWithTrigger={position === 'item-aligned'}
+        className="z-[9999]"
       >
         <SelectScrollUpButton />
         <BaseSelect.Popup

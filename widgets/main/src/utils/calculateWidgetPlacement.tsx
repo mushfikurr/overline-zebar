@@ -31,7 +31,8 @@ export const calculateWidgetPlacementFromRight = async (
 
 export const calculateWidgetPlacementFromLeft = async (
   ref: RefObject<HTMLElement>,
-  size: Size
+  size: Size,
+  offsetX?: number
 ) => {
   const windowSize = await currentWidget().tauriWindow.outerSize();
   const rect = ref.current?.getBoundingClientRect();
@@ -39,7 +40,7 @@ export const calculateWidgetPlacementFromLeft = async (
 
   return {
     anchor: 'top_left',
-    offsetX: `${elementLeft}px`,
+    offsetX: `${elementLeft - (offsetX ?? 0)}px`,
     offsetY: `${windowSize.height + 6}px`,
     width: `${size.width}px`,
     height: `${size.height}px`,

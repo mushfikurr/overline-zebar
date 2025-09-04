@@ -13,6 +13,10 @@ body,
   --sb-size: 4px;
 }
 
+#root {
+  isolation: isolate;
+}
+
 *::-webkit-scrollbar {
   width: var(--sb-size);
 }

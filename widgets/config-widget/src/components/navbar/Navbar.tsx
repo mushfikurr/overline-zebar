@@ -45,6 +45,14 @@ export default function Navbar() {
         location={location}
         navigate={navigate}
       />
+      <NavbarItem
+        className="rounded-none"
+        Icon={LayoutGrid}
+        title="App Launcher"
+        href="/widget/app-launcher"
+        location={location}
+        navigate={navigate}
+      />
     </UiNavbar>
   );
 }

@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Volume, Volume1, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AudioOutput } from 'zebar';
-import { cn } from '../../utils/cn';
 import Slider from './components/Slider';
 
 export default function VolumeControl({
@@ -66,7 +65,6 @@ export default function VolumeControl({
   };
 
   const renderIcon = () => {
-    if (!playbackDevice) return null;
     if (playbackDevice.volume === 0) {
       return (
         <Volume className={statIconClassnames} size={16} strokeWidth={3} />
@@ -82,8 +80,6 @@ export default function VolumeControl({
     }
   };
 
-  if (!playbackDevice) return;
-
   return (
     <Chip
       ref={ref}
@@ -91,33 +87,26 @@ export default function VolumeControl({
       onClick={handleClick}
       onWheel={handleWheel}
       onDoubleClick={handleDoubleClick}
-      className="outline-none pr-4"
+      className="outline-none"
     >
       <div className="flex items-center">
         <div>{renderIcon()}</div>
 
-        <div
-          className={cn(
-            'transition duration-200 ease-in-out mx-1 w-full',
-            expanded && 'mx-1.5'
-          )}
-        >
+        <div>
           <AnimatePresence initial={false}>
             {expanded && (
               <motion.div
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 'auto', opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
+                initial={{ width: 0, marginLeft: 0, opacity: 0 }}
+                animate={{ width: 'auto', marginLeft: '6px', opacity: 1 }}
+                exit={{ width: 0, marginLeft: 0, opacity: 0 }}
                 className="overflow-hidden"
-                transition={{ type: 'spring', duration: 0.4, bounce: 0 }}
+                transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
               >
                 <Slider value={playbackDevice.volume} setValue={setVolume} />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-
-        <p>{playbackDevice.volume}%</p>
       </div>
     </Chip>
   );

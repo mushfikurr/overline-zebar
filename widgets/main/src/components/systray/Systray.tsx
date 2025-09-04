@@ -75,7 +75,7 @@ export default function Systray({ systray }: SystrayProps) {
       <ExpandingCarousel
         items={systrayIcons}
         expanded={expanded}
-        gap={6}
+        gap={4}
         itemWidth={16}
         visibleCount={visibleCount}
         startIndex={startIndex}

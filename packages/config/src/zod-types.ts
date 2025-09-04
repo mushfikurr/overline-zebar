@@ -14,6 +14,8 @@ export const LabelColorSchema = z.union([
   z.literal('--text'),
 ]);
 
+export const BaseWidgetSettingsSchema = z.object({});
+
 export const WeatherThresholdSchema = z.object({
   id: z.string(),
   min: z.number(),
@@ -26,16 +28,17 @@ export const AppSettingsSchema = z.object({
   zebarWebsocketUri: z.string(),
   themes: z.array(ThemeSchema),
   currentThemeId: z.string(),
-  radius: z.string(), // Added radius setting
+  radius: z.string(),
 });
 
 export const ProviderSettingsSchema = z.object({
   cpu: z.boolean().default(true),
   memory: z.boolean().default(true),
   weather: z.boolean().default(true),
+  battery: z.boolean().default(true),
 });
 
-export const MainWidgetSettingsSchema = z.object({
+export const MainWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
   flowLauncherPath: z.string(),
   mediaMaxWidth: z.string(),
   weatherThresholds: z.array(WeatherThresholdSchema),
@@ -48,8 +51,22 @@ export const MainWidgetSettingsSchema = z.object({
   providers: ProviderSettingsSchema.default({}),
 });
 
+export const LauncherCommandSchema = z.object({
+  id: z.string(),
+  command: z.string(),
+  args: z.array(z.string()),
+  title: z.string(),
+  icon: z.string().optional(),
+});
+
+export const AppLauncherWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
+  applications: z.array(LauncherCommandSchema),
+});
+
 export const AllWidgetSettingsSchema = z.object({
   main: MainWidgetSettingsSchema,
+  'app-launcher': AppLauncherWidgetSettingsSchema,
+  'config-widget': z.object({}),
 });
 
 export const RootConfigSchema = z.object({

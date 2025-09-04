@@ -83,7 +83,7 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
       <Chip
         className={cn(
           width ? 'absolute' : 'relative',
-          'flex items-center select-none overflow-hidden px-1 py-1 h-full space-x-0.5'
+          'flex items-center select-none overflow-hidden px-1 py-1 h-full gap-1'
         )}
         as="div"
         ref={ref}

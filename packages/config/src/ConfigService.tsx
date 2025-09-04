@@ -1,5 +1,6 @@
-import { AllWidgetSettings, RootConfig, defaultConfig } from './types';
 import * as zebar from 'zebar';
+import { AllWidgetSettings, RootConfig } from './types';
+import { defaultConfig } from './defaults/default-config';
 import { deepMerge } from './utils/deepMerge';
 import { logger } from './utils/logger';
 
@@ -8,8 +9,6 @@ const STORAGE_KEY = 'overline-zebar-config';
 let cachedConfig: RootConfig | null = null;
 
 import { generateId } from './utils/generateId';
-import { AllWidgetSettingsSchema } from './zod-types';
-import { z } from 'zod';
 
 function loadConfig(forceReload = false): RootConfig {
   if (cachedConfig && !forceReload) {
@@ -92,7 +91,7 @@ function getWidgetSetting(widgetName: string, key: string): unknown {
   return loadConfig().widgets[widgetName]?.[key];
 }
 
-export const configManager = {
+export const configService = {
   loadConfig,
   saveConfig,
   updateAppSetting,

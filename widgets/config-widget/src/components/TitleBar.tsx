@@ -1,11 +1,24 @@
 import { cn } from '@/utils/cn';
+import { useConfigDispatch, useWidgetSetting } from '@overline-zebar/config';
 import { buttonVariants } from '@overline-zebar/ui';
 import { X } from 'lucide-react';
 import * as zebar from 'zebar';
 
 export default function TitleBar() {
+  const [isAlwaysOn] = useWidgetSetting('config-widget', 'alwaysOn');
+  const dispatch = useConfigDispatch();
+
   const onClose = () => {
-    zebar.currentWidget().close();
+    if (isAlwaysOn) {
+      dispatch({
+        type: 'SET_WIDGET_SETTING',
+        widget: 'config-widget',
+        key: 'isVisible',
+        value: false,
+      });
+    } else {
+      zebar.currentWidget().close();
+    }
   };
 
   return (

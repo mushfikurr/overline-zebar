@@ -9,6 +9,13 @@ import WeatherThresholds from './WeatherThresholds';
 import { useWidgetSetting, ProviderSettings } from '@overline-zebar/config';
 import { Separator } from '@/components/common/Separator';
 
+const providerLabels: Record<keyof ProviderSettings, string> = {
+  cpu: 'CPU Usage',
+  memory: 'Memory Usage',
+  weather: 'Weather',
+  battery: 'Battery',
+};
+
 export default function SystemStatsTab() {
   const [providers, setProviders] = useWidgetSetting('main', 'providers');
   const [weatherUnit, setWeatherUnit] = useWidgetSetting('main', 'weatherUnit');
@@ -31,39 +38,21 @@ export default function SystemStatsTab() {
           </p>
         </div>
         <div className="space-y-3">
-          <FormField switch>
-            <FieldTitle>CPU Usage</FieldTitle>
-            <FieldInput>
-              <Switch
-                checked={providers.cpu}
-                onCheckedChange={(checked) =>
-                  handleProviderToggle('cpu', checked)
-                }
-              />
-            </FieldInput>
-          </FormField>
-          <FormField switch>
-            <FieldTitle>Memory Usage</FieldTitle>
-            <FieldInput>
-              <Switch
-                checked={providers.memory}
-                onCheckedChange={(checked) =>
-                  handleProviderToggle('memory', checked)
-                }
-              />
-            </FieldInput>
-          </FormField>
-          <FormField switch>
-            <FieldTitle>Weather</FieldTitle>
-            <FieldInput>
-              <Switch
-                checked={providers.weather}
-                onCheckedChange={(checked) =>
-                  handleProviderToggle('weather', checked)
-                }
-              />
-            </FieldInput>
-          </FormField>
+          {(Object.keys(providers) as Array<keyof ProviderSettings>).map(
+            (key) => (
+              <FormField switch key={key}>
+                <FieldTitle>{providerLabels[key]}</FieldTitle>
+                <FieldInput>
+                  <Switch
+                    checked={providers[key]}
+                    onCheckedChange={(checked) =>
+                      handleProviderToggle(key, checked)
+                    }
+                  />
+                </FieldInput>
+              </FormField>
+            )
+          )}
         </div>
       </div>
 

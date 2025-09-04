@@ -23,7 +23,7 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider>
+      <ConfigProvider widgetName="main">
         <App />
       </ConfigProvider>
     </QueryClientProvider>

@@ -52,7 +52,7 @@ function TabsList({
     <BaseTabs.List
       data-slot="tabs-list"
       className={cn(
-        'text-text-muted  p-1 relative z-0 inline-flex h-10 w-fit items-center justify-center gap-x-1',
+        'text-text-muted p-1 relative z-0 inline-flex h-10 w-fit items-center justify-center gap-x-1',
         variant === 'capsule' ? 'bg-background-deeper rounded-lg' : '',
         className
       )}

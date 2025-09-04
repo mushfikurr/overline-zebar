@@ -1,32 +1,37 @@
-import { sendWidgetAction } from '@overline-zebar/config';
-import * as zebar from 'zebar';
+import { useWidgetSetting } from '@overline-zebar/config';
 import { Button } from '@overline-zebar/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, LayoutGrid } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import * as zebar from 'zebar';
 import { GlazeWmOutput } from 'zebar';
-import { calculateWidgetPlacementFromLeft } from '../utils/calculateWidgetPlacement';
-import { cn } from '../utils/cn';
+import { calculateWidgetPlacementFromLeft } from '../../utils/calculateWidgetPlacement';
+import { cn } from '../../utils/cn';
 
-interface TilingControlProps {
+interface LeftButtonsProps {
   glazewm: GlazeWmOutput | null;
 }
 
-export function TilingControl({ glazewm }: TilingControlProps) {
+export function LeftButtons({ glazewm }: LeftButtonsProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const calculatePlacementFromRef = async () => {
-    return await calculateWidgetPlacementFromLeft(buttonRef, {
-      width: 400,
-      height: 400,
-    });
-  };
+  const [marginX] = useWidgetSetting('main', 'marginX');
 
   if (!glazewm) return null;
 
+  const calculatePlacementFromRef = async () => {
+    return await calculateWidgetPlacementFromLeft(
+      buttonRef,
+      {
+        width: 400,
+        height: 400,
+      },
+      marginX
+    );
+  };
+
   const handleOpenAppLauncher = async () => {
     const placement = await calculatePlacementFromRef();
-    sendWidgetAction('app-launcher', 'toggle', placement);
+    await zebar.startWidget('app-launcher', placement, {});
   };
 
   return (

@@ -5,6 +5,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "use-debounce": "^10.0.5",
