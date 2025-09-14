@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import * as zebar from 'zebar';
 import { configService } from '../../ConfigService';
+import { Dispatch } from '../../ConfigReducer';
 
-export function useConfigChangeIpc(dispatch: any) {
+export function useConfigChangeIpc(dispatch: Dispatch) {
   useEffect(() => {
     const listenConfigChange = async () => {
       await zebar.currentWidget().tauriWindow.listen('config-changed', () => {

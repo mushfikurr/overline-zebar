@@ -15,7 +15,7 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ConfigProvider widgetName="system-stats">
+    <ConfigProvider>
       <App />
     </ConfigProvider>
   </StrictMode>

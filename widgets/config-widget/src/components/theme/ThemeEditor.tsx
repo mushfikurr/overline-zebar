@@ -1,4 +1,8 @@
-import { generateThemeFromColor, useThemePreview, useThemes } from '@overline-zebar/config';
+import {
+  generateThemeFromColor,
+  useThemePreview,
+  useThemes,
+} from '@overline-zebar/config';
 import {
   Button,
   ColorPicker,
@@ -23,7 +27,11 @@ interface ThemeColorPickerProps {
   onColorChange: (newColor: string) => void;
 }
 
-function ThemeColorPicker({ name, value, onColorChange }: ThemeColorPickerProps) {
+function ThemeColorPicker({
+  name,
+  value,
+  onColorChange,
+}: ThemeColorPickerProps) {
   return (
     <div key={name} className="flex items-center justify-between">
       <label>{name}</label>
@@ -184,7 +192,9 @@ export function ThemeEditor() {
                   key={name}
                   name={name}
                   value={value}
-                  onColorChange={(newColor) => handleColorChange(name, newColor)}
+                  onColorChange={(newColor) =>
+                    handleColorChange(name, newColor)
+                  }
                 />
               ))}
             </div>
@@ -205,6 +215,3 @@ export function ThemeEditor() {
     </div>
   );
 }
-
-
-

@@ -30,8 +30,7 @@ const getInitialState = () => {
 
 export const ConfigProvider: React.FC<{
   children: React.ReactNode;
-  widgetName: keyof AllWidgetSettings;
-}> = ({ children, widgetName }) => {
+}> = ({ children }) => {
   const [state, dispatch] = useReducer(configReducer, getInitialState());
 
   // Register IPC hooks

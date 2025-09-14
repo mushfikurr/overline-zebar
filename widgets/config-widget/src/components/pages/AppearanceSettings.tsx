@@ -38,7 +38,7 @@ function AppearanceSettings() {
             <FieldTitle>Border Radius</FieldTitle>
             <FieldInput>
               <Select
-                onValueChange={(value) => setRadius(value as any)}
+                onValueChange={setRadius}
                 defaultValue={radius}
                 items={selectOptions}
               >

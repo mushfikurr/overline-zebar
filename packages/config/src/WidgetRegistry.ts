@@ -1,4 +1,4 @@
-import { AllWidgetSettings } from "./types";
+import { AllWidgetSettings } from './types';
 
 const launchedWidgets = new Set<keyof AllWidgetSettings>();
 

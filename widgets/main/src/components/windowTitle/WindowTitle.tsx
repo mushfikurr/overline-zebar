@@ -78,8 +78,7 @@ export const formatWindowTitle = (title: string, process: string) => {
       process.startsWith(exclusion)
     );
 
-  const splitWindowTitle =
-    title?.split(SPLIT_WINDOW_TITLE_REGEX) || [];
+  const splitWindowTitle = title?.split(SPLIT_WINDOW_TITLE_REGEX) || [];
 
   const lastSplitWindowTitle = isExcluded
     ? process

@@ -9,9 +9,8 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ConfigProvider widgetName="script-launcher">
+    <ConfigProvider>
       <App />
     </ConfigProvider>
   </React.StrictMode>
 );
-

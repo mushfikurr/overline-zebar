@@ -8,8 +8,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
   base: './',
 });
