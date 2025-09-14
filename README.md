@@ -58,7 +58,7 @@ A comprehensive GUI for configuring all aspects of the widgets, from appearance 
 
 ### Script-Launcher Widget
 
-A simple but powerful widget that allows you to define and quickly run custom shell commands or scripts.
+A simple but powerful widget that allows you to define and quickly run custom shell commands or scripts. Access the main **config-widget** by clicking the settings (gear) icon in the bottom right.
 
 ## Installation
 
@@ -161,6 +161,7 @@ Here's a breakdown of the available options:
 
 ### Widget Specific > Script Launcher
 
+- **Accessing Configuration**: Open the main **config-widget** by clicking the settings (gear) icon in the bottom right of the script launcher.
 - **Scripts**: Add, edit, and remove custom scripts. Each script has a name (which is displayed in the widget) and a shell command to be executed.
 
 ## Development
