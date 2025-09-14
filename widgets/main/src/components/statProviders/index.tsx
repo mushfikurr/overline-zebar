@@ -5,6 +5,7 @@ import { calculateWidgetPlacementFromRight } from '../../utils/calculateWidgetPl
 import * as zebar from 'zebar';
 import Stat from '../stat/Stat';
 import { getWeatherIcon } from '../../utils/weatherIcons';
+import { Battery, BatteryCharging } from 'lucide-react';
 
 type Props = {
   battery: zebar.BatteryOutput | null;
@@ -78,9 +79,20 @@ type BatteryStatProps = {
 };
 function BatteryStat({ battery, batteryProvider }: BatteryStatProps) {
   if (!batteryProvider || !battery) return null;
+
+  const renderBatteryIcon = () => {
+    if (battery.isCharging) {
+      return (
+        <BatteryCharging strokeWidth={3} className="h-3.5 w-3.5 text-icon" />
+      );
+    } else {
+      return <Battery strokeWidth={3} className="h-3.5 w-3.5 text-icon" />;
+    }
+  };
+
   return (
     <Stat
-      Icon={<p className="font-medium text-icon">RAM</p>}
+      Icon={renderBatteryIcon()}
       stat={`${Math.round(battery.chargePercent)}%`}
       type="ring"
     />
