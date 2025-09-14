@@ -11,7 +11,7 @@ import { ScriptLauncherSettings } from './components/pages/widgets/script-launch
 function App() {
   return (
     <Router hook={useHashLocation}>
-      <div className="relative flex flex-col shadow-sm items-center bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
+      <div className="relative flex flex-col shadow-sm items-center bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-screen antialiased select-none rounded-lg font-mono">
         <TitleBar />
         <div className="flex w-full flex-grow min-h-0">
           <div className="flex flex-col w-full max-w-sm">

@@ -59,7 +59,7 @@ const IconButton = ({
   ...props
 }: IconButtonProps) => {
   const renderInner = (Icon: LucideIcon) => (
-    <Icon className="h-4 w-4" strokeWidth={3} />
+    <Icon className="h-3 w-3" strokeWidth={3} />
   );
 
   return (

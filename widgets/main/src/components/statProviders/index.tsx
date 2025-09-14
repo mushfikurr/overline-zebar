@@ -21,14 +21,14 @@ function StatProviders({ cpu, memory, battery, weather }: Props) {
   const [weatherThresholds] = useWidgetSetting('main', 'weatherThresholds');
   const [weatherUnit] = useWidgetSetting('main', 'weatherUnit');
   const chipRef = useRef<HTMLDivElement | null>(null);
-  const statIconClassnames = 'h-5 w-5 text-icon';
+  const statIconClassnames = 'h-3.5 w-3.5 text-icon';
 
   if (allProvidersDisabled) return null;
 
   return (
     <Chip
       ref={chipRef}
-      className="flex items-center gap-3 h-full pl-3.5 pr-3"
+      className="flex items-center gap-3 h-full pl-3 pr-2.5"
       as="button"
       onClick={async () => {
         const widgetPlacement = await calculateWidgetPlacementFromRight(

@@ -7,7 +7,7 @@ import { cn } from '../../utils/cn';
 
 export default function RightButtons() {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 h-full">
       <PowerOffButton />
     </div>
   );
@@ -46,9 +46,9 @@ function PowerOffButton() {
 
   return (
     <Button
-      size="icon"
+      size="icon-sm"
       onClick={handlePowerOff}
-      className={cn(shuttingDown && 'animate-pulse border-danger')}
+      className={cn('h-full', shuttingDown && 'animate-pulse border-danger')}
     >
       {!shuttingDown ? (
         <Power strokeWidth={3} className="text-danger h-4 w-4" />

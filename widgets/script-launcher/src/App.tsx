@@ -101,7 +101,7 @@ function App() {
   };
 
   return (
-    <div className="relative shadow-sm bg-background/95 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
+    <div className="relative shadow-sm bg-background/95 border border-button-border/80 h-screen backdrop-blur-xl text-text antialiased select-none rounded-lg font-mono">
       <UpdateScriptModal
         open={isModalOpen}
         setOpen={setIsModalOpen}
@@ -110,11 +110,11 @@ function App() {
         editingId={editingId}
         onAddOrUpdate={handleAddOrUpdate}
       />
-      <div className="flex flex-col h-full w-full min-h-0 gap-1">
+      <div className="flex flex-col h-full w-full gap-1">
         {applications.length == 0 && (
           <div className="grow flex flex-col gap-2 items-center justify-center p-2">
             <h1 className="text-center">Scripts you add will show up here</h1>
-            <p className="text-text-muted text-center">
+            <p className="text-text-muted text-center max-w-xs">
               These can be .exe paths, AHK scripts you commonly use, or
               generally just any shell command.
             </p>

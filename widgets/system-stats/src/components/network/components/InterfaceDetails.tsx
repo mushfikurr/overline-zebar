@@ -28,7 +28,7 @@ export default function InterfaceDetails({ iface }: Props) {
       </div>
       <section className="space-y-1.5">
         <h3 className="font-medium flex items-center text-text-muted gap-2">
-          <Rss className="h-5 w-5" aria-hidden="true" />
+          <Rss className="h-4 w-4" aria-hidden="true" />
           Connection Speed
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -48,7 +48,7 @@ export default function InterfaceDetails({ iface }: Props) {
       </section>
       <section className="space-y-1.5">
         <h3 className="font-medium flex items-center text-text-muted gap-2">
-          <Globe className="h-5 w-5" aria-hidden="true" />
+          <Globe className="h-4 w-4" aria-hidden="true" />
           Network Addresses
         </h3>
         <Card>

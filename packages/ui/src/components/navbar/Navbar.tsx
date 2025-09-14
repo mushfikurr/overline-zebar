@@ -29,7 +29,7 @@ export function NavbarItem({
     <Button
       onClick={handleClick}
       className={cn(
-        'group max-h-10 justify-start text-base gap-2 bg-transparent hover:bg-background-deeper/60 h-full px-4 border-none border-b border-button-border rounded-none text-text-muted hover:text-text last:border-b-0',
+        'group max-h-8 justify-start gap-2 bg-transparent hover:bg-background-deeper/60 h-full px-4 border-none border-b border-button-border rounded-none text-text-muted hover:text-text last:border-b-0',
         location === href &&
           'text-text bg-background-deeper hover:bg-background-deeper',
         className

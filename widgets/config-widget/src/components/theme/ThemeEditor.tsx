@@ -1,4 +1,4 @@
-import { useThemePreview, useThemes } from '@overline-zebar/config';
+import { generateThemeFromColor, useThemePreview, useThemes } from '@overline-zebar/config';
 import {
   Button,
   ColorPicker,
@@ -9,7 +9,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from '@overline-zebar/ui';
+import { useState } from 'react';
 import SaveAsNewDialog from './SaveAsNewDialog';
 
 interface ThemeColorPickerProps {
@@ -18,11 +23,7 @@ interface ThemeColorPickerProps {
   onColorChange: (newColor: string) => void;
 }
 
-function ThemeColorPicker({
-  name,
-  value,
-  onColorChange,
-}: ThemeColorPickerProps) {
+function ThemeColorPicker({ name, value, onColorChange }: ThemeColorPickerProps) {
   return (
     <div key={name} className="flex items-center justify-between">
       <label>{name}</label>
@@ -90,12 +91,21 @@ export function ThemeEditor() {
     cancelPreview,
     savePreview,
   } = useThemePreview();
+  const [editorMode, setEditorMode] = useState('simple');
 
   const handleColorChange = (colorName: string, newColor: string) => {
     if (!isPreviewing) {
       startPreview(activeTheme!);
     }
     updatePreview({ [colorName]: newColor });
+  };
+
+  const handleGenerateTheme = (baseColor: string) => {
+    const newTheme = generateThemeFromColor(baseColor);
+    if (!isPreviewing) {
+      startPreview(activeTheme!); // start preview with the original theme
+    }
+    updatePreview(newTheme.colors);
   };
 
   const handleThemeChange = (themeId: unknown) => {
@@ -161,18 +171,40 @@ export function ThemeEditor() {
         </div>
       </div>
 
-      {displayedTheme && (
-        <div className="grid grid-cols-2 w-full gap-y-3 gap-x-6">
-          {Object.entries(displayedTheme.colors).map(([name, value]) => (
-            <ThemeColorPicker
-              key={name}
-              name={name}
-              value={value}
-              onColorChange={(newColor) => handleColorChange(name, newColor)}
-            />
-          ))}
-        </div>
-      )}
+      <Tabs value={editorMode} onValueChange={setEditorMode}>
+        <TabsList>
+          <TabsTrigger value="simple">Simple</TabsTrigger>
+          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+        </TabsList>
+        <TabsContent value="advanced">
+          {displayedTheme && (
+            <div className="grid grid-cols-2 w-full gap-y-3 gap-x-6 pt-4">
+              {Object.entries(displayedTheme.colors).map(([name, value]) => (
+                <ThemeColorPicker
+                  key={name}
+                  name={name}
+                  value={value}
+                  onColorChange={(newColor) => handleColorChange(name, newColor)}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="simple">
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center justify-between">
+              <label>Base Color</label>
+              <ColorPicker
+                value={displayedTheme?.colors['--background'] || '#000000'}
+                onChange={handleGenerateTheme}
+              />
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
+
+
+

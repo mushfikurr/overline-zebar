@@ -57,14 +57,14 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
     <AnimatePresence>
       <motion.div
         onWheel={handleWheel}
-        layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={springConfig}
+        layout="size"
         className={cn(
           chipStyles,
-          'flex items-center gap-1 p-1 rounded-2xl select-none overflow-hidden'
+          'flex items-center gap-1 p-1 h-full rounded-2xl select-none overflow-hidden transition-[width] duration-200 ease-out'
         )}
       >
         {workspaces.map((workspace) => {
@@ -75,39 +75,42 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
             workspace.name;
 
           return (
-            <motion.div
+            <motion.button
               key={workspace.name}
-              layout
               transition={springConfig}
               onClick={() =>
                 glazewm.runCommand(`focus --workspace ${workspace.name}`)
               }
-              className="relative flex items-center justify-center min-w-[2rem] h-full cursor-pointer"
+              className="relative touch-hitbox flex items-center justify-center px-1 max-w-[10rem] h-full"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {isActive && (
                 <motion.span
                   layoutId="activeWorkspace"
                   transition={springConfig}
-                  className="absolute inset-0 bg-primary border border-primary-border drop-shadow-sm z-0"
+                  className="absolute w-full h-full inset-0 bg-primary border border-primary-border drop-shadow-sm z-0"
                   style={{ borderRadius: `calc(${borderRadius} - 0.25rem)` }}
                 />
               )}
-              <span
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 className={cn(
-                  'relative z-10 truncate max-w-40 leading-none',
+                  'relative z-10 truncate px-0.5 w-full h-full leading-none text-center flex items-center justify-center',
+                  'transition-colors ease-in-out duration-200',
                   isActive
                     ? 'text-primary-text font-medium'
                     : 'text-text-muted hover:text-text transition-colors'
                 )}
               >
                 {label}
-              </span>
-            </motion.div>
+              </motion.span>
+            </motion.button>
           );
         })}
       </motion.div>
     </AnimatePresence>
   );
 }
-

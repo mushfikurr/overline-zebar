@@ -32,7 +32,7 @@ export function BatterySection({ battery }: BatteryProps) {
           <div className="flex items-center gap-1">
             {battery.isCharging ? (
               <Zap
-                className="h-3 w-3 text-icon animate-pulse"
+                className="h-4 w-4 text-icon animate-pulse"
                 strokeWidth={2.6}
               />
             ) : (
@@ -72,13 +72,13 @@ export function BatterySection({ battery }: BatteryProps) {
         </IconSection>
         <IconSection title="Voltage">
           <IconContainer>
-            <Cable className="h-5 w-5" />
+            <Cable className="h-4 w-4" />
           </IconContainer>
           <p>{battery.powerConsumption}V</p>
         </IconSection>
         <IconSection title="Power Consumption">
           <IconContainer>
-            <PlugZap className="h-5 w-5" />
+            <PlugZap className="h-4 w-4" />
           </IconContainer>
           <p>{battery.voltage}W</p>
         </IconSection>
@@ -89,7 +89,7 @@ export function BatterySection({ battery }: BatteryProps) {
 
 function IconContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-5 w-5 text-icon flex items-center justify-center">
+    <div className="h-4 w-4 text-icon flex items-center justify-center">
       {children}
     </div>
   );

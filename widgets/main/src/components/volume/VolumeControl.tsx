@@ -66,17 +66,11 @@ export default function VolumeControl({
 
   const renderIcon = () => {
     if (playbackDevice.volume === 0) {
-      return (
-        <Volume className={statIconClassnames} size={16} strokeWidth={3} />
-      );
+      return <Volume className={statIconClassnames} strokeWidth={3} />;
     } else if (playbackDevice.volume > 0 && playbackDevice.volume < 60) {
-      return (
-        <Volume1 className={statIconClassnames} size={16} strokeWidth={3} />
-      );
+      return <Volume1 className={statIconClassnames} strokeWidth={3} />;
     } else {
-      return (
-        <Volume2 className={statIconClassnames} size={16} strokeWidth={3} />
-      );
+      return <Volume2 className={statIconClassnames} strokeWidth={3} />;
     }
   };
 

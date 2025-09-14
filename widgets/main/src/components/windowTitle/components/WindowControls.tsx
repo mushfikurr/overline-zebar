@@ -18,16 +18,18 @@ export function WindowControls({ glazewm, ...props }: WindowControlsProps) {
 
   return (
     <ConditionalPanel sessionActive={props.show}>
-      <Chip
-        as="button"
-        className="mx-2.5 h-fit py-2"
-        ref={ref}
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-        }}
-      >
-        <ControlList glazewm={glazewm} />
-      </Chip>
+      <div className="py-1">
+        <Chip
+          as="button"
+          className="mx-2.5 h-full py-1"
+          ref={ref}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+          }}
+        >
+          <ControlList glazewm={glazewm} />
+        </Chip>
+      </div>
     </ConditionalPanel>
   );
 }
@@ -43,7 +45,7 @@ const ControlList = ({ glazewm }: { glazewm: GlazeWmOutput | null }) => {
   const controls = [CopyProcessName, ToggleFloating, ToggleFullscreen];
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center h-full gap-1.5">
       {controls.map((Control, idx) => (
         <Control key={idx} glazewm={glazewm} />
       ))}

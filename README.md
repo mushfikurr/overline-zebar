@@ -26,6 +26,7 @@ The project is organized into two main directories:
   - `main`: The main topbar widget.
   - `system-stats`: A widget to display system statistics.
   - `config-widget`: A graphical user interface to configure all widgets.
+  - `script-launcher`: A widget to quickly launch custom scripts.
 
 ## Features
 
@@ -54,6 +55,10 @@ This widget provides a detailed view of your system's statistics, including:
 ### Config Widget
 
 A comprehensive GUI for configuring all aspects of the widgets, from appearance to functionality. See the [Configuration](#configuration) section for more details.
+
+### Script-Launcher Widget
+
+A simple but powerful widget that allows you to define and quickly run custom shell commands or scripts.
 
 ## Installation
 
@@ -92,7 +97,7 @@ Choose this option if you want to customize the widget's functionality, modify t
 3.  Build the project for production:
 
     ```sh
-    pnpm -r build
+    pnpm --filter "@overline-zebar/*" build
     ```
 
     This creates a `dist` folder in each widget's directory, containing the compiled widget ready for use.
@@ -123,7 +128,7 @@ Here's a breakdown of the available options:
 ### Appearance
 
 - **Border Radius**: Adjust the roundness of elements.
-- **Theme**: Choose from a list of preset themes (including Catppuccin variants) or create your own. The theme editor allows you to:
+- **Theme**: Choose from a list of preset themes (including Catppuccin variants) or generate your own from a single color. The theme generator creates a rich, varied palette with distinct shades and high-contrast, tinted text, ensuring both readability and a unique aesthetic. The theme editor allows you to:
   - Select, add, and delete themes.
   - Customize every color in the theme with a color picker and eye-dropper.
   - Preview changes in real-time.
@@ -141,7 +146,7 @@ Here's a breakdown of the available options:
 - **Launcher Path**: The file path to your preferred application launcher (e.g., Flow Launcher, PowerToys Run).
 - **Allow Dynamic Workspace Indicators**: If enabled, workspace indicators will be named after the first opened window in that workspace.
 - **Horizontal Margin**: Adds space to the left and right of the topbar for a "floating" look.
-- **Horizontal Padding**: Adjusts the inner spacing on the left and right of the topbar.
+- **Left/Right Padding**: Adjusts the inner spacing on the left and right ends of the topbar independently.
 - **Media Max Width**: Sets the maximum width for the media display.
 
 #### Stats
@@ -153,6 +158,10 @@ Here's a breakdown of the available options:
 #### System Tray
 
 - **Pinned Icons**: Select which icons should remain visible when the system tray is collapsed. You can toggle the collapsed state by Shift-clicking the system tray icons.
+
+### Widget Specific > Script Launcher
+
+- **Scripts**: Add, edit, and remove custom scripts. Each script has a name (which is displayed in the widget) and a shell command to be executed.
 
 ## Development
 

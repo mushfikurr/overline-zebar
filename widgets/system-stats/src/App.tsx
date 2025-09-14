@@ -44,7 +44,7 @@ function App() {
 
   return (
     <Router hook={useHashLocation}>
-      <div className="relative flex justify-between shadow-sm items-center bg-background/90 border border-button-border/80 backdrop-blur-xl text-text h-full antialiased select-none rounded-lg font-mono">
+      <div className="h-screen relative flex justify-between shadow-sm items-center bg-background/90 border border-button-border/80 backdrop-blur-xl text-text antialiased select-none rounded-lg font-mono">
         <div className="flex w-full h-full">
           <div className="flex flex-col">
             <Navbar />

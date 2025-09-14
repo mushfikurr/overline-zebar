@@ -35,7 +35,7 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
   };
 
   return (
-    <>
+    <div className="flex items-center h-full gap-1.5">
       <AnimatePresence>
         {glazewm.bindingModes.map((bindingMode) => (
           <motion.div
@@ -46,27 +46,35 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
             exit={{ opacity: 0 }}
             className="flex items-center h-full"
           >
-            <Button>{bindingMode.displayName ?? bindingMode.name}</Button>
+            <Button size="sm">
+              {bindingMode.displayName ?? bindingMode.name}
+            </Button>
           </motion.div>
         ))}
       </AnimatePresence>
 
-      <Button size="icon" ref={buttonRef} onClick={handleOpenScriptLauncher}>
-        <LayoutGrid strokeWidth={3} className="h-4 w-4" />
+      <Button
+        size="icon-sm"
+        ref={buttonRef}
+        className="h-full"
+        onClick={handleOpenScriptLauncher}
+      >
+        <LayoutGrid strokeWidth={2.5} className="h-3 w-3" />
       </Button>
 
       <Button
-        size="icon"
+        size="icon-sm"
         onClick={() => glazewm.runCommand('toggle-tiling-direction')}
+        className="h-full"
       >
         <ChevronRight
           className={cn(
-            'h-4 w-4 transition-transform duration-200 ease-in-out',
+            'h-3 w-3 transition-transform duration-200 ease-in-out',
             glazewm.tilingDirection === 'vertical' ? 'rotate-90' : ''
           )}
           strokeWidth={3}
         />
       </Button>
-    </>
+    </div>
   );
 }

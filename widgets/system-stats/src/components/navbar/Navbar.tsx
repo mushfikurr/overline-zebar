@@ -1,5 +1,4 @@
-import { cn } from '@/utils/cn';
-import { Navbar as UiNavbar, NavbarItem } from '@overline-zebar/ui';
+import { NavbarItem, Navbar as UiNavbar } from '@overline-zebar/ui';
 import { BarChart, Globe, HardDrive, Server } from 'lucide-react';
 import { useLocation } from 'wouter';
 
@@ -7,7 +6,7 @@ export default function Navbar() {
   const [location, navigate] = useLocation();
 
   return (
-    <UiNavbar>
+    <UiNavbar className="bg-background/95">
       <NavbarItem
         Icon={Server}
         title="Host"

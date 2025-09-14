@@ -14,7 +14,7 @@ function Switch({
     <BaseCheckbox.Root
       data-slot="checkbox"
       className={cn(
-        'peer bg-background-deeper focus-visible:ring-primary/50 aria-invalid:border-destructive aria-invalid:text-destructive aria-invalid:focus:ring-destructive/50 data-[checked]:border-primary-border data-[checked]:bg-primary data-[checked]:text-primary-text data-[indeterminate]:text-text flex size-5 items-center justify-center rounded-sm border border-border transition-colors duration-150 outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
+        'peer bg-background-deeper focus-visible:ring-primary/50 aria-invalid:border-destructive aria-invalid:text-destructive aria-invalid:focus:ring-destructive/50 data-[checked]:border-primary-border data-[checked]:bg-primary data-[checked]:text-primary-text data-[indeterminate]:text-text flex size-4 items-center justify-center rounded-sm border border-border transition-colors duration-150 outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
@@ -24,9 +24,9 @@ function Switch({
         className="block data-[unchecked]:hidden"
       >
         {props.indeterminate ? (
-          <MinusIcon className="size-3.5" />
+          <MinusIcon className="size-3" />
         ) : (
-          <CheckIcon className="size-3.5" />
+          <CheckIcon className="size-3" />
         )}
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>

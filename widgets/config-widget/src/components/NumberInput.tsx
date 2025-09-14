@@ -50,6 +50,7 @@ export function NumberInput({
       {...props}
       type="number"
       value={internalValue}
+      className="h-full"
       onChange={handleInputChange}
       onBlur={handleBlur}
     />

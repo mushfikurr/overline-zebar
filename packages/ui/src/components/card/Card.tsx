@@ -38,7 +38,7 @@ const CardTitle = React.forwardRef<HTMLDivElement, CardTitleProps>(
         {...props}
       >
         <h3 className="font-medium text-text-muted">{children}</h3>
-        {Icon && <Icon className="h-5 w-5 text-text-muted" />}
+        {Icon && <Icon className="h-4 w-4 text-text-muted" />}
       </div>
     );
   }

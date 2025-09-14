@@ -25,7 +25,7 @@ export default function Traffic({ traffic }: Props) {
   return (
     <section className="space-y-1.5">
       <h3 className="font-medium flex items-center text-text-muted gap-2">
-        <ArrowDownUp className="h-5 w-5" aria-hidden="true" />
+        <ArrowDownUp className="h-4 w-4" aria-hidden="true" />
         Overall Traffic
       </h3>
       <div className="grid grid-cols-2 gap-2">

@@ -74,8 +74,12 @@ export default function Network({ network }: NetworkPanelProps) {
             });
           }}
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Interface..."></SelectValue>
+          <SelectTrigger className="max-h-full">
+            <SelectValue>
+              {(i) =>
+                network.interfaces.find((f) => i.name === f.name)?.friendlyName
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent position="item-aligned">
             {network.interfaces.map((i) => (

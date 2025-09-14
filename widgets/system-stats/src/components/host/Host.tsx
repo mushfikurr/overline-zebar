@@ -16,7 +16,7 @@ export default function Host({
   const uptimeDisplay = formatMsToHumanDuration(Number(host.uptime));
   const renderOsIcon = (osName: string | null) => {
     if (osName === 'Windows') {
-      return <WindowsIcon className="h-5 w-5 text-text-muted" />;
+      return <WindowsIcon className="h-4 w-4 text-text-muted" />;
     }
     return null;
   };

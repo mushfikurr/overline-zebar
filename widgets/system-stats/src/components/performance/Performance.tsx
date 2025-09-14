@@ -42,7 +42,7 @@ function Memory({ memory }: { memory: MemoryOutput | null }) {
   return (
     <div>
       <h3 className="font-medium flex items-center text-text-muted gap-2 mb-1.5">
-        <MemoryStick className="h-5 w-5" aria-hidden="true" />
+        <MemoryStick className="h-4 w-4" aria-hidden="true" />
         Memory
       </h3>
 
@@ -80,7 +80,7 @@ function Cpu({ cpu }: { cpu: CpuOutput | null }) {
   return (
     <div>
       <h3 className="font-medium flex items-center text-text-muted gap-2 mb-1.5">
-        <CpuIcon className="h-5 w-5" aria-hidden="true" />
+        <CpuIcon className="h-4 w-4" aria-hidden="true" />
         CPU
       </h3>
 

@@ -52,7 +52,7 @@ function TabsList({
     <BaseTabs.List
       data-slot="tabs-list"
       className={cn(
-        'text-text-muted p-1 relative z-0 inline-flex h-10 w-fit items-center justify-center gap-x-1',
+        'text-text-muted p-0.5 relative z-0 inline-flex h-8 w-fit items-center justify-center gap-x-1',
         variant === 'capsule' ? 'bg-background-deeper rounded-lg' : '',
         className
       )}
@@ -72,7 +72,7 @@ function TabsTrigger({
     <BaseTabs.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "text-text-muted hover:text-text transition-colors ease-in-out duration-300 data-[selected]:text-text focus-visible:ring-primary/50 [&_svg:not([class*='size-'])] z-[1] flex flex-1 items-center justify-center gap-1.5 rounded-md px-3.5 h-full text-sm text-nowrap whitespace-nowrap focus-visible:ring-[3px] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "text-text-muted hover:text-text transition-colors ease-in-out duration-300 data-[selected]:text-text focus-visible:ring-primary/50 [&_svg:not([class*='size-'])] z-[1] flex flex-1 items-center justify-center gap-1.5 rounded-md px-2.5 h-full text-sm text-nowrap whitespace-nowrap focus-visible:ring-[3px] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}

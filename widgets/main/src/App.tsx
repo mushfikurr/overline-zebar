@@ -35,7 +35,7 @@ function App() {
 
   useAutoTiling();
 
-  const statIconClassnames = 'h-5 w-5 text-icon';
+  const statIconClassnames = 'h-3.5 w-3.5 text-icon';
   const [marginX] = useWidgetSetting('main', 'marginX');
   const [paddingLeft] = useWidgetSetting('main', 'paddingLeft');
   const [paddingRight] = useWidgetSetting('main', 'paddingRight');
@@ -43,17 +43,17 @@ function App() {
   return (
     <div
       className={cn(
-        'relative flex justify-between items-center bg-background/80 backdrop-blur-3xl text-text h-full antialiased select-none font-mono py-1.5',
+        'relative flex justify-between items-center py-1 bg-background/80 backdrop-blur-3xl text-text h-screen antialiased select-none font-mono',
         marginX > 0 && 'rounded-lg border border-border'
       )}
       style={{ margin: `0 ${marginX}px` }}
     >
       {/* Left */}
       <div
-        className="flex items-center gap-3 h-full z-10"
+        className="flex items-center gap-2 h-full z-10"
         style={{ paddingLeft: `${paddingLeft}px` }}
       >
-        <div className="flex items-center gap-2 h-full py-0.5">
+        <div className="flex items-center gap-2 h-full">
           <LeftButtons glazewm={output.glazewm} />
         </div>
         <div className="flex items-center h-full">
@@ -71,7 +71,7 @@ function App() {
       </div>
 
       {/* Right */}
-      <div className="flex gap-3 items-center h-full z-10">
+      <div className="flex gap-2 items-center h-full z-10">
         <div className="flex items-center h-full">
           <StatProviders
             weather={output.weather}
@@ -101,7 +101,10 @@ function App() {
               .format(new Date())
               .replace(/,/g, '')}
         </div>
-        <div style={{ paddingRight: `${paddingRight}px` }}>
+        <div
+          className="flex items-center h-full"
+          style={{ paddingRight: `${paddingRight}px` }}
+        >
           <RightButtons />
         </div>
       </div>
