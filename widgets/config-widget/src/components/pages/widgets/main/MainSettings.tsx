@@ -9,6 +9,7 @@ import PanelHeading from '../../../PanelHeading';
 import GeneralTab from './components/GeneralTab';
 import SystemStatsTab from './components/SystemStatsTab';
 import SystrayTab from './components/SystrayTab';
+import TimeTab from './components/TimeTab';
 
 export function MainSettings() {
   return (
@@ -22,6 +23,7 @@ export function MainSettings() {
           />
           <TabsList className="mt-4 mb-1">
             <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="time">Time</TabsTrigger>
             <TabsTrigger value="system-stats">Stats</TabsTrigger>
             <TabsTrigger value="systray">System Tray</TabsTrigger>
           </TabsList>
@@ -32,6 +34,12 @@ export function MainSettings() {
             className="space-y-8 overflow-y-auto min-h-0"
           >
             <GeneralTab />
+          </TabsContent>
+          <TabsContent
+            value="time"
+            className="space-y-8 overflow-y-auto min-h-0"
+          >
+            <TimeTab />
           </TabsContent>
           <TabsContent
             value="system-stats"

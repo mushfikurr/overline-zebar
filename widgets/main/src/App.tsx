@@ -7,6 +7,7 @@ import Media from './components/media';
 import RightButtons from './components/rightButtons/RightButtons';
 import StatProviders from './components/statProviders';
 import Systray from './components/systray';
+import { TimeDisplay } from './components/TimeDisplay';
 import VolumeControl from './components/volume';
 import { WindowTitle } from './components/windowTitle/WindowTitle';
 import { WorkspaceControls } from './components/WorkspaceControls';
@@ -89,18 +90,7 @@ function App() {
         <div className="h-full flex items-center px-0.5">
           <Systray systray={output.systray} />
         </div>
-        <div className="h-full flex items-center justify-center px-1">
-          {output?.date?.formatted ??
-            new Intl.DateTimeFormat('en-GB', {
-              weekday: 'short', // EEE
-              day: 'numeric', // d
-              month: 'short', // MMM
-              hour: 'numeric', // t (hour part)
-              minute: 'numeric', // t (minute part)
-            })
-              .format(new Date())
-              .replace(/,/g, '')}
-        </div>
+        <TimeDisplay dateOutput={output.date} />
         <div
           className="flex items-center h-full"
           style={{ paddingRight: `${paddingRight}px` }}

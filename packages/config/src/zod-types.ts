@@ -48,6 +48,8 @@ export const MainWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
   paddingLeft: z.number(),
   paddingRight: z.number(),
   dynamicWorkspaceIndicator: z.boolean(),
+  timeFormat: z.string().default('EEE d MMM t'),
+  timeLocale: z.string().default('en-GB'),
   providers: ProviderSettingsSchema.default({}),
 });
 

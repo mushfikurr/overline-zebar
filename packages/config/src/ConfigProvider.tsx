@@ -8,7 +8,6 @@ import { configService } from './ConfigService';
 import { defaultConfig } from './defaults/default-config';
 import { useConfigChangeIpc } from './ipc/hooks/useConfigChangeIpc';
 import { useThemePreviewIpc } from './ipc/hooks/useThemePreviewIpc';
-import { AllWidgetSettings } from './types';
 import { deepMerge } from './utils/deepMerge';
 import { RootConfigSchema } from './zod-types';
 
