@@ -1,11 +1,18 @@
+import { useRef } from 'react';
+import * as zebar from 'zebar';
 import { useWidgetSetting } from '@overline-zebar/config';
 import { Chip } from '@overline-zebar/ui';
-import { useRef } from 'react';
 import { calculateWidgetPlacementFromRight } from '../../utils/calculateWidgetPlacement';
-import * as zebar from 'zebar';
-import Stat from '../stat/Stat';
 import { getWeatherIcon } from '../../utils/weatherIcons';
-import { Battery, BatteryCharging } from 'lucide-react';
+
+import Stat from '../stat/Stat';
+
+import {
+  BatteryCharging,
+  BatteryFull,
+  BatteryLow,
+  BatteryMedium,
+} from 'lucide-react';
 
 type Props = {
   battery: zebar.BatteryOutput | null;
@@ -14,7 +21,12 @@ type Props = {
   weather: zebar.WeatherOutput | null;
 };
 
-function StatProviders({ cpu, memory, battery, weather }: Props) {
+export default function StatProviders({
+  cpu,
+  memory,
+  battery,
+  weather,
+}: Props) {
   const [statProviders] = useWidgetSetting('main', 'providers');
   const allProvidersDisabled = Object.values(statProviders || {}).every(
     (p) => !p
@@ -77,26 +89,37 @@ type BatteryStatProps = {
   battery: zebar.BatteryOutput | null;
   batteryProvider: boolean;
 };
+
 function BatteryStat({ battery, batteryProvider }: BatteryStatProps) {
   if (!batteryProvider || !battery) return null;
+
+  const chargePercent = Math.round(battery.chargePercent);
 
   const renderBatteryIcon = () => {
     if (battery.isCharging) {
       return (
-        <BatteryCharging strokeWidth={3} className="h-3.5 w-3.5 text-icon" />
+        <BatteryCharging strokeWidth={3} className="h-3.5 w-3.5 text-success" />
       );
-    } else {
-      return <Battery strokeWidth={3} className="h-3.5 w-3.5 text-icon" />;
     }
+
+    if (chargePercent >= 80) {
+      return (
+        <BatteryFull strokeWidth={3} className="h-3.5 w-3.5 text-success" />
+      );
+    }
+
+    if (chargePercent >= 40) {
+      return (
+        <BatteryMedium strokeWidth={3} className="h-3.5 w-3.5 text-icon" />
+      );
+    }
+
+    return (
+      <BatteryLow strokeWidth={3} className="h-3.5 w-3.5 text-destructive" />
+    );
   };
 
   return (
-    <Stat
-      Icon={renderBatteryIcon()}
-      stat={`${Math.round(battery.chargePercent)}%`}
-      type="ring"
-    />
+    <Stat Icon={renderBatteryIcon()} stat={`${chargePercent}%`} type="inline" />
   );
 }
-
-export default StatProviders;
