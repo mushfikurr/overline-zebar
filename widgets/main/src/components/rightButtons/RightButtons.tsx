@@ -51,9 +51,9 @@ function PowerOffButton() {
       className={cn('h-full', shuttingDown && 'animate-pulse border-danger')}
     >
       {!shuttingDown ? (
-        <Power strokeWidth={3} className="text-danger h-4 w-4" />
+        <Power strokeWidth={3} className="text-danger" />
       ) : (
-        <X strokeWidth={3} className="text-danger h-4 w-4" />
+        <X strokeWidth={3} className="text-danger" />
       )}
     </Button>
   );
