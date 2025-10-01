@@ -106,7 +106,7 @@ Choose this option if you want to customize the widget's functionality, modify t
 
 ## Configuration
 
-`overline-zebar` is highly configurable through the **config-widget**. To open it, simply click on the date and time in the main topbar widget.
+`overline-zebar` is highly configurable through the **config-widget**. To open it, click on the left-most button (Script Launcher), and then the "Gear Icon".
 
 ### (!) For Zebar specific settings
 
@@ -116,7 +116,7 @@ To configure zebar specific settings when downloading from marketplace, you must
 
 This will save the widget to a custom pack. You will now be able to configure the widget through the `zpack.json` file.
 
-The config-widget itself provides a user-friendly interface to manage internal widget settings. Keep in mind it is not 1:1 with the Zebar settings. 
+The config-widget itself provides a user-friendly interface to manage internal widget settings. Keep in mind it is not 1:1 with the Zebar settings.
 
 Here's a breakdown of the available options:
 
@@ -183,4 +183,3 @@ This will start the development server for all widgets with hot reloading. Zebar
 ## Contributions
 
 Pull requests are welcome. If you find any issues or have feature suggestions, feel free to open an issue on GitHub.
-
