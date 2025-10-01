@@ -106,7 +106,7 @@ Choose this option if you want to customize the widget's functionality, modify t
 
 ## Configuration
 
-`overline-zebar` is highly configurable through the **config-widget**. To open it, simply click on the "Script Launcher", button (top-left button), and then the Gear Icon.
+`overline-zebar` is highly configurable through the **config-widget**. To open it, simply click on the date and time in the main topbar widget.
 
 ### (!) For Zebar specific settings
 
