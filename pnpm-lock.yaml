@@ -28,8 +28,8 @@ catalogs:
       specifier: ^3.4.15
       version: 3.4.17
     zebar:
-      specifier: ^3.1.0
-      version: 3.1.0
+      specifier: 3.3.1
+      version: 3.3.1
 
 importers:
 
@@ -95,7 +95,7 @@ importers:
         version: 10.0.5(react@18.3.1)
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
       zod:
         specifier: ^3.23.8
         version: 3.25.51
@@ -249,7 +249,7 @@ importers:
         version: 3.7.1(react@18.3.1)
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -322,7 +322,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -422,7 +422,7 @@ importers:
         version: 2.6.0
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -501,7 +501,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -601,7 +601,7 @@ importers:
         version: 3.7.1(react@18.3.1)
       zebar:
         specifier: 'catalog:'
-        version: 3.1.0(ws@7.5.10)
+        version: 3.3.1(ws@7.5.10)
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -2996,8 +2996,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zebar@3.1.0:
-    resolution: {integrity: sha512-bRzT9fZqfsElmP9M+i6dcphMhLCGc7ZYrkOJbq1ahnDMOmKk7txfA/82fcBf2mnT9sSOfobvNPMa1+awOrkFmQ==}
+  zebar@3.3.1:
+    resolution: {integrity: sha512-s54NzacaY5dbN5rv1Gf2jpxPkob5EWptwtRwyR4ZgxCp3A/ZJ6Qxjn3ypOnLJ1XaHngx6MrIy1/ObAmsXjSmEg==}
 
   zod-validation-error@3.4.1:
     resolution: {integrity: sha512-1KP64yqDPQ3rupxNv7oXhf7KdhHHgaqbKuspVoiN93TT0xrBjql+Svjkdjq/Qh/7GSMmgQs3AfvBT0heE35thw==}
@@ -5575,7 +5575,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zebar@3.1.0(ws@7.5.10):
+  zebar@3.3.1(ws@7.5.10):
     dependencies:
       '@tauri-apps/api': 2.0.2
       '@tauri-apps/plugin-dialog': 2.0.0

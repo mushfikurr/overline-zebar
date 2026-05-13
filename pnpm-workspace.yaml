@@ -7,7 +7,7 @@ catalog:
   react: '^18.3.1'
   react-compiler-runtime: '^19.1.0-rc.2'
   react-dom: '^18.3.1'
-  zebar: '^3.1.0'
+  zebar: '3.3.1'
   tailwindcss: '^3.4.15'
   postcss: '^8.4.49'
   '@types/react': '^18.3.18'
