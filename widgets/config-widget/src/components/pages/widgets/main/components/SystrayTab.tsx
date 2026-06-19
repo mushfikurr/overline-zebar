@@ -72,7 +72,7 @@ function SystrayTab() {
           between expanded or collapsed.
         </p>
       </div>
-      <div className="relative mb-3">
+      <div className="relative">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-text-muted" />
         <Input
           className="pl-9"
@@ -81,12 +81,12 @@ function SystrayTab() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="grow min-w-0 overflow-hidden">
+      <div className="max-h-80 min-w-0 overflow-y-auto rounded-md border border-border bg-background-deeper">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">Pinned</TableHead>
-              <TableHead className="w-12">Icon</TableHead>
+              <TableHead className="w-20">Pinned</TableHead>
+              <TableHead className="w-16">Icon</TableHead>
               <TableHead>Name</TableHead>
             </TableRow>
           </TableHeader>
@@ -100,7 +100,7 @@ function SystrayTab() {
                   />
                 </TableCell>
                 <TableCell>
-                  <img className="h-6 w-6" src={i.iconUrl} alt="" />
+                  <img className="h-5 w-5" src={i.iconUrl} alt="" />
                 </TableCell>
                 <TableCell>
                   <Tooltip>
