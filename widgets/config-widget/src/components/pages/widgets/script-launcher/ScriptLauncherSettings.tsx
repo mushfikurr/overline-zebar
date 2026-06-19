@@ -4,14 +4,13 @@ import { ApplicationsTab } from './components/ApplicationsTab';
 
 export function ScriptLauncherSettings() {
   return (
-    <PanelLayout title="Script Launcher">
-      <Tabs defaultValue="applications" className="flex-grow">
-        <div className="px-3 py-1 flex flex-col flex-grow">
-          <PanelHeading
-            title="Script Launcher"
-            description="Manage your scripts."
-          />
-
+    <PanelLayout>
+      <Tabs defaultValue="applications" className="flex-grow gap-0">
+        <PanelHeading
+          title="Script Launcher"
+          description="Manage your scripts."
+        />
+        <div className="px-4 py-4">
           <ApplicationsTab />
         </div>
       </Tabs>

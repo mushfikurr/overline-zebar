@@ -6,10 +6,9 @@ import {
   FieldTitle,
   FormField,
   Input,
-  PanelLayout,
 } from '@overline-zebar/ui';
 import { useState } from 'react';
-import PanelHeading from '../PanelHeading';
+import SettingsPage from '../SettingsPage';
 import { Separator } from '../common/Separator';
 
 export function ConfigManagement() {
@@ -64,49 +63,46 @@ export function ConfigManagement() {
   };
 
   return (
-    <PanelLayout title="Config Management">
-      <div className="px-3 py-1 flex-grow flex flex-col">
-        <PanelHeading
-          title={'Config Management'}
-          description={'Manage overline-zebar configuration.'}
-        />
-        <div className="pb-1">
-          {feedback && (
-            <div
-              className={`px-3 py-1.5 rounded-md  border border-border ${feedback.type === 'success' ? 'bg-background' : 'bg-danger'}`}
-            >
-              {feedback.message}
-            </div>
-          )}
-          <FormField>
-            <FieldTitle>Export Configuration</FieldTitle>
-            <FieldInput>
-              <Button onClick={handleDownload}>Download Config</Button>
-            </FieldInput>
-          </FormField>
-          <Separator />
-          <FormField>
-            <FieldTitle>Import Configuration</FieldTitle>
-            <FieldInput>
-              <Input type="file" accept=".json" onChange={handleFileChange} />
-            </FieldInput>
-            <FieldDescription>
-              Select a JSON file to import your configuration.
-            </FieldDescription>
-          </FormField>
-          <Separator />
-          <FormField>
-            <FieldTitle>Reset Configuration</FieldTitle>
-            <FieldInput>
-              <Button onClick={resetConfig}>Reset Config</Button>
-            </FieldInput>
-            <FieldDescription warning>
-              This will reset all settings to their default values. This action
-              is irreversible.
-            </FieldDescription>
-          </FormField>
-        </div>
+    <SettingsPage
+      title={'Config Management'}
+      description={'Manage overline-zebar configuration.'}
+    >
+      <div className="pb-1">
+        {feedback && (
+          <div
+            className={`px-3 py-1.5 rounded-md  border border-border ${feedback.type === 'success' ? 'bg-background' : 'bg-danger'}`}
+          >
+            {feedback.message}
+          </div>
+        )}
+        <FormField>
+          <FieldTitle>Export Configuration</FieldTitle>
+          <FieldInput>
+            <Button onClick={handleDownload}>Download Config</Button>
+          </FieldInput>
+        </FormField>
+        <Separator />
+        <FormField>
+          <FieldTitle>Import Configuration</FieldTitle>
+          <FieldInput>
+            <Input type="file" accept=".json" onChange={handleFileChange} />
+          </FieldInput>
+          <FieldDescription>
+            Select a JSON file to import your configuration.
+          </FieldDescription>
+        </FormField>
+        <Separator />
+        <FormField>
+          <FieldTitle>Reset Configuration</FieldTitle>
+          <FieldInput>
+            <Button onClick={resetConfig}>Reset Config</Button>
+          </FieldInput>
+          <FieldDescription warning>
+            This will reset all settings to their default values. This action is
+            irreversible.
+          </FieldDescription>
+        </FormField>
       </div>
-    </PanelLayout>
+    </SettingsPage>
   );
 }

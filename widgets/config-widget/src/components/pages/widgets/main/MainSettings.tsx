@@ -13,47 +13,34 @@ import TimeTab from './components/TimeTab';
 
 export function MainSettings() {
   return (
-    <PanelLayout title="Main">
-      <Tabs defaultValue="general" className="flex-grow">
-        <div className="px-3 py-1 flex flex-col flex-grow">
-          <PanelHeading
-            title="Main (Topbar)"
-            description="Customise your main topbar widget."
-            separator={false}
-          />
-          <TabsList className="mt-4 mb-1">
+    <PanelLayout>
+      <Tabs defaultValue="general" className="flex-grow gap-0">
+        <PanelHeading
+          title="Main (Topbar)"
+          description="Customise your main topbar widget."
+        >
+          <TabsList className="mt-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="time">Time</TabsTrigger>
             <TabsTrigger value="system-stats">Stats</TabsTrigger>
             <TabsTrigger value="systray">System Tray</TabsTrigger>
           </TabsList>
-          <div className="w-full bg-text/5 h-px my-4 mb-6"></div>
-
-          <TabsContent
-            value="general"
-            className="space-y-8 overflow-y-auto min-h-0"
-          >
-            <GeneralTab />
-          </TabsContent>
-          <TabsContent
-            value="time"
-            className="space-y-8 overflow-y-auto min-h-0"
-          >
-            <TimeTab />
-          </TabsContent>
-          <TabsContent
-            value="system-stats"
-            className="space-y-8 overflow-y-auto min-h-0"
-          >
-            <SystemStatsTab />
-          </TabsContent>
-          <TabsContent
-            value="systray"
-            className="flex flex-col flex-grow space-y-8 overflow-y-auto min-h-0"
-          >
-            <SystrayTab />
-          </TabsContent>
-        </div>
+        </PanelHeading>
+        <TabsContent value="general" className="space-y-8 flex-none px-4 py-4">
+          <GeneralTab />
+        </TabsContent>
+        <TabsContent value="time" className="space-y-8 flex-none px-4 py-4">
+          <TimeTab />
+        </TabsContent>
+        <TabsContent
+          value="system-stats"
+          className="space-y-8 flex-none px-4 py-4"
+        >
+          <SystemStatsTab />
+        </TabsContent>
+        <TabsContent value="systray" className="space-y-3 flex-none px-4 py-4">
+          <SystrayTab />
+        </TabsContent>
       </Tabs>
     </PanelLayout>
   );

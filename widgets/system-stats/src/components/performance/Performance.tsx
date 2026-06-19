@@ -17,7 +17,7 @@ interface PerformanceProps {
 
 export default function Performance({ cpu, memory }: PerformanceProps) {
   return (
-    <PanelLayout title="Performance" className="space-y-3">
+    <PanelLayout className="page-container space-y-3">
       <Memory memory={memory} />
       <Cpu cpu={cpu} />
     </PanelLayout>
