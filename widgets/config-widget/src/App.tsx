@@ -14,7 +14,7 @@ function App() {
       <div className="relative flex flex-col shadow-sm items-center bg-background border border-button-border/80 backdrop-blur-xl text-text h-screen antialiased select-none rounded-lg font-mono">
         <TitleBar />
         <div className="flex w-full flex-grow min-h-0">
-          <div className="flex flex-col w-full max-w-sm">
+          <div className="flex flex-col w-72 shrink-0">
             <Navbar />
           </div>
 
@@ -44,4 +44,4 @@ function App() {
 }
 
 export default App;
-App;
+
