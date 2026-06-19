@@ -18,7 +18,7 @@ function App() {
             <Navbar />
           </div>
 
-          <div className="flex-grow h-full flex flex-col bg-background">
+          <div className="flex-grow min-w-0 h-full flex flex-col bg-background">
             <Switch>
               <Route path="/">
                 <GeneralSettings />

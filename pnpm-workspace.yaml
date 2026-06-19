@@ -3,6 +3,9 @@ packages:
   - 'widgets/**'
   - 'packages/**'
 
+allowBuilds:
+  esbuild: true
+
 catalog:
   react: '^18.3.1'
   react-compiler-runtime: '^19.1.0-rc.2'

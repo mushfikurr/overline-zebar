@@ -42,3 +42,20 @@ export {
   CollapsibleContent,
 } from './components/collapsible';
 export * from './components/context-menu';
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from './components/table/Table';
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipPopup,
+  TooltipPortal,
+  TooltipPositioner,
+} from './components/tooltip/Tooltip';

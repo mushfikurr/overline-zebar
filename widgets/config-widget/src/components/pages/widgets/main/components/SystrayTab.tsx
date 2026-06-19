@@ -1,5 +1,21 @@
 import { useWidgetSetting } from '@overline-zebar/config';
-import { Switch } from '@overline-zebar/ui';
+import {
+  Input,
+  Switch,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tooltip,
+  TooltipPopup,
+  TooltipPortal,
+  TooltipPositioner,
+  TooltipTrigger,
+} from '@overline-zebar/ui';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import * as zebar from 'zebar';
 
@@ -19,6 +35,15 @@ function SystrayTab() {
   }, []);
 
   const icons = useMemo(() => output.systray?.icons, [output.systray]);
+
+  const [search, setSearch] = useState('');
+
+  const filteredIcons = useMemo(() => {
+    if (!icons) return icons;
+    const query = search.trim().toLowerCase();
+    if (!query) return icons;
+    return icons.filter((i) => i.tooltip.toLowerCase().includes(query));
+  }, [icons, search]);
 
   const isIconPinned = (icon: zebar.SystrayIcon) => {
     return !!pinnedSystrayIcons.find((i: string) => icon.iconHash === i);
@@ -47,19 +72,56 @@ function SystrayTab() {
           between expanded or collapsed.
         </p>
       </div>
-      <div className="grow grid grid-cols-2 gap-y-3 gap-x-6 max-w-full">
-        {icons?.map((i) => (
-          <div key={i.iconHash} className="flex items-center gap-4">
-            <Switch
-              checked={isIconPinned(i)}
-              onCheckedChange={() => handleCheckedChange(i)}
-            />
-            <div className="flex items-center gap-4">
-              <img className="h-6 w-6" src={i.iconUrl} />
-              <p className="max-w-full truncate">{i.tooltip}</p>
-            </div>
-          </div>
-        ))}
+      <div className="relative mb-3">
+        <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-text-muted" />
+        <Input
+          className="pl-9"
+          placeholder="Search tray icons..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      <div className="grow min-w-0 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">Pinned</TableHead>
+              <TableHead className="w-12">Icon</TableHead>
+              <TableHead>Name</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredIcons?.map((i) => (
+              <TableRow key={i.iconHash}>
+                <TableCell>
+                  <Switch
+                    checked={isIconPinned(i)}
+                    onCheckedChange={() => handleCheckedChange(i)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <img className="h-6 w-6" src={i.iconUrl} alt="" />
+                </TableCell>
+                <TableCell>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <span className="block truncate" title={i.tooltip}>
+                          {i.tooltip}
+                        </span>
+                      }
+                    />
+                    <TooltipPortal>
+                      <TooltipPositioner>
+                        <TooltipPopup>{i.tooltip}</TooltipPopup>
+                      </TooltipPositioner>
+                    </TooltipPortal>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </>
   );
