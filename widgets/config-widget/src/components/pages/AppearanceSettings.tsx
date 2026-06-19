@@ -102,7 +102,7 @@ function AppearanceSettings() {
               </Select>
             </FieldInput>
             <FieldDescription>
-              Sets the window transparency/blurring effect.
+              Sets the window transparency/blurring effect. Restart Zebar to ensure the correct effect is applied.
             </FieldDescription>
           </FormField>
           <Separator />
