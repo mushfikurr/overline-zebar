@@ -4,7 +4,6 @@ import {
   Switch,
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
