@@ -49,20 +49,22 @@ function App() {
             <Navbar />
           </div>
 
-          <Switch>
-            <Route path="/">
-              <Host host={output.host} battery={output.battery} />
-            </Route>
-            <Route path="/storage">
-              <Storage disk={output.disk} />
-            </Route>
-            <Route path="/performance">
-              <Performance cpu={output.cpu} memory={output.memory} />
-            </Route>
-            <Route path="/network">
-              <Network network={output.network} />
-            </Route>
-          </Switch>
+          <div className="flex-grow min-w-0 h-full flex flex-col bg-surface">
+            <Switch>
+              <Route path="/">
+                <Host host={output.host} battery={output.battery} />
+              </Route>
+              <Route path="/storage">
+                <Storage disk={output.disk} />
+              </Route>
+              <Route path="/performance">
+                <Performance cpu={output.cpu} memory={output.memory} />
+              </Route>
+              <Route path="/network">
+                <Network network={output.network} />
+              </Route>
+            </Switch>
+          </div>
         </div>
       </div>
     </Router>

@@ -6,7 +6,7 @@ export default function Navbar() {
   const [location, navigate] = useLocation();
 
   return (
-    <UiNavbar className="bg-background">
+    <UiNavbar className="rounded-none">
       <NavbarItem
         Icon={Server}
         title="Host"

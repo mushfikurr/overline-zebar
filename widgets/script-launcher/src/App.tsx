@@ -110,9 +110,9 @@ function App() {
         editingId={editingId}
         onAddOrUpdate={handleAddOrUpdate}
       />
-      <div className="flex flex-col h-full w-full gap-1">
+      <div className="flex flex-col h-full w-full">
         {applications.length == 0 && (
-          <div className="grow flex flex-col gap-2 items-center justify-center p-2">
+          <div className="grow flex flex-col gap-2 items-center justify-center p-2 bg-surface">
             <h1 className="text-center">Scripts you add will show up here</h1>
             <p className="text-text-muted text-center max-w-xs">
               These can be .exe paths, AHK scripts you commonly use, or
@@ -121,7 +121,7 @@ function App() {
           </div>
         )}
         {applications.length > 0 && (
-          <div className="grid grow grid-cols-3 grid-rows-4 gap-2 w-full p-2">
+          <div className="grid grow grid-cols-3 grid-rows-4 gap-2 w-full p-2 bg-surface">
             {applications.map((application: LauncherCommand) => (
               <LauncherButton
                 key={application.id}
@@ -133,7 +133,13 @@ function App() {
             ))}
           </div>
         )}
-        <div className="flex bg-background rounded-md rounded-t-none justify-end items-center border-t border-border/60 p-2 gap-2">
+        <div
+          className="flex bg-background rounded-md rounded-t-none justify-end items-center border-t border-border/60 p-2 gap-2"
+          style={{
+            boxShadow:
+              'inset 0 4px 10px -6px rgba(0,0,0,0.07), inset 0 14px 28px -14px rgba(0,0,0,0.16)',
+          }}
+        >
           <Button onClick={handleOpenModalForAdd} size="icon">
             <Plus className="h-5 w-5" strokeWidth={2.5} />
           </Button>
