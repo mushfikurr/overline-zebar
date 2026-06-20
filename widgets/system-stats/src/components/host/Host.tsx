@@ -22,7 +22,7 @@ export default function Host({
   };
 
   return (
-    <PanelLayout className="page-container">
+    <PanelLayout className="p-2 px-2.5 space-y-2">
       <div className="flex flex-col justify-between select-text w-full text-text-muted h-full">
         <div className="space-y-1.5">
           <div className="flex items-start">

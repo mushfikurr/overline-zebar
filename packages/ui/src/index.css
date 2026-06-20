@@ -15,12 +15,6 @@ body,
   isolation: isolate;
 }
 
-@layer components {
-  .page-container {
-    @apply p-2 px-2.5 space-y-2;
-  }
-}
-
 @layer utilities {
   .touch-hitbox {
     position: relative;
