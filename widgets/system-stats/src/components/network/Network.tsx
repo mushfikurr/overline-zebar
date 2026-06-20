@@ -71,8 +71,8 @@ export default function Network({ network }: NetworkPanelProps) {
         >
           <SelectTrigger className="max-h-full">
             <SelectValue>
-              {(i) =>
-                network.interfaces.find((f) => i.name === f.name)?.friendlyName
+              {(name) =>
+                network.interfaces.find((f) => name === f.name)?.friendlyName
               }
             </SelectValue>
           </SelectTrigger>
