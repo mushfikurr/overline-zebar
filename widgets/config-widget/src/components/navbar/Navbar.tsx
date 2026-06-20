@@ -1,5 +1,5 @@
 import { NavbarItem, Navbar as UiNavbar } from '@overline-zebar/ui';
-import { Cog, DatabaseZap, LayoutGrid, Palette } from 'lucide-react';
+import { Cog, FileSliders, LayoutGrid, Palette, Terminal } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Navbar() {
@@ -28,7 +28,7 @@ export default function Navbar() {
       />
       <NavbarItem
         className="rounded-none"
-        Icon={DatabaseZap}
+        Icon={FileSliders}
         title="Config Management"
         href="/config-management"
         location={location}
@@ -47,7 +47,7 @@ export default function Navbar() {
       />
       <NavbarItem
         className="rounded-none"
-        Icon={LayoutGrid}
+        Icon={Terminal}
         title="Script Launcher"
         href="/widget/script-launcher"
         location={location}
