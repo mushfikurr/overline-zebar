@@ -55,7 +55,7 @@ function DialogContent({
       <BaseDialog.Popup
         data-slot="dialog-content"
         className={cn(
-          'bg-background border border-border text-text fixed z-50 grid w-full sm:max-w-[calc(100%-2rem)] backdrop-blur-2xl',
+          'bg-surface/75 border border-border text-text fixed z-50 grid w-full sm:max-w-[calc(100%-2rem)] backdrop-blur-2xl',
           'gap-4 rounded-lg border p-6 shadow-lg duration-200 outline-none sm:max-w-lg sm:scale-[calc(1-0.1*var(--nested-dialogs))]',
           'fixed bottom-0 w-full sm:top-[50%] sm:bottom-auto sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%]',
           'duration-200',

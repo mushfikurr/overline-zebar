@@ -79,7 +79,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     scope="col"
     className={cn(
-      'text-text-muted h-8 px-3 text-left align-middle font-medium sticky top-0 z-10 bg-background-deeper',
+      'text-text-muted h-8 px-3 text-left align-middle font-medium sticky top-0 z-10 bg-surface/75 backdrop-blur-xl',
       className
     )}
     {...props}

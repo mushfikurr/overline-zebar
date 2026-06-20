@@ -57,11 +57,19 @@ export function Navbar({ children, className }: NavbarProps) {
   return (
     <div
       className={cn(
-        'h-full border-r border-border rounded-tl rounded-bl flex flex-col overflow-clip',
+        'relative h-full border-r border-border rounded-tl rounded-bl flex flex-col overflow-clip',
         className
       )}
     >
       {children}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          boxShadow:
+            'inset -4px 0 10px -6px rgba(0,0,0,0.07), inset -14px 0 28px -14px rgba(0,0,0,0.16)',
+        }}
+      />
     </div>
   );
 }

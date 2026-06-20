@@ -16,6 +16,7 @@ const config: Omit<Config, 'content'> = {
         background: withOpacity('--background'),
         border: withOpacity('--border'),
         'background-deeper': withOpacity('--background-deeper'),
+        surface: withOpacity('--surface'),
         button: withOpacity('--button'),
         'button-border': withOpacity('--button-border'),
         primary: withOpacity('--primary'),

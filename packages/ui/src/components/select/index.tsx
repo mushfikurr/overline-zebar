@@ -87,7 +87,7 @@ export function SelectContent({
         <BaseSelect.Popup
           data-slot="select-content"
           className={cn(
-            'bg-background text-text relative z-50 max-h-[var(--available-height)] w-[var(--anchor-width)] min-w-[8rem] origin-[var(--transform-origin)] overflow-x-hidden overflow-y-auto rounded-md border border-border p-1 shadow-md backdrop-blur-2xl transition-[transform,scale,opacity] data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
+            'bg-surface/75 text-text relative z-50 max-h-[var(--available-height)] w-[var(--anchor-width)] min-w-[8rem] origin-[var(--transform-origin)] overflow-x-hidden overflow-y-auto rounded-md border border-border p-1 shadow-md backdrop-blur-2xl transition-[transform,scale,opacity] data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
             className
           )}
           {...props}
@@ -161,7 +161,7 @@ export function SelectScrollUpButton({
     <BaseSelect.ScrollUpArrow
       data-slot="select-scroll-up-button"
       className={cn(
-        'bg-background text-text top-px left-[1px] z-[100] flex w-[calc(100%-2px)] cursor-default items-center justify-center rounded-t-md py-1',
+        'bg-surface/75 text-text top-px left-[1px] z-[100] flex w-[calc(100%-2px)] cursor-default items-center justify-center rounded-t-md py-1',
         className
       )}
       {...props}
@@ -179,7 +179,7 @@ export function SelectScrollDownButton({
     <BaseSelect.ScrollDownArrow
       data-slot="select-scroll-down-button"
       className={cn(
-        'bg-background text-text bottom-px left-[1px] z-[100] flex w-[calc(100%-2px)] cursor-default items-center justify-center rounded-b-md py-1',
+        'bg-surface/75 text-text bottom-px left-[1px] z-[100] flex w-[calc(100%-2px)] cursor-default items-center justify-center rounded-b-md py-1',
         className
       )}
       {...props}
