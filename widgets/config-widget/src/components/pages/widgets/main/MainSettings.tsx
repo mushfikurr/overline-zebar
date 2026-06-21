@@ -15,10 +15,7 @@ export function MainSettings() {
   return (
     <PanelLayout>
       <Tabs defaultValue="general" className="flex-grow gap-0">
-        <PanelHeading
-          title="Main (Topbar)"
-          description="Customise your main topbar widget."
-        >
+        <PanelHeading title="Top Bar" description="Customise your top bar.">
           <TabsList className="mt-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="time">Time</TabsTrigger>
