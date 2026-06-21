@@ -1,0 +1,69 @@
+import { useCallback, useEffect, useState } from 'react';
+
+export type FontPermission =
+  | 'granted'
+  | 'denied'
+  | 'prompt'
+  | 'unsupported'
+  | null;
+
+interface UseFontPermissionResult {
+  permission: FontPermission;
+  revokePermission: () => Promise<void>;
+}
+
+/**
+ * Tracks the browser's "local-fonts" permission state while the picker
+ * dialog is open. Falls back to `'unsupported'` when the Permissions API
+ * rejects the `'fonts'` descriptor (e.g. Firefox / Safari).
+ */
+export function useFontPermission(open: boolean): UseFontPermissionResult {
+  const [permission, setPermission] = useState<FontPermission>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    let status: PermissionStatus | null = null;
+
+    const check = async () => {
+      try {
+        status = await navigator.permissions.query({
+          name: 'fonts' as PermissionName,
+        });
+        if (cancelled) return;
+        setPermission(status.state as 'granted' | 'denied' | 'prompt');
+        status.onchange = () => {
+          if (!cancelled) {
+            setPermission(status!.state as 'granted' | 'denied' | 'prompt');
+          }
+        };
+      } catch {
+        if (!cancelled) setPermission('unsupported');
+      }
+    };
+
+    check();
+
+    return () => {
+      cancelled = true;
+      if (status) status.onchange = null;
+    };
+  }, [open]);
+
+  const revokePermission = useCallback(async () => {
+    try {
+      const perms = navigator.permissions as Permissions & {
+        revoke?: (
+          descriptor: PermissionDescriptor
+        ) => Promise<PermissionStatus>;
+      };
+      await perms.revoke?.({ name: 'fonts' as PermissionName });
+    } catch {
+      // revoke() is deprecated/removed in some Chromium builds — ignore.
+    }
+    // Force the grant-access flow to re-show next time.
+    setPermission('prompt');
+  }, []);
+
+  return { permission, revokePermission };
+}

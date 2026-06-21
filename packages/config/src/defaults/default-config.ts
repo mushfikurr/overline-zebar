@@ -10,6 +10,7 @@ export const defaultConfig: RootConfig = {
     currentThemeId: 'default',
     radius: '0.5rem',
     windowEffect: 'acrylic',
+    fontFamily: 'Geist Mono',
   },
   widgets: {
     main: {

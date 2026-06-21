@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-mono: 'Geist Mono';
+}
+
 body,
 #root {
-  @apply text-sm;
+  @apply text-sm font-mono;
   overflow: hidden;
   --sb-track-color: var(--background);
   --sb-thumb-color: var(--button);

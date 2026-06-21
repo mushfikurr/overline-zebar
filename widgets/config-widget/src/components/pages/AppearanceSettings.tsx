@@ -13,6 +13,7 @@ import { useAppSetting } from '@overline-zebar/config';
 import SettingsPage from '../SettingsPage';
 import { ThemeEditor } from '../theme/ThemeEditor';
 import { Separator } from '../common/Separator';
+import FontPicker from '../common/FontPicker';
 
 function AppearanceSettings() {
   const [radius, setRadius] = useAppSetting('radius');
@@ -101,6 +102,16 @@ function AppearanceSettings() {
           <FieldDescription>
             Sets the window transparency/blurring effect. Restart Zebar to
             ensure the correct effect is applied.
+          </FieldDescription>
+        </FormField>
+        <Separator />
+        <FormField>
+          <FieldTitle>Font</FieldTitle>
+          <FieldInput>
+            <FontPicker />
+          </FieldInput>
+          <FieldDescription>
+            Font used across all widgets. Defaults to Geist Mono.
           </FieldDescription>
         </FormField>
         <Separator />

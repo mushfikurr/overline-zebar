@@ -46,6 +46,16 @@ export const ConfigProvider: React.FC<{
     document.documentElement.style.setProperty('--radius', state.app.radius);
   }, [state.app.radius]);
 
+  // Sync font family changes to the document to ALL widgets
+  useEffect(() => {
+    if (state.app.fontFamily) {
+      document.documentElement.style.setProperty(
+        '--font-mono',
+        `'${state.app.fontFamily.replace(/'/g, "\\'")}'`
+      );
+    }
+  }, [state.app.fontFamily]);
+
   // Sync theme changes to the document to ALL widgets
   useEffect(() => {
     const theme = state.app.themes.find(

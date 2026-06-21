@@ -30,7 +30,7 @@ const config: Omit<Config, 'content'> = {
         warning: 'var(--warning)',
       },
       fontFamily: {
-        mono: ['Geist Mono', 'monospace'],
+        mono: ['var(--font-mono)', 'Geist Mono', 'monospace'],
       },
       fontSize: {
         xs: '10px',
