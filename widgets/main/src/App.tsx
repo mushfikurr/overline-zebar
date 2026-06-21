@@ -7,7 +7,6 @@ import Media from './components/media';
 import RightButtons from './components/rightButtons/RightButtons';
 import StatProviders from './components/statProviders';
 import Systray from './components/systray';
-import { motion } from 'framer-motion';
 import { TimeDisplay } from './components/TimeDisplay';
 import VolumeControl from './components/volume';
 import { WindowTitle } from './components/windowTitle/WindowTitle';
@@ -51,8 +50,7 @@ function App() {
       style={{ margin: `0 ${marginX}px` }}
     >
       {/* Left */}
-      <motion.div
-        layout
+      <div
         className="flex items-center gap-2 h-full z-10"
         style={{ paddingLeft: `${paddingLeft}px` }}
       >
@@ -65,7 +63,7 @@ function App() {
         <div className="flex items-center justify-center h-full">
           <Media media={output.media} />
         </div>
-      </motion.div>
+      </div>
 
       <div className="absolute w-full h-full flex items-center justify-center left-0">
         <Center>
