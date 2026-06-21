@@ -59,7 +59,7 @@ function SystrayTab() {
   };
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="space-y-0.5">
         <h1>Pinned Icons</h1>
         <p className="text-text-muted">
@@ -80,7 +80,7 @@ function SystrayTab() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="max-h-80 min-w-0 overflow-y-auto rounded-md border border-border bg-background-deeper">
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto rounded-md border border-border bg-background-deeper">
         <Table>
           <TableHeader>
             <TableRow>
@@ -122,7 +122,7 @@ function SystrayTab() {
           </TableBody>
         </Table>
       </div>
-    </>
+    </div>
   );
 }
 
