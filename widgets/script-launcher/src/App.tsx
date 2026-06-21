@@ -101,7 +101,7 @@ function App() {
   };
 
   return (
-    <div className="relative shadow-sm bg-background border border-button-border/80 h-screen backdrop-blur-xl text-text antialiased select-none rounded-lg font-mono">
+    <div className="relative shadow-sm bg-background border border-button-border/80 h-screen backdrop-blur-xl text-text antialiased select-none rounded-lg">
       <UpdateScriptModal
         open={isModalOpen}
         setOpen={setIsModalOpen}

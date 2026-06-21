@@ -44,7 +44,7 @@ function App() {
   return (
     <div
       className={cn(
-        'relative flex justify-between items-center py-1 bg-background backdrop-blur-xl text-text h-screen antialiased select-none font-mono',
+        'relative flex justify-between items-center py-1 bg-background backdrop-blur-xl text-text h-screen antialiased select-none',
         marginX > 0 && 'rounded-lg border border-border'
       )}
       style={{ margin: `0 ${marginX}px` }}
