@@ -10,9 +10,9 @@ body,
 #root {
   @apply text-sm font-mono;
   overflow: hidden;
-  --sb-track-color: #14171c;
-  --sb-thumb-color: rgba(255, 255, 255, 0.08);
-  --sb-size: 6px;
+  --sb-track-color: var(--background-deeper);
+  --sb-thumb-color: var(--surface);
+  --sb-size: 0.85rem;
 }
 
 #root {
@@ -45,27 +45,21 @@ body,
 
 *::-webkit-scrollbar-track {
   background: var(--sb-track-color);
-  border-radius: 9999px;
   box-shadow:
-    inset 0 1px 1px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 10px rgba(0, 0, 0, 0.18);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--sb-thumb-color);
+  background: color-mix(in srgb, var(--sb-thumb-color) 68%, transparent);
   border-radius: 9999px;
-  border: 2px solid transparent;
+  border: 0.25rem solid transparent;
   background-clip: padding-box;
-  transition-property: background-color;
-  transition-duration: 120ms;
+  @apply transition-colors duration-200 ease-in-out;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-*::-webkit-scrollbar-thumb:active {
-  background: rgba(255, 255, 255, 0.25);
+  background-color: var(--sb-thumb-color);
 }
 
 @supports not selector(::-webkit-scrollbar) {
