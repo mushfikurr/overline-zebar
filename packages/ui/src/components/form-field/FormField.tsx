@@ -90,7 +90,7 @@ export function FieldDescription({
     <div className={cn('text-text-muted space-y-1', className)} {...props}>
       {warning && (
         <span className="flex items-center gap-2 text-text">
-          <AlertTriangle className="text-warning h-5 w-5" strokeWidth={2.5} />
+          <AlertTriangle className="text-warning h-4 w-4" strokeWidth={2.5} />
           Only amend if you know what you are doing
         </span>
       )}
