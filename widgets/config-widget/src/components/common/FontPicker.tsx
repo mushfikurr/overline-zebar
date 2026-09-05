@@ -9,13 +9,7 @@ import {
   DialogTitle,
   Input,
 } from '@overline-zebar/ui';
-import {
-  CheckIcon,
-  FolderLock,
-  FolderSearch,
-  LoaderIcon,
-  SearchIcon,
-} from 'lucide-react';
+import { CheckIcon, FolderLock, LoaderIcon, SearchIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useFontPermission } from '../../hooks/useFontPermission';
 import { useLocalFontAccess } from '../../hooks/useLocalFontAccess';

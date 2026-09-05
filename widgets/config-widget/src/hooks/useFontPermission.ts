@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type FontPermission =
   | 'granted'
@@ -9,7 +9,6 @@ export type FontPermission =
 
 interface UseFontPermissionResult {
   permission: FontPermission;
-  revokePermission: () => Promise<void>;
 }
 
 /**
@@ -50,20 +49,5 @@ export function useFontPermission(open: boolean): UseFontPermissionResult {
     };
   }, [open]);
 
-  const revokePermission = useCallback(async () => {
-    try {
-      const perms = navigator.permissions as Permissions & {
-        revoke?: (
-          descriptor: PermissionDescriptor
-        ) => Promise<PermissionStatus>;
-      };
-      await perms.revoke?.({ name: 'fonts' as PermissionName });
-    } catch {
-      // revoke() is deprecated/removed in some Chromium builds — ignore.
-    }
-    // Force the grant-access flow to re-show next time.
-    setPermission('prompt');
-  }, []);
-
-  return { permission, revokePermission };
+  return { permission };
 }

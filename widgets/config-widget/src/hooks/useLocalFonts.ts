@@ -22,7 +22,7 @@ interface UseLocalFontsResult {
  * Enumerates installed font families via the Local Font Access API.
  * Auto-loads when permission is already granted (or the Permissions
  * API is unavailable). `loadFonts` doubles as the "Grant access" trigger;
- * `reset` powers the "Try again" and "Reset permission" re-entry paths.
+ * `reset` powers the "Try again" re-entry path.
  */
 export function useLocalFonts({
   open,
