@@ -62,24 +62,43 @@ function saveConfig(config: RootConfig) {
 function updateAppSetting<K extends keyof RootConfig['app']>(
   key: K,
   value: RootConfig['app'][K]
-) {
-  const config = loadConfig();
+): RootConfig {
+  const config = loadConfig(true);
   config.app[key] = value;
   saveConfig(config);
+  return config;
 }
 
 function updateWidgetSetting(
   widgetName: keyof AllWidgetSettings,
   key: string,
   value: unknown
-) {
-  const config = loadConfig();
+): RootConfig {
+  const config = loadConfig(true);
   const widgets = config.widgets as Record<string, unknown>;
   if (!widgets[widgetName]) {
     widgets[widgetName] = {};
   }
   (widgets[widgetName] as Record<string, unknown>)[key] = value;
   saveConfig(config);
+  return config;
+}
+
+function updateWidgetSettings(
+  widgetName: keyof AllWidgetSettings,
+  settings: Record<string, unknown>
+): RootConfig {
+  const config = loadConfig(true);
+  const widgets = config.widgets as Record<string, unknown>;
+  if (!widgets[widgetName]) {
+    widgets[widgetName] = {};
+  }
+  widgets[widgetName] = {
+    ...(widgets[widgetName] as Record<string, unknown>),
+    ...settings,
+  };
+  saveConfig(config);
+  return config;
 }
 
 function getAppSetting<K extends keyof RootConfig['app']>(
@@ -98,6 +117,7 @@ export const configService = {
   saveConfig,
   updateAppSetting,
   updateWidgetSetting,
+  updateWidgetSettings,
   getAppSetting,
   getWidgetSetting,
 };
