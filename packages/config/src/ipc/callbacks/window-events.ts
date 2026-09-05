@@ -3,8 +3,8 @@ import { Dispatch } from '../../ConfigReducer';
 
 export async function listenForAlwaysOnEvents(
   widgetName: string,
-  event: Event<unknown>,
-  dispatch: Dispatch
+  _event: Event<unknown>,
+  _dispatch: Dispatch
 ): Promise<void> {
   // Stub implementation - alwaysOn functionality not yet implemented
   console.warn(

@@ -15,7 +15,10 @@ export function MainSettings() {
   return (
     <PanelLayout>
       <Tabs defaultValue="general" className="h-full min-h-0 gap-0">
-        <PanelHeading title="Top Bar" description="Customise your top bar.">
+        <PanelHeading
+          title="Top Bar"
+          description="Customise your top bar, the main widget situated at the top of your screen."
+        >
           <TabsList className="mt-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="time">Time</TabsTrigger>

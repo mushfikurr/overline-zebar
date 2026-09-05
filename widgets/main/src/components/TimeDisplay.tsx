@@ -20,7 +20,7 @@ export function TimeDisplay({ dateOutput }: TimeDisplayProps) {
 
   if (isCustomConfigured) {
     // Parse ICU format string to Intl.DateTimeFormat options
-    let formatOptions: Intl.DateTimeFormatOptions = {
+    const formatOptions: Intl.DateTimeFormatOptions = {
       hour: 'numeric',
       minute: 'numeric',
     };
