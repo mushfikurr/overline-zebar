@@ -17,10 +17,6 @@ function GeneralTab() {
     'main',
     'mediaMaxWidth'
   );
-  const [flowLauncherPath, setFlowLauncherPath] = useWidgetSetting(
-    'main',
-    'flowLauncherPath'
-  );
   const [marginX, setMarginX] = useWidgetSetting('main', 'marginX');
   const [paddingLeft, setPaddingLeft] = useWidgetSetting('main', 'paddingLeft');
   const [paddingRight, setPaddingRight] = useWidgetSetting(
@@ -40,20 +36,6 @@ function GeneralTab() {
 
   return (
     <>
-      <FormField>
-        <FieldTitle>Launcher Path</FieldTitle>
-        <FieldInput>
-          <Input
-            placeholder="e.g., C:\Users\YourUser\AppData\Local\FlowLauncher\Flow.Launcher.exe"
-            value={flowLauncherPath}
-            onChange={(e) => setFlowLauncherPath(e.target.value)}
-          />
-        </FieldInput>
-        <FieldDescription>
-          Specify the full path to your Launcher executable (the search button,
-          leftmost of the topbar widget).
-        </FieldDescription>
-      </FormField>
       <Separator />
       <FormField switch>
         <FieldTitle>Allow Dynamic Workspace Indicators</FieldTitle>

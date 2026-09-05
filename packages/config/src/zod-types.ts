@@ -41,7 +41,6 @@ export const ProviderSettingsSchema = z.object({
 });
 
 export const MainWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
-  flowLauncherPath: z.string().default(''),
   mediaMaxWidth: z.string().default('400'),
   weatherThresholds: z.array(ThresholdSchema).default([]),
   weatherUnit: z

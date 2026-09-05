@@ -143,7 +143,6 @@ Here's a breakdown of the available options:
 
 #### General
 
-- **Launcher Path**: The file path to your preferred application launcher (e.g., Flow Launcher, PowerToys Run).
 - **Allow Dynamic Workspace Indicators**: If enabled, workspace indicators will be named after the first opened window in that workspace.
 - **Horizontal Margin**: Adds space to the left and right of the topbar for a "floating" look.
 - **Left/Right Padding**: Adjusts the inner spacing on the left and right ends of the topbar independently.

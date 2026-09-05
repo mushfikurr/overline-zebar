@@ -14,7 +14,6 @@ export const defaultConfig: RootConfig = {
   },
   widgets: {
     main: {
-      flowLauncherPath: '',
       mediaMaxWidth: '400',
       weatherThresholds: [
         { id: 'weather-1', min: -10, max: 0, labelColor: '--danger' },

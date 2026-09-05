@@ -84,14 +84,6 @@ export const getNumberFromConfig = async (
   return isNaN(parsed) ? fallback : parsed;
 };
 
-// Common configuration values used in the application
-export const getFlowLauncherPath = async (): Promise<string> => {
-  return await getStringFromConfig(
-    'FLOW_LAUNCHER_PATH',
-    'C:\\Program Files\\FlowLauncher\\Flow.Launcher.exe'
-  );
-};
-
 export const getMediaMaxWidth = async (): Promise<string> => {
   return await getStringFromConfig('MEDIA_MAX_WIDTH', '400');
 };
