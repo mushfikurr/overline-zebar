@@ -7,7 +7,20 @@ import { cn } from '../../utils/cn';
 const Tooltip = BaseTooltip.Root;
 const TooltipTrigger = BaseTooltip.Trigger;
 const TooltipPortal = BaseTooltip.Portal;
-const TooltipPositioner = BaseTooltip.Positioner;
+
+// Same stacking-context rule as Popover: the z must live on the positioner
+// (floating-ui's transform traps popup z-index inside it).
+const TooltipPositioner = React.forwardRef<
+  React.ElementRef<typeof BaseTooltip.Positioner>,
+  React.ComponentPropsWithoutRef<typeof BaseTooltip.Positioner>
+>(({ className, ...props }, ref) => (
+  <BaseTooltip.Positioner
+    ref={ref}
+    className={cn('z-[9999]', className)}
+    {...props}
+  />
+));
+TooltipPositioner.displayName = BaseTooltip.Positioner.displayName;
 
 const TooltipPopup = React.forwardRef<
   React.ElementRef<typeof BaseTooltip.Popup>,
