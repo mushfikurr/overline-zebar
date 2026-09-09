@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { execSync } from 'child_process';
+import { execSync, spawn } from 'child_process';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -38,8 +38,12 @@ export default defineConfig({
           console.log(err.message);
         }
 
-        // Start the new zebar.exe process
-        execSync(`start ${exePath}`, { stdio: 'inherit' });
+        // Start the new zebar.exe process detached, so the build never
+        // waits on it (execSync('start ...') hangs on inherited handles).
+        spawn('cmd', ['/c', 'start', '', exePath], {
+          detached: true,
+          stdio: 'ignore',
+        }).unref();
       },
     },
   ],
