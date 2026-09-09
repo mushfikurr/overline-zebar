@@ -41,6 +41,7 @@ function App() {
   const [marginX] = useWidgetSetting('main', 'marginX');
   const [paddingLeft] = useWidgetSetting('main', 'paddingLeft');
   const [paddingRight] = useWidgetSetting('main', 'paddingRight');
+  const [showSystray] = useWidgetSetting('main', 'showSystray');
 
   return (
     <div
@@ -88,9 +89,11 @@ function App() {
             iconClassnames={volumeIconClassnames}
           />
         </div>
-        <div className="h-full flex items-center px-0.5">
-          <Systray systray={output.systray} />
-        </div>
+        {showSystray && (
+          <div className="h-full flex items-center px-0.5">
+            <Systray systray={output.systray} />
+          </div>
+        )}
         <TimeDisplay dateOutput={output.date} />
         <div
           className="flex items-center h-full"

@@ -36,6 +36,7 @@ export const defaultConfig: RootConfig = {
       ],
       useInlineStats: false,
       pinnedSystrayIcons: [],
+      showSystray: true,
       weatherUnit: 'celsius',
       dynamicWorkspaceIndicator: false,
       marginX: 0,

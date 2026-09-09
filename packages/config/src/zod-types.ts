@@ -50,6 +50,7 @@ export const MainWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
     .union([z.literal('celsius'), z.literal('fahrenheit')])
     .default('celsius'),
   pinnedSystrayIcons: z.array(SystrayIconSchema).default([]),
+  showSystray: z.boolean().default(true),
   marginX: z.number().default(0),
   paddingLeft: z.number().default(4),
   paddingRight: z.number().default(4),

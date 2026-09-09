@@ -1,5 +1,9 @@
 import { useWidgetSetting } from '@overline-zebar/config';
 import {
+  FieldDescription,
+  FieldInput,
+  FieldTitle,
+  FormField,
   Input,
   Switch,
   Table,
@@ -24,6 +28,10 @@ const providers = zebar.createProviderGroup({
 
 function SystrayTab() {
   const [output, setOutput] = useState(providers.outputMap);
+  const [showSystray, setShowSystray] = useWidgetSetting(
+    'main',
+    'showSystray'
+  );
   const [pinnedSystrayIcons, setPinnedSystrayIcons] = useWidgetSetting(
     'main',
     'pinnedSystrayIcons'
@@ -60,6 +68,18 @@ function SystrayTab() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
+      <FormField switch>
+        <FieldTitle>Show System Tray</FieldTitle>
+        <FieldInput>
+          <Switch
+            checked={showSystray}
+            onCheckedChange={setShowSystray}
+          />
+        </FieldInput>
+        <FieldDescription>
+          Show the system tray icons in the topbar.
+        </FieldDescription>
+      </FormField>
       <div className="space-y-0.5">
         <h1>Pinned Icons</h1>
         <p className="text-text-muted">
@@ -78,6 +98,7 @@ function SystrayTab() {
           placeholder="Search tray icons..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          disabled={!showSystray}
         />
       </div>
       <div className="min-h-0 min-w-0 flex-1 overflow-y-auto rounded-md border border-border bg-background-deeper">
@@ -96,6 +117,7 @@ function SystrayTab() {
                   <Switch
                     checked={isIconPinned(i)}
                     onCheckedChange={() => handleCheckedChange(i)}
+                    disabled={!showSystray}
                   />
                 </TableCell>
                 <TableCell>
