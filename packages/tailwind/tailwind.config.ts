@@ -2,8 +2,10 @@ import type { Config } from 'tailwindcss';
 
 // Allows opacity with OKLCH values. (i.e. bg-background/80)
 function withOpacity(variableName: string) {
-  return ({ opacityValue }: { opacityValue: number }) => {
-    if (opacityValue === 100) return `var(${variableName})`;
+  return ({ opacityValue }: { opacityValue?: number }) => {
+    if (opacityValue === undefined || opacityValue === 100) {
+      return `var(${variableName})`;
+    }
     return `color-mix(in srgb, var(${variableName}) calc(${opacityValue} * 100%), transparent)`;
   };
 }
