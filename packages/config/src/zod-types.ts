@@ -31,6 +31,9 @@ export const AppSettingsSchema = z.object({
   radius: z.string(),
   windowEffect: z.string().default('acrylic'),
   fontFamily: z.string().default('Geist Mono'),
+  systemThemeSync: z.boolean().default(false),
+  lightThemeId: z.string().nullable().default('latte'),
+  darkThemeId: z.string().nullable().default('default'),
 });
 
 export const ProviderSettingsSchema = z.object({

@@ -7,6 +7,7 @@ export { useConfigDispatch, useConfigState } from './hooks/useConfigContext';
 export { useManageRootConfig } from './hooks/useManageRootConfig';
 export { useThemePreview } from './hooks/useThemePreview';
 export { useThemes } from './hooks/useThemes';
+export { useSystemThemeSync } from './hooks/useSystemThemeSync';
 export { generateThemeFromColor } from './utils/theme-generator';
 export type {
   AllWidgetSettings,

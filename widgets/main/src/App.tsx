@@ -1,4 +1,4 @@
-import { useWidgetSetting } from '@overline-zebar/config';
+import { useSystemThemeSync, useWidgetSetting } from '@overline-zebar/config';
 import { useEffect, useState } from 'react';
 import * as zebar from 'zebar';
 import { Center } from './components/Center';
@@ -35,6 +35,7 @@ function App() {
   }, []);
 
   useAutoTiling();
+  useSystemThemeSync();
 
   const volumeIconClassnames = 'h-3.5 w-3.5 text-icon';
   const [marginX] = useWidgetSetting('main', 'marginX');

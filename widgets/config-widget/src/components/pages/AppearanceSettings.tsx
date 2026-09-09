@@ -11,7 +11,7 @@ import {
 } from '@overline-zebar/ui';
 import { useAppSetting } from '@overline-zebar/config';
 import SettingsPage from '../SettingsPage';
-import { ThemeEditor } from '../theme/ThemeEditor';
+import { ThemePicker } from '../theme/ThemePicker';
 import { Separator } from '../common/Separator';
 import FontPicker from '../common/FontPicker';
 
@@ -36,7 +36,7 @@ function AppearanceSettings() {
 
   return (
     <SettingsPage
-      title="Apperance"
+      title="Appearance"
       description="Customise your overline-zebar widgets to suit you."
     >
       <div>
@@ -118,7 +118,7 @@ function AppearanceSettings() {
         <FormField>
           <FieldTitle>Theme</FieldTitle>
           <FieldInput>
-            <ThemeEditor />
+            <ThemePicker />
           </FieldInput>
         </FormField>
       </div>

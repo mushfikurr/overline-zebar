@@ -11,6 +11,9 @@ export const defaultConfig: RootConfig = {
     radius: '0.5rem',
     windowEffect: 'acrylic',
     fontFamily: 'Geist Mono',
+    systemThemeSync: false,
+    lightThemeId: 'latte',
+    darkThemeId: 'default',
   },
   widgets: {
     main: {
