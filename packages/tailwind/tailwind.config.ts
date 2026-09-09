@@ -26,7 +26,7 @@ const config: Omit<Config, 'content'> = {
         'text-muted': withOpacity('--text-muted'),
         icon: withOpacity('--icon'),
         success: 'var(--success)',
-        danger: 'var(--danger)',
+        danger: withOpacity('--danger'),
         warning: 'var(--warning)',
       },
       fontFamily: {

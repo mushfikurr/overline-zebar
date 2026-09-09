@@ -36,7 +36,6 @@ function GeneralTab() {
 
   return (
     <>
-      <Separator />
       <FormField switch>
         <FieldTitle>Allow Dynamic Workspace Indicators</FieldTitle>
         <FieldInput>
