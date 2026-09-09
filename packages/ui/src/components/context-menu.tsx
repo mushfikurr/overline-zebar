@@ -206,12 +206,7 @@ function ContextMenuSub({
   ...props
 }: React.ComponentProps<typeof BaseContextMenu.SubmenuRoot>) {
   return (
-    <BaseContextMenu.SubmenuRoot
-      delay={0}
-      closeDelay={0}
-      data-slot="context-menu-sub"
-      {...props}
-    />
+    <BaseContextMenu.SubmenuRoot data-slot="context-menu-sub" {...props} />
   );
 }
 
