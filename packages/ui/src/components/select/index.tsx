@@ -87,7 +87,7 @@ export function SelectContent({
         <BaseSelect.Popup
           data-slot="select-content"
           className={cn(
-            'bg-surface/75 text-text relative z-50 max-h-[var(--available-height)] w-[var(--anchor-width)] min-w-[8rem] origin-[var(--transform-origin)] overflow-x-hidden overflow-y-auto rounded-md border border-border p-1 shadow-md backdrop-blur-2xl transition-[transform,scale,opacity] data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
+            'bg-surface/75 text-text relative z-50 max-h-[var(--available-height)] w-max min-w-[max(8rem,var(--anchor-width))] max-w-[var(--available-width)] origin-[var(--transform-origin)] overflow-x-hidden overflow-y-auto rounded-md border border-border p-1 shadow-md backdrop-blur-2xl transition-[transform,scale,opacity] data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
             className
           )}
           {...props}
