@@ -1,4 +1,10 @@
 export { Button, buttonVariants } from './components/button';
+export {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+  buttonGroupVariants,
+} from './components/button-group';
 export { StatRing } from './components/stat-ring/StatRing';
 export { LabelType } from './components/stat-ring/types/labelType';
 export { systemStatThresholds } from './components/stat-ring/defaults/systemStatThresholds';
