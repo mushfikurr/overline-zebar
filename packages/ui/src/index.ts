@@ -21,6 +21,13 @@ export { Navbar, NavbarItem } from './components/navbar';
 export { default as PanelLayout } from './components/panel-layout/PanelLayout';
 export { Input } from './components/input';
 export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupText,
+  InputGroupInput,
+} from './components/input-group';
+export {
   FormField,
   FieldTitle,
   FieldInput,
@@ -42,6 +49,7 @@ export {
   CollapsibleContent,
 } from './components/collapsible';
 export * from './components/context-menu';
+export * from './components/dropdown-menu';
 export {
   Table,
   TableHeader,

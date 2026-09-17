@@ -23,9 +23,9 @@ const buttonVariants = cva(
           'bg-button border border-button-border text-text hover:bg-danger/80 focus-visible:ring-danger/50 shadow-xs',
       },
       size: {
-        sm: 'text-xs py-1 px-2 gap-1',
-        md: 'py-1.5 px-2.5',
-        lg: 'py-2 px-3',
+        sm: 'h-6 px-2 py-1 text-xs gap-1',
+        md: 'h-7 px-2.5 py-1.5',
+        lg: 'h-8 px-3 py-2',
         'icon-xs': "size-5 [&_svg:not([class*='size-'])]:size-2.5",
         'icon-sm': "px-3 size-6 [&_svg:not([class*='size-'])]:size-3",
         icon: 'size-7',
