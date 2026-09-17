@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import animate from 'tailwindcss-animate';
 
 // Allows opacity with OKLCH values. (i.e. bg-background/80)
 function withOpacity(variableName: string) {
@@ -73,6 +74,6 @@ const config: Omit<Config, 'content'> = {
       },
     },
   },
-  plugins: [],
+  plugins: [animate],
 };
 export default config;

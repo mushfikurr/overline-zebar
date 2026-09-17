@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@overline-zebar/config": "workspace:*",
     "@overline-zebar/config-widget": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
