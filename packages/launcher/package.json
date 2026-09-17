@@ -1,0 +1,19 @@
+{
+  "name": "@overline-zebar/launcher",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@overline-zebar/config": "workspace:*",
+    "lucide-react": "^0.460.0",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@overline-zebar/typescript": "workspace:*",
+    "@types/react": "catalog:",
+    "typescript": "^5.8.3"
+  }
+}
