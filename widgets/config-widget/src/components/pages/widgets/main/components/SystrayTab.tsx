@@ -28,10 +28,7 @@ const providers = zebar.createProviderGroup({
 
 function SystrayTab() {
   const [output, setOutput] = useState(providers.outputMap);
-  const [showSystray, setShowSystray] = useWidgetSetting(
-    'main',
-    'showSystray'
-  );
+  const [showSystray, setShowSystray] = useWidgetSetting('main', 'showSystray');
   const [pinnedSystrayIcons, setPinnedSystrayIcons] = useWidgetSetting(
     'main',
     'pinnedSystrayIcons'
@@ -71,10 +68,7 @@ function SystrayTab() {
       <FormField switch>
         <FieldTitle>Show System Tray</FieldTitle>
         <FieldInput>
-          <Switch
-            checked={showSystray}
-            onCheckedChange={setShowSystray}
-          />
+          <Switch checked={showSystray} onCheckedChange={setShowSystray} />
         </FieldInput>
         <FieldDescription>
           Show the system tray icons in the topbar.
