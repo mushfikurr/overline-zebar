@@ -1,10 +1,15 @@
-import { isLauncherFolder, useWidgetSetting } from '@overline-zebar/config';
+import {
+  getFolderCounts,
+  isLauncherFolder,
+  useWidgetSetting,
+} from '@overline-zebar/config';
 import type {
   LauncherCommand,
   LauncherFolder,
   LauncherItem,
 } from '@overline-zebar/config';
 import {
+  ConfirmDialog,
   UpdateFolderModal,
   UpdateScriptModal,
 } from '@overline-zebar/config-widget';
@@ -13,10 +18,19 @@ import {
   IconSquare,
 } from '@overline-zebar/config-widget/src/components/icons';
 import { isFileDialogActive } from '@overline-zebar/config-widget/src/utils/fileDialogGuard';
-import { generateId } from '@overline-zebar/config/src/utils/generateId';
+import {
+  DragStackOverlay,
+  FolderTargetBadge,
+  ROOT_DROP_ID,
+  SelectedBadge,
+  useLauncherApplications,
+  useLauncherDnd,
+} from '@overline-zebar/launcher';
 import { logger } from '@overline-zebar/config/src/utils/logger';
 import {
   Button,
+  ButtonGroup,
+  ButtonGroupText,
   ContextMenu,
   ContextMenuContent,
   ContextMenuGroup,
@@ -32,30 +46,15 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@overline-zebar/ui';
-import {
-  DndContext,
-  DragOverlay,
-  PointerSensor,
-  pointerWithin,
-  rectIntersection,
-  useDroppable,
-  useSensor,
-  useSensors,
-  type CollisionDetection,
-  type DragEndEvent,
-  type DragMoveEvent,
-  type DragStartEvent,
-} from '@dnd-kit/core';
+import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
 import {
   SortableContext,
-  arrayMove,
   rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
-  Check,
   ChevronLeft,
   FilePlus2,
   Folder,
@@ -71,7 +70,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ComponentProps,
   type KeyboardEvent,
@@ -90,21 +88,6 @@ const interactive =
 
 const ITEM_SELECTOR = '[data-launcher-item]';
 
-/**
- * How long a script must dwell on another item before the folder action
- * commits (join an existing folder / create a new one). Matches Apple's
- * spring-loading guidance: highlight instantly, commit after roughly half
- * a second — long enough to not fire mid-pass, short enough to feel
- * responsive.
- */
-const FOLDER_HOVER_DELAY = 600;
-
-/** Droppable id of the folder header; dropping on it moves a script out
- * of the current folder. */
-const ROOT_DROP_ID = 'launcher-root-drop';
-
-type FrozenRect = { left: number; top: number; right: number; bottom: number };
-
 type ItemHandlers = {
   onOpenFolder: (folder: LauncherFolder) => void;
   onEditScript: (script: LauncherCommand) => void;
@@ -120,58 +103,33 @@ type ItemHandlers = {
 
 function App() {
   const [output, setOutput] = useState(providers.outputMap);
-  const [applications, setApplications] = useWidgetSetting(
-    'script-launcher',
-    'applications'
-  );
+  const model = useLauncherApplications();
+  const { applications } = model;
   const [view] = useWidgetSetting('script-launcher', 'view');
   const [showCommands] = useWidgetSetting('script-launcher', 'showCommands');
   const [collapsePaths] = useWidgetSetting('script-launcher', 'collapsePaths');
   const [query, setQuery] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [newApp, setNewApp] = useState<LauncherCommand>({
-    id: '',
-    title: '',
-    command: '',
-    args: [],
-  });
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
-  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
-  const [folderName, setFolderName] = useState('');
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeRect, setActiveRect] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
-  /** Item currently dwelled on with the dwell timer running (soft ring). */
-  const [dwellTargetId, setDwellTargetId] = useState<string | null>(null);
-  /** Item whose folder action has committed (full affordance). */
-  const [folderTargetId, setFolderTargetId] = useState<string | null>(null);
-  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dwellTargetRef = useRef<string | null>(null);
-  const folderTargetRef = useRef<string | null>(null);
-  /** Item rects captured at drag start; dwell hit-testing stays anchored
-   * to these stable boxes while sortable items shuffle around. */
-  const frozenRectsRef = useRef<Map<string, FrozenRect> | null>(null);
 
   // ----- Selection (ctrl/shift-click) ------------------------------------
 
   /** Ids of selected scripts; folders are never selectable. */
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  /** When a selected item starts dragging with more selected, these move
-   * together; null means a plain single-item drag. */
-  const [multiDragIds, setMultiDragIds] = useState<string[] | null>(null);
-  /** Pointer delta during a multi-drag, applied to the selected siblings
-   * so the whole stack travels with the cursor. */
-  const [dragDelta, setDragDelta] = useState<{ x: number; y: number } | null>(
-    null
-  );
 
   const clearSelection = useCallback(() => {
     setSelectedIds((prev) => (prev.length > 0 ? [] : prev));
   }, []);
+
+  const q = query.trim().toLowerCase();
+  const isSearching = q.length > 0;
+
+  // ----- Drag & drop ------------------------------------------------------
+
+  const dnd = useLauncherDnd({
+    model,
+    selection: { selectedIds, clearSelection },
+    springLoadEnabled: !isSearching && currentFolderId === null,
+  });
 
   useEffect(() => {
     providers.onOutput(() => setOutput(providers.outputMap));
@@ -239,57 +197,15 @@ function App() {
     }
   }, [applications, currentFolderId]);
 
-  useEffect(() => {
-    return () => {
-      if (hoverTimeout.current !== null) clearTimeout(hoverTimeout.current);
-    };
-  }, []);
-
   const handleOnSettingsClick = () => {
     zebar.startWidgetPreset('config-widget', 'default');
   };
 
-  const handleAddOrUpdate = () => {
-    if (editingId) {
-      setApplications(
-        applications.map((item) =>
-          item.id === editingId && !isLauncherFolder(item) ? newApp : item
-        )
-      );
-    } else {
-      // Scripts added while a folder is open land inside it.
-      const parentId =
-        !isSearching && currentFolderId ? currentFolderId : undefined;
-      setApplications([
-        ...applications,
-        { ...newApp, id: generateId(), parentId },
-      ]);
-    }
-    setNewApp({ id: '', title: '', command: '', args: [] });
-    setEditingId(null);
-    setIsModalOpen(false);
-  };
-
   const handleOpenModalForAdd = () => {
-    setEditingId(null);
-    setNewApp({ id: '', title: '', command: '', args: [] });
-    setIsModalOpen(true);
-  };
-
-  const handleOpenModalForEdit = (appToEdit: LauncherCommand) => {
-    setEditingId(appToEdit.id);
-    setNewApp(appToEdit);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    setApplications(applications.filter((item) => item.id !== id));
-  };
-
-  const handleDeleteSelected = (ids: string[]) => {
-    const idSet = new Set(ids);
-    setApplications(applications.filter((item) => !idSet.has(item.id)));
-    clearSelection();
+    // Scripts added while a folder is open land inside it.
+    model.openScriptModalForAdd(
+      !isSearching && currentFolderId ? currentFolderId : undefined
+    );
   };
 
   const handleOpenFolder = (folder: LauncherFolder) => {
@@ -298,75 +214,15 @@ function App() {
     setCurrentFolderId(folder.id);
   };
 
-  const handleOpenFolderModalForAdd = () => {
-    setEditingFolderId(null);
-    setFolderName('');
-    setIsFolderModalOpen(true);
-  };
-
-  const handleOpenFolderModalForRename = (folder: LauncherFolder) => {
-    setEditingFolderId(folder.id);
-    setFolderName(folder.title);
-    setIsFolderModalOpen(true);
-  };
-
-  const handleAddOrUpdateFolder = () => {
-    const title = folderName.trim();
-    if (!title) return;
-
-    if (editingFolderId) {
-      setApplications(
-        applications.map((item) =>
-          isLauncherFolder(item) && item.id === editingFolderId
-            ? { ...item, title }
-            : item
-        )
-      );
-    } else {
-      setApplications([
-        ...applications,
-        { id: generateId(), type: 'folder', title },
-      ]);
-    }
-    setFolderName('');
-    setEditingFolderId(null);
-    setIsFolderModalOpen(false);
-  };
-
-  // Deleting a folder keeps its scripts: they lift up to the top level,
-  // taking the folder's slot in order.
-  const handleDeleteFolder = (folder: LauncherFolder) => {
-    const next = applications.filter((item) => item.id !== folder.id);
-    const folderIndex = applications.findIndex((item) => item.id === folder.id);
-    if (folderIndex === -1) return;
-
-    const children = applications
-      .filter((item) => !isLauncherFolder(item) && item.parentId === folder.id)
-      .map((child) => ({ ...child, parentId: undefined }));
-    next.splice(folderIndex, 0, ...children);
-    setApplications(next);
-
-    if (currentFolderId === folder.id) setCurrentFolderId(null);
-  };
-
-  const handleMoveToTopLevel = (id: string) => {
-    handleMoveSelectedOut([id]);
-  };
-
-  const handleMoveSelectedOut = (ids: string[]) => {
-    const idSet = new Set(ids);
-    setApplications(
-      applications.map((item) =>
-        !isLauncherFolder(item) && idSet.has(item.id)
-          ? { ...item, parentId: undefined }
-          : item
-      )
-    );
+  const handleConfirmDelete = () => {
+    model.confirmDelete();
     clearSelection();
   };
 
-  const q = query.trim().toLowerCase();
-  const isSearching = q.length > 0;
+  const handleMoveSelectedOut = (ids: string[]) => {
+    model.moveScriptsToTopLevel(ids);
+    clearSelection();
+  };
 
   const currentFolder = useMemo(
     () =>
@@ -379,15 +235,10 @@ function App() {
     [applications, currentFolderId]
   );
 
-  const folderCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const item of applications) {
-      if (!isLauncherFolder(item) && item.parentId) {
-        counts.set(item.parentId, (counts.get(item.parentId) ?? 0) + 1);
-      }
-    }
-    return counts;
-  }, [applications]);
+  const folderCounts = useMemo(
+    () => getFolderCounts(applications),
+    [applications]
+  );
 
   // Search looks through every folder; otherwise the view shows the items
   // of the current folder (or the top level), in their persisted order.
@@ -429,11 +280,6 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [visibleItems]);
-
-  const activeItem =
-    activeId !== null
-      ? (applications.find((item) => item.id === activeId) ?? null)
-      : null;
 
   // ----- Selection interactions -----------------------------------------
 
@@ -480,282 +326,6 @@ function App() {
     // drop any selection that was in progress).
     clearSelection();
     launch(item, output.glazewm);
-  };
-
-  // ----- Drag & drop ----------------------------------------------------
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
-  );
-
-  // Pointer-precise detection so "over" always reflects the item actually
-  // under the cursor. While a folder action is engaged, collisions are
-  // suppressed so shuffled items settle back and the target stays put.
-  const collisionDetection = useCallback<CollisionDetection>((args) => {
-    if (folderTargetRef.current !== null) return [];
-    const pointerCollisions = pointerWithin(args);
-    return pointerCollisions.length > 0
-      ? pointerCollisions
-      : rectIntersection(args);
-  }, []);
-
-  const handleDragStart = ({ active }: DragStartEvent) => {
-    const activeItemId = String(active.id);
-    setActiveId(activeItemId);
-    const rect = active.rect.current.initial;
-    setActiveRect(rect ? { width: rect.width, height: rect.height } : null);
-
-    // Dragging an unselected item while others are selected starts a
-    // fresh single-item drag, like in Explorer.
-    const isSelected = selectedIds.includes(activeItemId);
-    if (!isSelected && selectedIds.length > 0) clearSelection();
-    setMultiDragIds(isSelected && selectedIds.length > 1 ? selectedIds : null);
-
-    // Freeze item boxes as they are at pickup. dnd-kit's own "over" jumps
-    // around as sortable items shift out of the way (endlessly in list
-    // view), so dwell detection cannot rely on it.
-    const rects = new Map<string, FrozenRect>();
-    document
-      .querySelectorAll<HTMLElement>('[data-launcher-id]')
-      .forEach((element) => {
-        const id = element.dataset.launcherId;
-        if (!id) return;
-        const box = element.getBoundingClientRect();
-        rects.set(id, {
-          left: box.left,
-          top: box.top,
-          right: box.right,
-          bottom: box.bottom,
-        });
-      });
-    frozenRectsRef.current = rects;
-  };
-
-  // During a multi-drag, track the pointer delta so the selected siblings
-  // travel alongside the overlay.
-  const handleDragMove = ({ delta }: DragMoveEvent) => {
-    if (multiDragIds === null) return;
-    setDragDelta({ x: delta.x, y: delta.y });
-  };
-
-  const setDwell = useCallback((targetId: string | null) => {
-    if (hoverTimeout.current !== null) {
-      clearTimeout(hoverTimeout.current);
-      hoverTimeout.current = null;
-    }
-    dwellTargetRef.current = targetId;
-    setDwellTargetId(targetId);
-    if (folderTargetRef.current !== null) {
-      folderTargetRef.current = null;
-      setFolderTargetId(null);
-    }
-    if (!targetId) return;
-
-    hoverTimeout.current = setTimeout(() => {
-      folderTargetRef.current = targetId;
-      setFolderTargetId(targetId);
-    }, FOLDER_HOVER_DELAY);
-  }, []);
-
-  const hitTestItem = useCallback(
-    (x: number, y: number): string | null => {
-      const rects = frozenRectsRef.current;
-      if (!rects) return null;
-      for (const [id, rect] of rects) {
-        if (id === activeId) continue;
-        if (
-          x >= rect.left &&
-          x <= rect.right &&
-          y >= rect.top &&
-          y <= rect.bottom
-        ) {
-          return id;
-        }
-      }
-      return null;
-    },
-    [activeId]
-  );
-
-  // Spring-loading state machine: the item under the pointer (per the
-  // frozen boxes) highlights instantly; holding still for the dwell
-  // commits the folder action, moving away disengages it.
-  const runDwell = useCallback(
-    (x: number, y: number) => {
-      if (isSearching || currentFolderId !== null) {
-        if (dwellTargetRef.current !== null) setDwell(null);
-        return;
-      }
-      const draggedItem = applications.find((item) => item.id === activeId);
-      if (!draggedItem || isLauncherFolder(draggedItem)) {
-        if (dwellTargetRef.current !== null) setDwell(null);
-        return;
-      }
-      const target = hitTestItem(x, y);
-      if (target === dwellTargetRef.current) return;
-      setDwell(target);
-    },
-    [
-      activeId,
-      applications,
-      currentFolderId,
-      hitTestItem,
-      isSearching,
-      setDwell,
-    ]
-  );
-
-  useEffect(() => {
-    if (activeId === null) return;
-
-    const handlePointerMove = (event: PointerEvent) => {
-      runDwell(event.clientX, event.clientY);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-    return () => window.removeEventListener('pointermove', handlePointerMove);
-  }, [activeId, runDwell]);
-
-  const resetDragState = () => {
-    setDwell(null);
-    frozenRectsRef.current = null;
-    setActiveId(null);
-    setActiveRect(null);
-    setMultiDragIds(null);
-    setDragDelta(null);
-  };
-
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const activeItemId = String(active.id);
-    const overId = over?.id != null ? String(over.id) : null;
-    const engagedTargetId = folderTargetRef.current;
-
-    resetDragState();
-
-    const dragIds =
-      multiDragIds !== null && multiDragIds.includes(activeItemId)
-        ? multiDragIds
-        : [activeItemId];
-
-    // Dropped on the folder header: move the scripts out to the top level.
-    if (overId === ROOT_DROP_ID) {
-      if (currentFolderId) handleMoveSelectedOut(dragIds);
-      return;
-    }
-
-    if (engagedTargetId && engagedTargetId !== activeItemId) {
-      // Spring-loaded folder action: tuck the dragged scripts into a
-      // folder, or group them with the target script in a new one.
-      handleFolderDrop(dragIds, engagedTargetId);
-      return;
-    }
-
-    if (!overId || overId === activeItemId || isSearching) return;
-    if (dragIds.length > 1) reorderVisibleBlock(dragIds, overId);
-    else reorderVisible(activeItemId, overId);
-  };
-
-  const handleDragCancel = () => {
-    resetDragState();
-  };
-
-  // Rewrites the flat array so the items of the current level follow the
-  // new on-screen order, leaving items of other levels untouched.
-  const reorderVisible = (activeItemId: string, overItemId: string) => {
-    const oldIndex = visibleItems.findIndex((item) => item.id === activeItemId);
-    const newIndex = visibleItems.findIndex((item) => item.id === overItemId);
-    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-
-    const ordered = arrayMove(visibleItems, oldIndex, newIndex);
-    let cursor = 0;
-    const level = currentFolderId;
-    setApplications(
-      applications.map((item) =>
-        (item.parentId ?? null) === level ? (ordered[cursor++] ?? item) : item
-      )
-    );
-  };
-
-  // Same, but relocates a whole selection as a contiguous block: the
-  // selected items keep their relative order and land at the target's
-  // position.
-  const reorderVisibleBlock = (dragIds: string[], overItemId: string) => {
-    const idSet = new Set(dragIds);
-    const moving = visibleItems.filter((item) => idSet.has(item.id));
-    if (moving.length === 0) return;
-    const others = visibleItems.filter((item) => !idSet.has(item.id));
-    const insertIndex = others.findIndex((item) => item.id === overItemId);
-    if (insertIndex === -1) return;
-
-    const ordered = [
-      ...others.slice(0, insertIndex),
-      ...moving,
-      ...others.slice(insertIndex),
-    ];
-    let cursor = 0;
-    const level = currentFolderId;
-    setApplications(
-      applications.map((item) =>
-        (item.parentId ?? null) === level ? (ordered[cursor++] ?? item) : item
-      )
-    );
-  };
-
-  // Spring-loaded folder action for one or more dragged scripts: dropping
-  // on a folder tucks them all inside; dropping on a script wraps the
-  // whole group with the target in a fresh folder at the target's spot.
-  const handleFolderDrop = (dragIds: string[], targetItemId: string) => {
-    if (currentFolderId || isSearching) return;
-    const targetItem = applications.find((item) => item.id === targetItemId);
-    if (!targetItem) return;
-
-    const idSet = new Set(dragIds);
-    const draggedItems = applications.filter(
-      (item) =>
-        idSet.has(item.id) &&
-        !isLauncherFolder(item) &&
-        item.id !== targetItem.id
-    );
-    if (draggedItems.length === 0) return;
-
-    if (isLauncherFolder(targetItem)) {
-      const next = applications.filter((item) => !idSet.has(item.id));
-      const targetIndex = next.findIndex((item) => item.id === targetItem.id);
-      next.splice(
-        targetIndex + 1,
-        0,
-        ...draggedItems.map((item) => ({ ...item, parentId: targetItem.id }))
-      );
-      setApplications(next);
-      clearSelection();
-      return;
-    }
-
-    const folder: LauncherFolder = {
-      id: generateId(),
-      type: 'folder',
-      title: 'New folder',
-    };
-    const memberIds = new Set([
-      targetItem.id,
-      ...draggedItems.map((item) => item.id),
-    ]);
-    let placed = false;
-    const next = applications.flatMap((item) => {
-      if (!memberIds.has(item.id)) return [item];
-      if (placed) return [];
-      placed = true;
-      return [
-        folder,
-        { ...targetItem, parentId: folder.id },
-        ...draggedItems.map((child) => ({ ...child, parentId: folder.id })),
-      ];
-    });
-    setApplications(next);
-    setEditingFolderId(folder.id);
-    setFolderName(folder.title);
-    setIsFolderModalOpen(true);
-    clearSelection();
   };
 
   // ----- Focus navigation ----------------------------------------------
@@ -816,23 +386,16 @@ function App() {
 
   const handlers: ItemHandlers = {
     onOpenFolder: handleOpenFolder,
-    onEditScript: handleOpenModalForEdit,
-    onDelete: handleDelete,
-    onRenameFolder: handleOpenFolderModalForRename,
-    onDeleteFolder: handleDeleteFolder,
-    onMoveToTopLevel: handleMoveToTopLevel,
+    onEditScript: model.openScriptModalForEdit,
+    onDelete: model.requestDeleteScript,
+    onRenameFolder: model.openFolderModalForRename,
+    onDeleteFolder: model.requestDeleteFolder,
+    onMoveToTopLevel: (id) => handleMoveSelectedOut([id]),
     onItemClick: handleItemClick,
-    onDeleteSelected: handleDeleteSelected,
+    onDeleteSelected: model.requestDeleteScripts,
     onMoveSelectedOut: handleMoveSelectedOut,
     onClearSelection: clearSelection,
   };
-
-  // Selected items other than the one being dragged follow the pointer
-  // during a multi-drag.
-  const isGhostMover = (itemId: string) =>
-    multiDragIds !== null &&
-    multiDragIds.includes(itemId) &&
-    activeId !== itemId;
 
   const emptyState = (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
@@ -865,20 +428,56 @@ function App() {
   return (
     <div className="text-text relative h-screen select-none overflow-hidden rounded-lg border border-button-border/80 bg-background shadow-sm backdrop-blur-xl antialiased">
       <UpdateScriptModal
-        open={isModalOpen}
-        setOpen={setIsModalOpen}
-        newApp={newApp}
-        setNewApp={setNewApp}
-        editingId={editingId}
-        onAddOrUpdate={handleAddOrUpdate}
+        open={model.isScriptModalOpen}
+        setOpen={model.setIsScriptModalOpen}
+        newApp={model.newApp}
+        setNewApp={model.setNewApp}
+        editingId={model.editingId}
+        onAddOrUpdate={model.commitScript}
       />
       <UpdateFolderModal
-        open={isFolderModalOpen}
-        setOpen={setIsFolderModalOpen}
-        name={folderName}
-        setName={setFolderName}
-        editing={editingFolderId !== null}
-        onSubmit={handleAddOrUpdateFolder}
+        open={model.isFolderModalOpen}
+        setOpen={model.setIsFolderModalOpen}
+        name={model.folderName}
+        setName={model.setFolderName}
+        editing={model.editingFolderId !== null}
+        onSubmit={model.commitFolder}
+      />
+      <ConfirmDialog
+        open={model.pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) model.dismissDelete();
+        }}
+        title={
+          model.pendingDelete?.kind === 'folder'
+            ? 'Delete folder'
+            : model.pendingDelete?.kind === 'scripts'
+              ? 'Delete scripts'
+              : 'Delete script'
+        }
+        description={
+          model.pendingDelete?.kind === 'folder' ? (
+            <>
+              &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
+              The scripts inside are kept and moved to the top level.
+            </>
+          ) : model.pendingDelete?.kind === 'scripts' ? (
+            <>
+              This will remove {model.pendingDelete.ids.length}{' '}
+              {model.pendingDelete.ids.length === 1 ? 'script' : 'scripts'}{' '}
+              from your launcher.
+            </>
+          ) : (
+            <>
+              This will remove &ldquo;
+              {model.pendingDelete?.app.title || 'Untitled script'}&rdquo; from
+              your launcher.
+            </>
+          )
+        }
+        confirmLabel="Delete"
+        destructive
+        onConfirm={handleConfirmDelete}
       />
       <div className="flex h-full w-full flex-col">
         {applications.length > 0 && (
@@ -933,12 +532,12 @@ function App() {
         )}
 
         <DndContext
-          sensors={sensors}
-          collisionDetection={collisionDetection}
-          onDragStart={handleDragStart}
-          onDragMove={handleDragMove}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
+          sensors={dnd.sensors}
+          collisionDetection={dnd.collisionDetection}
+          onDragStart={dnd.onDragStart}
+          onDragMove={dnd.onDragMove}
+          onDragEnd={dnd.onDragEnd}
+          onDragCancel={dnd.onDragCancel}
         >
           <div className="bg-surface min-h-0 min-w-0 flex-1 overflow-y-auto">
             {applications.length === 0 && emptyState}
@@ -965,11 +564,11 @@ function App() {
                       key={item.id}
                       item={item}
                       dragEnabled={!isSearching}
-                      isDwellTarget={dwellTargetId === item.id}
-                      isFolderTarget={folderTargetId === item.id}
+                      isDwellTarget={dnd.dwellTargetId === item.id}
+                      isFolderTarget={dnd.folderTargetId === item.id}
                       isSelected={selectedIds.includes(item.id)}
-                      isGhostMover={isGhostMover(item.id)}
-                      dragDelta={dragDelta}
+                      isGhostMover={dnd.isGhostMover(item.id)}
+                      dragDelta={dnd.dragDelta}
                       selectedIds={selectedIds}
                       handlers={handlers}
                     />
@@ -998,11 +597,11 @@ function App() {
                       showCommand={showCommands}
                       collapsePath={collapsePaths}
                       dragEnabled={!isSearching}
-                      isDwellTarget={dwellTargetId === item.id}
-                      isFolderTarget={folderTargetId === item.id}
+                      isDwellTarget={dnd.dwellTargetId === item.id}
+                      isFolderTarget={dnd.folderTargetId === item.id}
                       isSelected={selectedIds.includes(item.id)}
-                      isGhostMover={isGhostMover(item.id)}
-                      dragDelta={dragDelta}
+                      isGhostMover={dnd.isGhostMover(item.id)}
+                      dragDelta={dnd.dragDelta}
                       selectedIds={selectedIds}
                       handlers={handlers}
                     />
@@ -1013,38 +612,28 @@ function App() {
           </div>
 
           <DragOverlay>
-            {activeItem ? (
-              <div className="relative">
-                {multiDragIds !== null && multiDragIds.length > 1 && (
-                  <>
-                    <div
-                      aria-hidden
-                      className="bg-surface absolute inset-0 translate-x-2 translate-y-2 rounded-md border border-border/70 opacity-40 shadow-xl"
-                    />
-                    <div
-                      aria-hidden
-                      className="bg-surface absolute inset-0 translate-x-1 translate-y-1 rounded-md border border-border/70 opacity-70 shadow-xl"
-                    />
-                  </>
-                )}
+            {dnd.activeItem ? (
+              <DragStackOverlay
+                count={
+                  dnd.multiDragIds !== null ? dnd.multiDragIds.length : null
+                }
+              >
                 {view === 'list' ? (
                   <RowPreview
-                    item={activeItem}
-                    width={activeRect?.width}
+                    item={dnd.activeItem}
+                    width={dnd.activeRect?.width}
                     showCommand={
-                      showCommands === true && !isLauncherFolder(activeItem)
+                      showCommands === true && !isLauncherFolder(dnd.activeItem)
                     }
                     collapsePath={collapsePaths === true}
                   />
                 ) : (
-                  <TilePreview item={activeItem} width={activeRect?.width} />
+                  <TilePreview
+                    item={dnd.activeItem}
+                    width={dnd.activeRect?.width}
+                  />
                 )}
-                {multiDragIds !== null && multiDragIds.length > 1 && (
-                  <span className="bg-primary pointer-events-none absolute -top-2 -right-2 z-10 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none text-white shadow-md">
-                    {multiDragIds.length}
-                  </span>
-                )}
-              </div>
+              </DragStackOverlay>
             ) : null}
           </DragOverlay>
         </DndContext>
@@ -1057,14 +646,17 @@ function App() {
           }}
         >
           {selectedIds.length > 0 && (
-            <div className="mr-auto flex min-w-0 items-center gap-1">
-              <span className="text-text-muted pl-1 text-xs leading-none whitespace-nowrap">
-                {selectedIds.length} selected
-              </span>
+            <ButtonGroup className="mr-auto h-7">
+              <ButtonGroupText role="status" className="select-none">
+                <span className="text-text font-semibold tabular-nums leading-none">
+                  {selectedIds.length}
+                </span>
+                selected
+              </ButtonGroupText>
               {currentFolderId && !isSearching && (
                 <Button
-                  variant="ghost"
-                  size="icon-sm"
+                  variant="default"
+                  size="icon"
                   title="Move to top level"
                   aria-label="Move selected to top level"
                   className={interactive}
@@ -1074,26 +666,26 @@ function App() {
                 </Button>
               )}
               <Button
-                variant="ghost"
-                size="icon-sm"
+                variant="default"
+                size="icon"
                 title="Delete selected"
                 aria-label="Delete selected"
                 className={`${interactive} hover:text-danger`}
-                onClick={() => handleDeleteSelected(selectedIds)}
+                onClick={() => model.requestDeleteScripts(selectedIds)}
               >
                 <Trash2 />
               </Button>
               <Button
-                variant="ghost"
-                size="icon-xs"
+                variant="default"
+                size="icon"
                 title="Clear selection (Esc)"
                 aria-label="Clear selection"
-                className="text-text-muted hover:text-text"
+                className={interactive}
                 onClick={clearSelection}
               >
                 <X />
               </Button>
-            </div>
+            </ButtonGroup>
           )}
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -1115,7 +707,7 @@ function App() {
                 Add script
               </DropdownMenuItem>
               {!currentFolderId && (
-                <DropdownMenuItem onClick={handleOpenFolderModalForAdd}>
+                <DropdownMenuItem onClick={model.openFolderModalForAdd}>
                   <FolderPlus />
                   Add folder
                 </DropdownMenuItem>
@@ -1148,7 +740,7 @@ function FolderHeader({
   return (
     <div
       ref={setNodeRef}
-      className={`bg-surface flex shrink-0 items-center gap-1.5 rounded-md px-2 pt-2 pb-1.5 transition-colors duration-150 ${
+      className={`bg-surface flex shrink-0 items-center gap-1.5 rounded-md px-2 pt-3 pb-1.5 transition-colors duration-150 ${
         isOver ? 'bg-primary/15' : ''
       }`}
     >
@@ -1172,22 +764,6 @@ function FolderHeader({
         </span>
       )}
     </div>
-  );
-}
-
-function FolderTargetBadge() {
-  return (
-    <span className="bg-primary pointer-events-none absolute -top-1.5 -right-1.5 z-10 flex size-4 items-center justify-center rounded-full text-white shadow-md">
-      <FolderPlus className="size-2.5" strokeWidth={2.5} />
-    </span>
-  );
-}
-
-function SelectedBadge() {
-  return (
-    <span className="bg-primary pointer-events-none absolute -top-1.5 -right-1.5 z-10 flex size-4 items-center justify-center rounded-full text-white shadow-md">
-      <Check className="size-2.5" strokeWidth={3.5} />
-    </span>
   );
 }
 

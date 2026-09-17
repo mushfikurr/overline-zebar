@@ -1,4 +1,5 @@
 import { Separator } from '@/components/common/Separator';
+import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { UpdateFolderModal } from '@/components/UpdateFolderModal';
 import { UpdateScriptModal } from '@/components/UpdateScriptModal';
 import {
@@ -8,8 +9,15 @@ import {
   type LauncherFolder,
   type LauncherItem,
 } from '@overline-zebar/config';
-import { FolderSquare } from '@/components/icons';
-import { generateId } from '@overline-zebar/config/src/utils/generateId';
+import { AppIcon, FolderSquare } from '@/components/icons';
+import { cn } from '@/utils/cn';
+import {
+  DragStackOverlay,
+  FolderTargetBadge,
+  ROOT_DROP_ID,
+  useLauncherApplications,
+  useLauncherDnd,
+} from '@overline-zebar/launcher';
 import {
   Button,
   Card,
@@ -24,140 +32,79 @@ import {
   SelectValue,
   Switch,
 } from '@overline-zebar/ui';
+import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { FileCode, FolderPlus, Pencil, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { ScriptItemContent } from './ScriptItemContent';
 
-const EMPTY_APP: LauncherCommand = {
-  id: '',
-  title: '',
-  command: '',
-  args: [],
-  icon: undefined,
-  iconPath: undefined,
-  iconData: undefined,
+const ITEM_RING_CLASSES = {
+  folderTarget: 'ring-primary/60 ring-[3px]',
+  dwellTarget: 'ring-primary/40 ring-2',
 };
 
 function ScriptItem({
   app,
+  isDwellTarget,
+  isFolderTarget,
   onEdit,
-  onDelete,
+  onRequestDelete,
 }: {
   app: LauncherCommand;
+  isDwellTarget: boolean;
+  isFolderTarget: boolean;
   onEdit: (app: LauncherCommand) => void;
-  onDelete: (id: string) => void;
+  onRequestDelete: (app: LauncherCommand) => void;
 }) {
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-
-  // Disarm the two-step delete automatically so a stray first click
-  // never lingers as armed.
-  useEffect(() => {
-    if (!confirmingDelete) return;
-    const timer = setTimeout(() => setConfirmingDelete(false), 2500);
-    return () => clearTimeout(timer);
-  }, [confirmingDelete]);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: app.id });
 
   return (
-    <Card
-      className="cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40"
-      onClick={() => onEdit(app)}
+    <div
+      ref={setNodeRef}
+      data-launcher-id={app.id}
+      style={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+      }}
+      className={`relative ${isDragging ? 'opacity-30' : ''}`}
     >
-      <div className="flex items-center gap-3 px-3 py-2.5">
-        <ScriptItemContent app={app} />
-        <div className="flex shrink-0 items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            title={`Edit ${app.title}`}
-            aria-label={`Edit ${app.title}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(app);
-            }}
-          >
-            <Pencil />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title={
-              confirmingDelete ? 'Click again to delete' : `Delete ${app.title}`
-            }
-            aria-label={
-              confirmingDelete
-                ? `Confirm deleting ${app.title}`
-                : `Delete ${app.title}`
-            }
-            className={
-              confirmingDelete
-                ? 'bg-danger/15 text-danger hover:bg-danger/25'
-                : undefined
-            }
-            onBlur={() => setConfirmingDelete(false)}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirmingDelete) {
-                setConfirmingDelete(false);
-                onDelete(app.id);
-              } else {
-                setConfirmingDelete(true);
-              }
-            }}
-          >
-            <Trash2 />
-          </Button>
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-function FolderItem({
-  folder,
-  count,
-  onRename,
-  onDelete,
-  children,
-}: {
-  folder: LauncherFolder;
-  count: number;
-  onRename: (folder: LauncherFolder) => void;
-  onDelete: (folder: LauncherFolder) => void;
-  children?: ReactNode;
-}) {
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-
-  useEffect(() => {
-    if (!confirmingDelete) return;
-    const timer = setTimeout(() => setConfirmingDelete(false), 2500);
-    return () => clearTimeout(timer);
-  }, [confirmingDelete]);
-
-  return (
-    <div className="space-y-2">
+      {isFolderTarget && <FolderTargetBadge />}
       <Card
-        className="cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40"
-        onClick={() => onRename(folder)}
+        {...attributes}
+        {...listeners}
+        className={cn(
+          'cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40',
+          isFolderTarget
+            ? ITEM_RING_CLASSES.folderTarget
+            : isDwellTarget
+              ? ITEM_RING_CLASSES.dwellTarget
+              : ''
+        )}
+        onClick={() => onEdit(app)}
       >
         <div className="flex items-center gap-3 px-3 py-2.5">
-          <FolderSquare className="size-9" glyphClassName="size-5" />
-          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <span className="truncate text-sm font-medium leading-none">
-              {folder.title}
-            </span>
-            <span className="text-text-muted text-xs leading-none">
-              Folder · {count} {count === 1 ? 'script' : 'scripts'}
-            </span>
-          </div>
+          <ScriptItemContent app={app} />
           <div className="flex shrink-0 items-center gap-1">
             <Button
               variant="ghost"
               size="icon"
-              title={`Rename ${folder.title}`}
-              aria-label={`Rename ${folder.title}`}
+              title={`Edit ${app.title}`}
+              aria-label={`Edit ${app.title}`}
               onClick={(e) => {
                 e.stopPropagation();
-                onRename(folder);
+                onEdit(app);
               }}
             >
               <Pencil />
@@ -165,30 +112,12 @@ function FolderItem({
             <Button
               variant="ghost"
               size="icon"
-              title={
-                confirmingDelete
-                  ? 'Click again to delete (scripts are kept)'
-                  : `Delete ${folder.title}`
-              }
-              aria-label={
-                confirmingDelete
-                  ? `Confirm deleting ${folder.title}`
-                  : `Delete ${folder.title}`
-              }
-              className={
-                confirmingDelete
-                  ? 'bg-danger/15 text-danger hover:bg-danger/25'
-                  : undefined
-              }
-              onBlur={() => setConfirmingDelete(false)}
+              title={`Delete ${app.title}`}
+              aria-label={`Delete ${app.title}`}
+              className="hover:bg-danger/15 hover:text-danger"
               onClick={(e) => {
                 e.stopPropagation();
-                if (confirmingDelete) {
-                  setConfirmingDelete(false);
-                  onDelete(folder);
-                } else {
-                  setConfirmingDelete(true);
-                }
+                onRequestDelete(app);
               }}
             >
               <Trash2 />
@@ -196,6 +125,102 @@ function FolderItem({
           </div>
         </div>
       </Card>
+    </div>
+  );
+}
+
+function FolderItem({
+  folder,
+  count,
+  isDwellTarget,
+  isFolderTarget,
+  onRename,
+  onRequestDelete,
+  children,
+}: {
+  folder: LauncherFolder;
+  count: number;
+  isDwellTarget: boolean;
+  isFolderTarget: boolean;
+  onRename: (folder: LauncherFolder) => void;
+  onRequestDelete: (folder: LauncherFolder) => void;
+  children?: ReactNode;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: folder.id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+      }}
+      className={`space-y-2 ${isDragging ? 'opacity-30' : ''}`}
+    >
+      {/* The folder card carries the launcher id (not the wrapper), so
+       * dwell hit-testing targets the card and not its children. */}
+      <div data-launcher-id={folder.id} className="relative">
+        {isFolderTarget && <FolderTargetBadge />}
+        <Card
+          {...attributes}
+          {...listeners}
+          className={cn(
+            'cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40',
+            isFolderTarget
+              ? ITEM_RING_CLASSES.folderTarget
+              : isDwellTarget
+                ? ITEM_RING_CLASSES.dwellTarget
+                : ''
+          )}
+          onClick={() => onRename(folder)}
+        >
+          <div className="flex items-center gap-3 px-3 py-2.5">
+            <FolderSquare className="size-9" glyphClassName="size-5" />
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+              <span className="truncate text-sm font-medium leading-none">
+                {folder.title}
+              </span>
+              <span className="text-text-muted text-xs leading-none">
+                Folder · {count} {count === 1 ? 'script' : 'scripts'}
+              </span>
+            </div>
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                title={`Rename ${folder.title}`}
+                aria-label={`Rename ${folder.title}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRename(folder);
+                }}
+              >
+                <Pencil />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                title={`Delete ${folder.title}`}
+                aria-label={`Delete ${folder.title}`}
+                className="hover:bg-danger/15 hover:text-danger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRequestDelete(folder);
+                }}
+              >
+                <Trash2 />
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
       {count > 0 && (
         <div className="border-border/60 space-y-2 pl-6">{children}</div>
       )}
@@ -203,11 +228,34 @@ function FolderItem({
   );
 }
 
-export function ApplicationsTab() {
-  const [applications, setApplications] = useWidgetSetting(
-    'script-launcher',
-    'applications'
+function ItemPreview({ item, width }: { item: LauncherItem; width?: number }) {
+  const isFolder = isLauncherFolder(item);
+
+  return (
+    <div
+      style={width !== undefined ? { width } : undefined}
+      className="bg-surface text-text flex min-w-0 items-center gap-3 rounded-lg border border-border/70 px-3 py-2.5 opacity-90 shadow-xl"
+    >
+      {isFolder ? (
+        <FolderSquare className="size-9" glyphClassName="size-5" />
+      ) : (
+        <span className="border-border bg-background-deeper flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-md border">
+          <AppIcon app={item} className="size-5" />
+        </span>
+      )}
+      <span className="min-w-0 flex-1 truncate text-sm font-medium leading-none">
+        {item.title}
+      </span>
+      {!isFolder && item.command && (
+        <span className="text-text-muted min-w-0 max-w-[45%] truncate text-xs leading-none">
+          {item.command}
+        </span>
+      )}
+    </div>
   );
+}
+
+export function ApplicationsTab() {
   const [view, setView] = useWidgetSetting('script-launcher', 'view');
   const [showCommands, setShowCommands] = useWidgetSetting(
     'script-launcher',
@@ -217,14 +265,10 @@ export function ApplicationsTab() {
     'script-launcher',
     'collapsePaths'
   );
-  const [newApp, setNewApp] = useState<LauncherCommand>({ ...EMPTY_APP });
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
-  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
-  const [folderName, setFolderName] = useState('');
+  const model = useLauncherApplications();
+  const dnd = useLauncherDnd({ model });
 
-  const items: LauncherItem[] = applications;
+  const items: LauncherItem[] = model.applications;
   const folderIds = new Set(
     items.filter(isLauncherFolder).map((folder) => folder.id)
   );
@@ -237,95 +281,31 @@ export function ApplicationsTab() {
         !isLauncherFolder(item) && item.parentId === folderId
     );
 
-  const handleAddOrUpdate = () => {
-    if (editingId) {
-      setApplications(
-        items.map((item) =>
-          item.id === editingId && !isLauncherFolder(item)
-            ? { ...newApp, args: newApp.args }
-            : item
-        )
-      );
-    } else {
-      setApplications([
-        ...items,
-        { ...newApp, id: generateId(), args: newApp.args },
-      ]);
-    }
-    setNewApp({ ...EMPTY_APP });
-    setEditingId(null);
-    setIsModalOpen(false);
-  };
+  // Top level of the tree: folders, loose scripts, and any scripts whose
+  // parent folder no longer exists.
+  const topLevel = items.filter(
+    (item) =>
+      isLauncherFolder(item) ||
+      !item.parentId ||
+      !folderIds.has(item.parentId)
+  );
 
-  const handleOpenModalForEdit = (appToEdit: LauncherCommand) => {
-    setEditingId(appToEdit.id);
-    setNewApp({ ...appToEdit, args: appToEdit.args });
-    setIsModalOpen(true);
-  };
-
-  const handleOpenModalForAdd = () => {
-    setEditingId(null);
-    setNewApp({ ...EMPTY_APP });
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    setApplications(items.filter((item) => item.id !== id));
-  };
-
-  const handleOpenFolderModalForAdd = () => {
-    setEditingFolderId(null);
-    setFolderName('');
-    setIsFolderModalOpen(true);
-  };
-
-  const handleOpenFolderModalForRename = (folder: LauncherFolder) => {
-    setEditingFolderId(folder.id);
-    setFolderName(folder.title);
-    setIsFolderModalOpen(true);
-  };
-
-  const handleAddOrUpdateFolder = () => {
-    const title = folderName.trim();
-    if (!title) return;
-
-    if (editingFolderId) {
-      setApplications(
-        items.map((item) =>
-          isLauncherFolder(item) && item.id === editingFolderId
-            ? { ...item, title }
-            : item
-        )
-      );
-    } else {
-      setApplications([...items, { id: generateId(), type: 'folder', title }]);
-    }
-    setFolderName('');
-    setEditingFolderId(null);
-    setIsFolderModalOpen(false);
-  };
-
-  // Deleting a folder keeps its scripts: they lift up to the top level,
-  // taking the folder's slot in order.
-  const handleDeleteFolder = (folder: LauncherFolder) => {
-    const folderIndex = items.findIndex((item) => item.id === folder.id);
-    if (folderIndex === -1) return;
-
-    const next = items.filter((item) => item.id !== folder.id);
-    const children = folderScripts(folder.id).map((child) => ({
-      ...child,
-      parentId: undefined,
-    }));
-    next.splice(folderIndex, 0, ...children);
-    setApplications(next);
-  };
+  // Dropping on the list heading lifts scripts back to the top level,
+  // mirroring the launcher's folder header.
+  const { setNodeRef: setRootDropRef, isOver: isOverRootDrop } = useDroppable({
+    id: ROOT_DROP_ID,
+  });
 
   const renderScript = (app: LauncherCommand) => (
     <ScriptItem
       key={app.id}
       app={app}
-      onEdit={handleOpenModalForEdit}
-      onDelete={handleDelete}
+      isDwellTarget={dnd.dwellTargetId === app.id}
+      isFolderTarget={dnd.folderTargetId === app.id}
+      onEdit={model.openScriptModalForEdit}
+      onRequestDelete={(appToDelete) =>
+        model.requestDeleteScript(appToDelete.id)
+      }
     />
   );
 
@@ -341,7 +321,7 @@ export function ApplicationsTab() {
         variant="outline"
         size="sm"
         className="mt-2"
-        onClick={handleOpenModalForAdd}
+        onClick={() => model.openScriptModalForAdd()}
       >
         <Plus />
         Add your first script
@@ -404,23 +384,33 @@ export function ApplicationsTab() {
       </div>
 
       <section className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
+        <div
+          ref={setRootDropRef}
+          className={`flex items-center justify-between gap-4 rounded-md transition-colors duration-150 ${
+            isOverRootDrop ? 'bg-primary/15' : ''
+          }`}
+        >
           <h3 className="text-sm font-medium">
             Your Scripts
             {items.length > 0 && (
               <span className="text-text-muted"> · {scriptCount}</span>
             )}
           </h3>
+          {isOverRootDrop && (
+            <span className="text-text-muted mr-2 shrink-0 text-[10px] leading-none">
+              Release to move to top level
+            </span>
+          )}
           <div className="flex items-center gap-2">
             <Button
               size="sm"
               variant="outline"
-              onClick={handleOpenFolderModalForAdd}
+              onClick={model.openFolderModalForAdd}
             >
               <FolderPlus />
               Add Folder
             </Button>
-            <Button size="sm" onClick={handleOpenModalForAdd}>
+            <Button size="sm" onClick={() => model.openScriptModalForAdd()}>
               <Plus />
               Add Script
             </Button>
@@ -430,48 +420,114 @@ export function ApplicationsTab() {
         {items.length === 0 ? (
           emptyState
         ) : (
-          <div className="space-y-2">
-            {items
-              .filter(
-                (item) =>
-                  isLauncherFolder(item) ||
-                  !item.parentId ||
-                  !folderIds.has(item.parentId)
-              )
-              .map((item) =>
-                isLauncherFolder(item) ? (
-                  <FolderItem
-                    key={item.id}
-                    folder={item}
-                    count={folderScripts(item.id).length}
-                    onRename={handleOpenFolderModalForRename}
-                    onDelete={handleDeleteFolder}
-                  >
-                    {folderScripts(item.id).map((child) => renderScript(child))}
-                  </FolderItem>
-                ) : (
-                  renderScript(item)
-                )
-              )}
-          </div>
+          <DndContext
+            sensors={dnd.sensors}
+            collisionDetection={dnd.collisionDetection}
+            onDragStart={dnd.onDragStart}
+            onDragMove={dnd.onDragMove}
+            onDragEnd={dnd.onDragEnd}
+            onDragCancel={dnd.onDragCancel}
+          >
+            <SortableContext
+              items={topLevel.map((item) => item.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-2">
+                {topLevel.map((item) =>
+                  isLauncherFolder(item) ? (
+                    <FolderItem
+                      key={item.id}
+                      folder={item}
+                      count={folderScripts(item.id).length}
+                      isDwellTarget={dnd.dwellTargetId === item.id}
+                      isFolderTarget={dnd.folderTargetId === item.id}
+                      onRename={model.openFolderModalForRename}
+                      onRequestDelete={(folder) =>
+                        model.requestDeleteFolder(folder)
+                      }
+                    >
+                      <SortableContext
+                        items={folderScripts(item.id).map(
+                          (child) => child.id
+                        )}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {folderScripts(item.id).map((child) =>
+                          renderScript(child)
+                        )}
+                      </SortableContext>
+                    </FolderItem>
+                  ) : (
+                    renderScript(item)
+                  )
+                )}
+              </div>
+            </SortableContext>
+            <DragOverlay>
+              {dnd.activeItem ? (
+                <DragStackOverlay count={null}>
+                  <ItemPreview
+                    item={dnd.activeItem}
+                    width={dnd.activeRect?.width}
+                  />
+                </DragStackOverlay>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         )}
       </section>
 
       <UpdateScriptModal
-        open={isModalOpen}
-        setOpen={setIsModalOpen}
-        newApp={newApp}
-        setNewApp={setNewApp}
-        editingId={editingId}
-        onAddOrUpdate={handleAddOrUpdate}
+        open={model.isScriptModalOpen}
+        setOpen={model.setIsScriptModalOpen}
+        newApp={model.newApp}
+        setNewApp={model.setNewApp}
+        editingId={model.editingId}
+        onAddOrUpdate={model.commitScript}
       />
       <UpdateFolderModal
-        open={isFolderModalOpen}
-        setOpen={setIsFolderModalOpen}
-        name={folderName}
-        setName={setFolderName}
-        editing={editingFolderId !== null}
-        onSubmit={handleAddOrUpdateFolder}
+        open={model.isFolderModalOpen}
+        setOpen={model.setIsFolderModalOpen}
+        name={model.folderName}
+        setName={model.setFolderName}
+        editing={model.editingFolderId !== null}
+        onSubmit={model.commitFolder}
+      />
+      <ConfirmDialog
+        open={model.pendingDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) model.dismissDelete();
+        }}
+        title={
+          model.pendingDelete?.kind === 'folder'
+            ? 'Delete folder'
+            : model.pendingDelete?.kind === 'scripts'
+              ? 'Delete scripts'
+              : 'Delete script'
+        }
+        description={
+          model.pendingDelete?.kind === 'folder' ? (
+            <>
+              &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
+              The scripts inside are kept and moved to the top level.
+            </>
+          ) : model.pendingDelete?.kind === 'scripts' ? (
+            <>
+              This will remove {model.pendingDelete.ids.length}{' '}
+              {model.pendingDelete.ids.length === 1 ? 'script' : 'scripts'}{' '}
+              from your launcher.
+            </>
+          ) : (
+            <>
+              This will remove &ldquo;
+              {model.pendingDelete?.app.title || 'Untitled script'}&rdquo; from
+              your launcher.
+            </>
+          )
+        }
+        confirmLabel="Delete"
+        destructive
+        onConfirm={model.confirmDelete}
       />
     </div>
   );

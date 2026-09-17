@@ -16,6 +16,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@overline-zebar/config": "workspace:*",
     "@overline-zebar/config-widget": "workspace:*",
+    "@overline-zebar/launcher": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
     "lucide-react": "^0.460.0",

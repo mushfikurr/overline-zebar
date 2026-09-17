@@ -6,6 +6,7 @@ const config: Pick<Config, 'prefix' | 'presets' | 'content'> = {
     './src/**/*.tsx',
     '../../packages/ui/src/**/*.tsx',
     '../config-widget/src/**/*.tsx',
+    '../../packages/launcher/src/**/*.tsx',
   ],
   presets: [sharedConfig],
 };
