@@ -69,11 +69,13 @@ export const LauncherCommandSchema = z.object({
   args: z.array(z.string()),
   title: z.string(),
   icon: z.string().optional(),
+  iconPath: z.string().optional(),
 });
 
 export const ScriptLauncherWidgetSettingsSchema =
   BaseWidgetSettingsSchema.extend({
     applications: z.array(LauncherCommandSchema),
+    view: z.enum(['grid', 'list']).default('grid'),
   });
 
 export const AllWidgetSettingsSchema = z.object({

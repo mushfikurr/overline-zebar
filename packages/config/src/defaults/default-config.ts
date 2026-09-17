@@ -53,6 +53,7 @@ export const defaultConfig: RootConfig = {
     },
     'script-launcher': {
       applications: [],
+      view: 'grid',
     },
   },
 };

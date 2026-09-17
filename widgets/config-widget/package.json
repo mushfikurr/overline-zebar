@@ -17,6 +17,7 @@
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
     "@radix-ui/react-slider": "^1.2.2",
+    "@tauri-apps/api": "^2.0.0",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
