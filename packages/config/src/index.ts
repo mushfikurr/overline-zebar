@@ -34,3 +34,12 @@ export type {
   WidgetSettingsMap,
 } from './types';
 export { isLauncherFolder } from './types';
+export {
+  deleteFolderKeepChildren,
+  getFolderCounts,
+  groupIntoFolder,
+  moveIntoFolder,
+  moveToTopLevel,
+  reorderBlockWithinLevel,
+  reorderWithinLevel,
+} from './launcher/transforms';
