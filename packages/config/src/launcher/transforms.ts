@@ -1,4 +1,8 @@
-import { isLauncherFolder, type LauncherFolder, type LauncherItem } from '../types';
+import {
+  isLauncherFolder,
+  type LauncherFolder,
+  type LauncherItem,
+} from '../types';
 
 function arrayMove<T>(array: T[], from: number, to: number): T[] {
   const copy = array.slice();
@@ -148,6 +152,99 @@ export function moveToTopLevel(
       ? { ...item, parentId: undefined }
       : item
   );
+}
+
+/**
+ * Lifts the given scripts up one level: each joins its parent folder's
+ * own level (the top level when the folder sits there), landing right
+ * after the folder in persisted order. The destination is read off each
+ * folder's own parent, so it stays correct should folders ever nest.
+ */
+export function moveUpLevel(
+  items: LauncherItem[],
+  scriptIds: string[]
+): LauncherItem[] {
+  const idSet = new Set(scriptIds);
+  const moving = items.filter(
+    (item) => !isLauncherFolder(item) && idSet.has(item.id) && item.parentId
+  );
+  if (moving.length === 0) return items;
+
+  // Scripts leaving each folder, in their persisted order.
+  const leaving = new Map<string, LauncherItem[]>();
+  for (const script of moving) {
+    const parent = script.parentId!;
+    const group = leaving.get(parent) ?? [];
+    group.push(script);
+    leaving.set(parent, group);
+  }
+
+  const folderIds = new Set(
+    items.filter(isLauncherFolder).map((folder) => folder.id)
+  );
+  const movingIds = new Set(moving.map((script) => script.id));
+
+  const next: LauncherItem[] = [];
+  for (const item of items) {
+    if (movingIds.has(item.id)) {
+      // Emitted right after its folder below. Scripts whose folder no
+      // longer exists already render at the top level; settle their
+      // parent to match.
+      if (folderIds.has(item.parentId!)) continue;
+      next.push({ ...item, parentId: undefined });
+      continue;
+    }
+    next.push(item);
+    if (isLauncherFolder(item) && leaving.has(item.id)) {
+      next.push(
+        ...leaving.get(item.id)!.map((script) => ({
+          ...script,
+          parentId: item.parentId ?? undefined,
+        }))
+      );
+    }
+  }
+  return next;
+}
+
+/**
+ * Cross-level drop: the dragged scripts join the level of the item they
+ * were dropped on, taking its position — dragging a script out of a
+ * folder onto the enclosing list lifts it up a level. The destination is
+ * read off the hovered item, so any future nesting depth needs no
+ * changes here. Folders stay put; they only reorder within their level.
+ */
+export function moveBlockToLevel(
+  items: LauncherItem[],
+  dragIds: string[],
+  overItemId: string
+): LauncherItem[] {
+  const over = items.find((item) => item.id === overItemId);
+  if (!over) return items;
+  const targetLevel = over.parentId ?? null;
+
+  const idSet = new Set(dragIds);
+  const dragged = items.filter(
+    (item) =>
+      !isLauncherFolder(item) &&
+      idSet.has(item.id) &&
+      (item.parentId ?? null) !== targetLevel
+  );
+  if (dragged.length === 0) return items;
+
+  const draggedIds = new Set(dragged.map((item) => item.id));
+  const next = items.filter((item) => !draggedIds.has(item.id));
+  const overIndex = next.findIndex((item) => item.id === overItemId);
+  if (overIndex === -1) return items;
+  next.splice(
+    overIndex,
+    0,
+    ...dragged.map((item) => ({
+      ...item,
+      parentId: over.parentId ?? undefined,
+    }))
+  );
+  return next;
 }
 
 /** Number of scripts per folder id. */

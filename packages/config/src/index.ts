@@ -38,8 +38,10 @@ export {
   deleteFolderKeepChildren,
   getFolderCounts,
   groupIntoFolder,
+  moveBlockToLevel,
   moveIntoFolder,
   moveToTopLevel,
+  moveUpLevel,
   reorderBlockWithinLevel,
   reorderWithinLevel,
 } from './launcher/transforms';
