@@ -9,17 +9,21 @@ import {
   type LauncherFolder,
   type LauncherItem,
 } from '@overline-zebar/config';
-import { AppIcon, FolderSquare } from '@/components/icons';
+import { FolderSquare } from '@/components/icons';
 import { cn } from '@/utils/cn';
 import {
   DragStackOverlay,
   FolderTargetBadge,
   ROOT_DROP_ID,
+  SelectedBadge,
   useLauncherApplications,
   useLauncherDnd,
+  useLauncherSelection,
 } from '@overline-zebar/launcher';
 import {
   Button,
+  ButtonGroup,
+  ButtonGroupText,
   Card,
   FieldDescription,
   FieldInput,
@@ -39,25 +43,47 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { FileCode, FolderPlus, Pencil, Plus, Trash2 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import {
+  FileCode,
+  FolderOutput,
+  FolderPlus,
+  Pencil,
+  Plus,
+  Trash2,
+  X,
+} from 'lucide-react';
+import {
+  useCallback,
+  useMemo,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from 'react';
 import { ScriptItemContent } from './ScriptItemContent';
 
 const ITEM_RING_CLASSES = {
   folderTarget: 'ring-primary/60 ring-[3px]',
   dwellTarget: 'ring-primary/40 ring-2',
+  selected: 'bg-primary/10 ring-primary/50 ring-2',
 };
 
 function ScriptItem({
   app,
   isDwellTarget,
   isFolderTarget,
+  isSelected,
+  isGhostMover,
+  dragDelta,
+  onItemClick,
   onEdit,
   onRequestDelete,
 }: {
   app: LauncherCommand;
   isDwellTarget: boolean;
   isFolderTarget: boolean;
+  isSelected: boolean;
+  isGhostMover: boolean;
+  dragDelta: { x: number; y: number } | null;
+  onItemClick: (item: LauncherItem, event: ReactMouseEvent) => void;
   onEdit: (app: LauncherCommand) => void;
   onRequestDelete: (app: LauncherCommand) => void;
 }) {
@@ -75,12 +101,21 @@ function ScriptItem({
       ref={setNodeRef}
       data-launcher-id={app.id}
       style={{
-        transform: CSS.Translate.toString(transform),
-        transition,
+        transform:
+          isGhostMover && dragDelta
+            ? `translate3d(${dragDelta.x}px, ${dragDelta.y}px, 0)`
+            : CSS.Translate.toString(transform),
+        transition: isGhostMover ? 'none' : transition,
       }}
-      className={`relative ${isDragging ? 'opacity-30' : ''}`}
+      className={`relative ${isDragging ? 'opacity-30' : ''} ${
+        isGhostMover ? 'z-20' : ''
+      }`}
     >
-      {isFolderTarget && <FolderTargetBadge />}
+      {isFolderTarget ? (
+        <FolderTargetBadge />
+      ) : isSelected ? (
+        <SelectedBadge />
+      ) : null}
       <Card
         {...attributes}
         {...listeners}
@@ -90,9 +125,11 @@ function ScriptItem({
             ? ITEM_RING_CLASSES.folderTarget
             : isDwellTarget
               ? ITEM_RING_CLASSES.dwellTarget
-              : ''
+              : isSelected
+                ? ITEM_RING_CLASSES.selected
+                : ''
         )}
-        onClick={() => onEdit(app)}
+        onClick={(event) => onItemClick(app, event)}
       >
         <div className="flex items-center gap-3 px-3 py-2.5">
           <ScriptItemContent app={app} />
@@ -134,6 +171,10 @@ function FolderItem({
   count,
   isDwellTarget,
   isFolderTarget,
+  isSelected,
+  isGhostMover,
+  dragDelta,
+  onItemClick,
   onRename,
   onRequestDelete,
   children,
@@ -142,6 +183,10 @@ function FolderItem({
   count: number;
   isDwellTarget: boolean;
   isFolderTarget: boolean;
+  isSelected: boolean;
+  isGhostMover: boolean;
+  dragDelta: { x: number; y: number } | null;
+  onItemClick: (item: LauncherItem, event: ReactMouseEvent) => void;
   onRename: (folder: LauncherFolder) => void;
   onRequestDelete: (folder: LauncherFolder) => void;
   children?: ReactNode;
@@ -159,15 +204,24 @@ function FolderItem({
     <div
       ref={setNodeRef}
       style={{
-        transform: CSS.Translate.toString(transform),
-        transition,
+        transform:
+          isGhostMover && dragDelta
+            ? `translate3d(${dragDelta.x}px, ${dragDelta.y}px, 0)`
+            : CSS.Translate.toString(transform),
+        transition: isGhostMover ? 'none' : transition,
       }}
-      className={`space-y-2 ${isDragging ? 'opacity-30' : ''}`}
+      className={`space-y-2 ${isDragging ? 'opacity-30' : ''} ${
+        isGhostMover ? 'relative z-20' : ''
+      }`}
     >
       {/* The folder card carries the launcher id (not the wrapper), so
        * dwell hit-testing targets the card and not its children. */}
       <div data-launcher-id={folder.id} className="relative">
-        {isFolderTarget && <FolderTargetBadge />}
+        {isFolderTarget ? (
+          <FolderTargetBadge />
+        ) : isSelected ? (
+          <SelectedBadge />
+        ) : null}
         <Card
           {...attributes}
           {...listeners}
@@ -177,9 +231,11 @@ function FolderItem({
               ? ITEM_RING_CLASSES.folderTarget
               : isDwellTarget
                 ? ITEM_RING_CLASSES.dwellTarget
-                : ''
+                : isSelected
+                  ? ITEM_RING_CLASSES.selected
+                  : ''
           )}
-          onClick={() => onRename(folder)}
+          onClick={(event) => onItemClick(folder, event)}
         >
           <div className="flex items-center gap-3 px-3 py-2.5">
             <FolderSquare className="size-9" glyphClassName="size-5" />
@@ -221,9 +277,7 @@ function FolderItem({
           </div>
         </Card>
       </div>
-      {count > 0 && (
-        <div className="border-border/60 space-y-2 pl-6">{children}</div>
-      )}
+      {count > 0 && <div className="pl-[30px] [&>*]:py-1">{children}</div>}
     </div>
   );
 }
@@ -237,19 +291,16 @@ function ItemPreview({ item, width }: { item: LauncherItem; width?: number }) {
       className="bg-surface text-text flex min-w-0 items-center gap-3 rounded-lg border border-border/70 px-3 py-2.5 opacity-90 shadow-xl"
     >
       {isFolder ? (
-        <FolderSquare className="size-9" glyphClassName="size-5" />
+        <>
+          <FolderSquare className="size-9" glyphClassName="size-5" />
+          <span className="min-w-0 flex-1 truncate text-sm font-medium leading-none">
+            {item.title}
+          </span>
+        </>
       ) : (
-        <span className="border-border bg-background-deeper flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-md border">
-          <AppIcon app={item} className="size-5" />
-        </span>
-      )}
-      <span className="min-w-0 flex-1 truncate text-sm font-medium leading-none">
-        {item.title}
-      </span>
-      {!isFolder && item.command && (
-        <span className="text-text-muted min-w-0 max-w-[45%] truncate text-xs leading-none">
-          {item.command}
-        </span>
+        <div className="pointer-events-none flex min-w-0 flex-1 items-center">
+          <ScriptItemContent app={item} />
+        </div>
       )}
     </div>
   );
@@ -266,28 +317,77 @@ export function ApplicationsTab() {
     'collapsePaths'
   );
   const model = useLauncherApplications();
-  const dnd = useLauncherDnd({ model });
 
   const items: LauncherItem[] = model.applications;
-  const folderIds = new Set(
-    items.filter(isLauncherFolder).map((folder) => folder.id)
-  );
   const scriptCount = items.filter((item) => !isLauncherFolder(item)).length;
 
   // Scripts inside a folder, in their persisted order.
-  const folderScripts = (folderId: string) =>
-    items.filter(
-      (item): item is LauncherCommand =>
-        !isLauncherFolder(item) && item.parentId === folderId
-    );
+  const folderScripts = useCallback(
+    (folderId: string) =>
+      items.filter(
+        (item): item is LauncherCommand =>
+          !isLauncherFolder(item) && item.parentId === folderId
+      ),
+    [items]
+  );
 
   // Top level of the tree: folders, loose scripts, and any scripts whose
   // parent folder no longer exists.
-  const topLevel = items.filter(
-    (item) =>
-      isLauncherFolder(item) ||
-      !item.parentId ||
-      !folderIds.has(item.parentId)
+  const topLevel = useMemo(
+    () =>
+      items.filter((item) => {
+        if (isLauncherFolder(item) || !item.parentId) return true;
+        return !items.some(
+          (other) => isLauncherFolder(other) && other.id === item.parentId
+        );
+      }),
+    [items]
+  );
+
+  // The tree flattened in display order: each top-level item followed by
+  // its folder's children. Range selection runs over this order.
+  const orderedItems = useMemo(
+    () =>
+      topLevel.flatMap((item) =>
+        isLauncherFolder(item) ? [item, ...folderScripts(item.id)] : [item]
+      ),
+    [topLevel, folderScripts]
+  );
+
+  // ----- Selection (ctrl/shift-click) ------------------------------------
+
+  // Shared with the launcher widget; folders select like scripts, and
+  // Escape clears the selection.
+  const {
+    selectedIds,
+    clearSelection,
+    handleSelectClick,
+    handleBackgroundClick,
+  } = useLauncherSelection({ model, orderedItems, escapeClears: true });
+
+  const dnd = useLauncherDnd({
+    model,
+    selection: { selectedIds, clearSelection },
+  });
+
+  // Ctrl/shift clicks select; plain clicks keep the tab's core
+  // interactions — edit a script, rename a folder.
+  const handleItemClick = (item: LauncherItem, event: ReactMouseEvent) => {
+    if (handleSelectClick(item, event)) return;
+    clearSelection();
+    if (isLauncherFolder(item)) model.openFolderModalForRename(item);
+    else model.openScriptModalForEdit(item);
+  };
+
+  const handleMoveSelectedOut = (ids: string[]) => {
+    model.moveScriptsToTopLevel(ids);
+    clearSelection();
+  };
+
+  // Mirrors the launcher's in-folder footer: the move-out button only
+  // makes sense when a selected script actually sits inside a folder.
+  const selectedInFolder = items.some(
+    (item) => item.parentId && selectedIds.includes(item.id)
   );
 
   // Dropping on the list heading lifts scripts back to the top level,
@@ -302,6 +402,10 @@ export function ApplicationsTab() {
       app={app}
       isDwellTarget={dnd.dwellTargetId === app.id}
       isFolderTarget={dnd.folderTargetId === app.id}
+      isSelected={selectedIds.includes(app.id)}
+      isGhostMover={dnd.isGhostMover(app.id)}
+      dragDelta={dnd.dragDelta}
+      onItemClick={handleItemClick}
       onEdit={model.openScriptModalForEdit}
       onRequestDelete={(appToDelete) =>
         model.requestDeleteScript(appToDelete.id)
@@ -390,29 +494,69 @@ export function ApplicationsTab() {
             isOverRootDrop ? 'bg-primary/15' : ''
           }`}
         >
-          <h3 className="text-sm font-medium">
+          <FieldTitle>
             Your Scripts
             {items.length > 0 && (
               <span className="text-text-muted"> · {scriptCount}</span>
             )}
-          </h3>
+          </FieldTitle>
           {isOverRootDrop && (
             <span className="text-text-muted mr-2 shrink-0 text-[10px] leading-none">
               Release to move to top level
             </span>
           )}
           <div className="flex items-center gap-2">
+            {selectedIds.length > 0 && (
+              <ButtonGroup className="h-7">
+                <ButtonGroupText role="status" className="select-none">
+                  <span className="text-text font-semibold tabular-nums leading-none">
+                    {selectedIds.length}
+                  </span>
+                  selected
+                </ButtonGroupText>
+                {selectedInFolder && (
+                  <Button
+                    variant="default"
+                    size="icon"
+                    title="Move to top level"
+                    aria-label="Move selected to top level"
+                    onClick={() => handleMoveSelectedOut(selectedIds)}
+                  >
+                    <FolderOutput />
+                  </Button>
+                )}
+                <Button
+                  variant="default"
+                  size="icon"
+                  title="Delete selected"
+                  aria-label="Delete selected"
+                  className="hover:text-danger"
+                  onClick={() => model.requestDeleteItems(selectedIds)}
+                >
+                  <Trash2 />
+                </Button>
+                <Button
+                  variant="default"
+                  size="icon"
+                  title="Clear selection (Esc)"
+                  aria-label="Clear selection"
+                  onClick={clearSelection}
+                >
+                  <X />
+                </Button>
+              </ButtonGroup>
+            )}
             <Button
               size="sm"
               variant="outline"
               onClick={model.openFolderModalForAdd}
             >
               <FolderPlus />
-              Add Folder
+              Add folder
             </Button>
             <Button size="sm" onClick={() => model.openScriptModalForAdd()}>
               <Plus />
-              Add Script
+              Add script
             </Button>
           </div>
         </div>
@@ -432,7 +576,7 @@ export function ApplicationsTab() {
               items={topLevel.map((item) => item.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="space-y-2">
+              <div className="space-y-2" onClick={handleBackgroundClick}>
                 {topLevel.map((item) =>
                   isLauncherFolder(item) ? (
                     <FolderItem
@@ -441,15 +585,17 @@ export function ApplicationsTab() {
                       count={folderScripts(item.id).length}
                       isDwellTarget={dnd.dwellTargetId === item.id}
                       isFolderTarget={dnd.folderTargetId === item.id}
+                      isSelected={selectedIds.includes(item.id)}
+                      isGhostMover={dnd.isGhostMover(item.id)}
+                      dragDelta={dnd.dragDelta}
+                      onItemClick={handleItemClick}
                       onRename={model.openFolderModalForRename}
                       onRequestDelete={(folder) =>
                         model.requestDeleteFolder(folder)
                       }
                     >
                       <SortableContext
-                        items={folderScripts(item.id).map(
-                          (child) => child.id
-                        )}
+                        items={folderScripts(item.id).map((child) => child.id)}
                         strategy={verticalListSortingStrategy}
                       >
                         {folderScripts(item.id).map((child) =>
@@ -465,7 +611,11 @@ export function ApplicationsTab() {
             </SortableContext>
             <DragOverlay>
               {dnd.activeItem ? (
-                <DragStackOverlay count={null}>
+                <DragStackOverlay
+                  count={
+                    dnd.multiDragIds !== null ? dnd.multiDragIds.length : null
+                  }
+                >
                   <ItemPreview
                     item={dnd.activeItem}
                     width={dnd.activeRect?.width}
@@ -501,8 +651,8 @@ export function ApplicationsTab() {
         title={
           model.pendingDelete?.kind === 'folder'
             ? 'Delete folder'
-            : model.pendingDelete?.kind === 'scripts'
-              ? 'Delete scripts'
+            : model.pendingDelete?.kind === 'items'
+              ? 'Delete items'
               : 'Delete script'
         }
         description={
@@ -511,11 +661,12 @@ export function ApplicationsTab() {
               &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
               The scripts inside are kept and moved to the top level.
             </>
-          ) : model.pendingDelete?.kind === 'scripts' ? (
+          ) : model.pendingDelete?.kind === 'items' ? (
             <>
               This will remove {model.pendingDelete.ids.length}{' '}
-              {model.pendingDelete.ids.length === 1 ? 'script' : 'scripts'}{' '}
-              from your launcher.
+              {model.pendingDelete.ids.length === 1 ? 'item' : 'items'} from
+              your launcher. Scripts inside a removed folder are kept and moved
+              to the top level.
             </>
           ) : (
             <>
@@ -527,7 +678,10 @@ export function ApplicationsTab() {
         }
         confirmLabel="Delete"
         destructive
-        onConfirm={model.confirmDelete}
+        onConfirm={() => {
+          model.confirmDelete();
+          clearSelection();
+        }}
       />
     </div>
   );

@@ -58,7 +58,7 @@ export function ScriptItemContent({
           <AppIcon app={app} className="size-5" />
         </span>
       )}
-      <div className="flex min-w-0 flex-col items-start gap-1.5">
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
         <span className="max-w-full truncate text-sm font-medium leading-none">
           {fallbackTitle}
         </span>
