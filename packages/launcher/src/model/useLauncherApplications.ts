@@ -9,19 +9,16 @@ import {
   groupIntoFolder,
   moveIntoFolder,
   moveToTopLevel,
+  moveUpLevel,
 } from '@overline-zebar/config/src/launcher/transforms';
 import { generateId } from '@overline-zebar/config/src/utils/generateId';
-import {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // A deletion waiting for the user to confirm it in the delete dialog.
 export type PendingLauncherDelete =
   | { kind: 'script'; app: LauncherCommand }
   | { kind: 'folder'; folder: LauncherFolder }
-  | { kind: 'scripts'; ids: string[] };
+  | { kind: 'items'; ids: string[] };
 
 const EMPTY_APP: LauncherCommand = {
   id: '',
@@ -77,7 +74,10 @@ export function useLauncherApplications() {
       );
     } else {
       const parentId = addParentIdRef.current ?? undefined;
-      setApplications([...applications, { ...newApp, id: generateId(), parentId }]);
+      setApplications([
+        ...applications,
+        { ...newApp, id: generateId(), parentId },
+      ]);
     }
     setNewApp({ ...EMPTY_APP });
     setEditingId(null);
@@ -174,8 +174,8 @@ export function useLauncherApplications() {
     setPendingDelete({ kind: 'folder', folder });
   };
 
-  const requestDeleteScripts = (ids: string[]) => {
-    if (ids.length > 0) setPendingDelete({ kind: 'scripts', ids });
+  const requestDeleteItems = (ids: string[]) => {
+    if (ids.length > 0) setPendingDelete({ kind: 'items', ids });
   };
 
   const dismissDelete = () => setPendingDelete(null);
@@ -189,6 +189,26 @@ export function useLauncherApplications() {
     setApplications(deleteFolderKeepChildren(applications, folder));
   };
 
+  /** Deletes a mixed selection: scripts outright, folders while keeping
+   * their scripts (lifted to the top level at the folder's spot). */
+  const deleteItems = (ids: string[]) => {
+    const idSet = new Set(ids);
+    if (!applications.some((item) => idSet.has(item.id))) return;
+
+    let next = applications;
+    for (const item of applications) {
+      if (isLauncherFolder(item) && idSet.has(item.id)) {
+        next = deleteFolderKeepChildren(next, item);
+      }
+    }
+    const scriptIds = new Set(
+      applications
+        .filter((item) => !isLauncherFolder(item) && idSet.has(item.id))
+        .map((item) => item.id)
+    );
+    setApplications(next.filter((item) => !scriptIds.has(item.id)));
+  };
+
   const confirmDelete = () => {
     if (!pendingDelete) return;
     if (pendingDelete.kind === 'script') {
@@ -196,7 +216,7 @@ export function useLauncherApplications() {
     } else if (pendingDelete.kind === 'folder') {
       deleteFolder(pendingDelete.folder);
     } else {
-      deleteScripts(pendingDelete.ids);
+      deleteItems(pendingDelete.ids);
     }
     setPendingDelete(null);
   };
@@ -209,6 +229,10 @@ export function useLauncherApplications() {
 
   const moveScriptsToTopLevel = (ids: string[]) => {
     setApplications(moveToTopLevel(applications, ids));
+  };
+
+  const moveScriptsUpLevel = (ids: string[]) => {
+    setApplications(moveUpLevel(applications, ids));
   };
 
   return {
@@ -237,14 +261,16 @@ export function useLauncherApplications() {
     pendingDelete,
     requestDeleteScript,
     requestDeleteFolder,
-    requestDeleteScripts,
+    requestDeleteItems,
     dismissDelete,
     confirmDelete,
     // Mutations.
     deleteScripts,
     deleteFolder,
+    deleteItems,
     moveScriptsIntoFolder,
     moveScriptsToTopLevel,
+    moveScriptsUpLevel,
   };
 }
 

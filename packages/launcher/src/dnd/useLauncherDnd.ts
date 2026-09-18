@@ -1,5 +1,6 @@
 import {
   isLauncherFolder,
+  moveBlockToLevel,
   reorderBlockWithinLevel,
   reorderWithinLevel,
   type LauncherCommand,
@@ -16,12 +17,7 @@ import {
   type DragMoveEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LauncherApplicationsModel } from '../model/useLauncherApplications';
 
 /**
@@ -33,10 +29,14 @@ import type { LauncherApplicationsModel } from '../model/useLauncherApplications
  */
 export const FOLDER_HOVER_DELAY = 600;
 
-/** Droppable id of a surface-level drop zone (the launcher's folder
- * header, the settings list heading); dropping on it moves scripts out
- * to the top level. */
+/** Droppable id of a surface-level drop zone (the settings list
+ * heading); dropping on it moves scripts out to the top level. */
 export const ROOT_DROP_ID = 'launcher-root-drop';
+
+/** Droppable id of the launcher's folder-view header; dropping on it
+ * lifts scripts up one level — out of the open folder into its parent,
+ * which is the top level for top-level folders. */
+export const PARENT_DROP_ID = 'launcher-parent-drop';
 
 type FrozenRect = { left: number; top: number; right: number; bottom: number };
 
@@ -65,7 +65,7 @@ function canReceiveSpringLoad(
  * The launcher drag & drop behavior shared by the launcher widget and the
  * settings applications tab: reorder with dnd-kit, spring-loaded folder
  * actions (dwell on an item to tuck into a folder or group into a new
- * one), root drop zones, and multi-drag of a selection.
+ * one), lift-out drop zones, and multi-drag of a selection.
  *
  * The hook is view-agnostic: it hit-tests items via their
  * `[data-launcher-id]` attribute and talks to the data through the model
@@ -308,6 +308,15 @@ export function useLauncherDnd({
       return;
     }
 
+    // Dropped on the folder-view header: lift the scripts up one level,
+    // into the open folder's own parent — dynamic, so nested folders
+    // would keep working unchanged.
+    if (overId === PARENT_DROP_ID) {
+      model.moveScriptsUpLevel(dragIds);
+      clearSelection();
+      return;
+    }
+
     if (engagedTargetId && engagedTargetId !== activeItemId) {
       commitFolderDrop(dragIds, engagedTargetId);
       return;
@@ -316,7 +325,23 @@ export function useLauncherDnd({
     if (!overId || overId === activeItemId) return;
     const draggedItem = applications.find((item) => item.id === activeItemId);
     if (!draggedItem) return;
+    const overItem = applications.find((item) => item.id === overId);
+    if (!overItem) return;
     const level = draggedItem.parentId ?? null;
+
+    // Dropped on an item of another level: dragging a script out of its
+    // folder lifts it into the target level at the drop position. The
+    // destination comes off the hovered item, so any nesting depth needs
+    // no changes here.
+    if ((overItem.parentId ?? null) !== level) {
+      const next = moveBlockToLevel(applications, dragIds, overId);
+      if (next !== applications) {
+        setApplications(next);
+        clearSelection();
+      }
+      return;
+    }
+
     if (dragIds.length > 1) {
       const next = reorderBlockWithinLevel(
         applications,
@@ -326,7 +351,12 @@ export function useLauncherDnd({
       );
       if (next !== applications) setApplications(next);
     } else {
-      const next = reorderWithinLevel(applications, activeItemId, overId, level);
+      const next = reorderWithinLevel(
+        applications,
+        activeItemId,
+        overId,
+        level
+      );
       if (next !== applications) setApplications(next);
     }
   };
