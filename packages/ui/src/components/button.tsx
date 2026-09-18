@@ -7,7 +7,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-all duration-200 outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5 shrink-0 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-[background-color,border-color,color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5 shrink-0 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -20,7 +20,7 @@ const buttonVariants = cva(
           'border border-button-border/60 hover:border-button-border bg-transparent text-text shadow-xs',
         link: 'text-foreground hover:underline',
         destructive:
-          'bg-button border border-button-border text-text hover:bg-danger/80 focus-visible:ring-danger/50 shadow-xs',
+          'bg-danger border border-danger/60 text-white hover:bg-danger/90 focus-visible:ring-danger/50 shadow-xs',
       },
       size: {
         sm: 'h-6 px-2 py-1 text-xs gap-1',

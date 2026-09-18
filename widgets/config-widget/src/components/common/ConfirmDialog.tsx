@@ -46,11 +46,7 @@ export function ConfirmDialog({
             {cancelLabel}
           </Button>
           <Button
-            className={
-              destructive
-                ? 'border-danger/60 bg-danger text-white hover:bg-danger/90 focus-visible:ring-danger/50'
-                : undefined
-            }
+            variant={destructive ? 'destructive' : 'default'}
             onClick={() => {
               onConfirm();
               onOpenChange(false);
