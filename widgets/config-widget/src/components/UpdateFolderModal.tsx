@@ -37,7 +37,7 @@ export function UpdateFolderModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden">
         <DialogHeader className="shrink-0">
-          <DialogTitle>{editing ? 'Rename Folder' : 'New Folder'}</DialogTitle>
+          <DialogTitle>{editing ? 'Rename folder' : 'New folder'}</DialogTitle>
           <DialogDescription>
             {editing
               ? 'Update the name of your folder.'
