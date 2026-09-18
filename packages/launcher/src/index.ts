@@ -16,3 +16,4 @@ export {
 } from './selection/useLauncherSelection';
 export { DragStackOverlay } from './components/DragStackOverlay';
 export { FolderTargetBadge, SelectedBadge } from './components/badges';
+export { ITEM_STATE_CLASSES } from './components/state-classes';
