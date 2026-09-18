@@ -21,16 +21,20 @@ import { isFileDialogActive } from '@overline-zebar/config-widget/src/utils/file
 import {
   DragStackOverlay,
   FolderTargetBadge,
-  ROOT_DROP_ID,
+  PARENT_DROP_ID,
   SelectedBadge,
   useLauncherApplications,
   useLauncherDnd,
+  useLauncherSelection,
 } from '@overline-zebar/launcher';
 import { logger } from '@overline-zebar/config/src/utils/logger';
 import {
   Button,
   ButtonGroup,
   ButtonGroupText,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   ContextMenu,
   ContextMenuContent,
   ContextMenuGroup,
@@ -55,6 +59,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
+  ChevronDown,
   ChevronLeft,
   FilePlus2,
   Folder,
@@ -74,6 +79,7 @@ import {
   type ComponentProps,
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
+  type ReactNode,
 } from 'react';
 import * as zebar from 'zebar';
 
@@ -111,17 +117,45 @@ function App() {
   const [query, setQuery] = useState('');
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
 
-  // ----- Selection (ctrl/shift-click) ------------------------------------
+  // Folders expanded inline with the chevron in list view.
+  const [expandedFolderIds, setExpandedFolderIds] = useState<string[]>([]);
 
-  /** Ids of selected scripts; folders are never selectable. */
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const clearSelection = useCallback(() => {
-    setSelectedIds((prev) => (prev.length > 0 ? [] : prev));
+  const toggleFolderExpanded = useCallback((folderId: string) => {
+    setExpandedFolderIds((prev) =>
+      prev.includes(folderId)
+        ? prev.filter((id) => id !== folderId)
+        : [...prev, folderId]
+    );
   }, []);
 
   const q = query.trim().toLowerCase();
   const isSearching = q.length > 0;
+
+  // Search looks through every folder; otherwise the view shows the items
+  // of the current folder (or the top level), in their persisted order.
+  const visibleItems = useMemo(() => {
+    if (isSearching) {
+      return applications.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          (!isLauncherFolder(item) && item.command.toLowerCase().includes(q))
+      );
+    }
+    return applications.filter(
+      (item) => (item.parentId ?? null) === currentFolderId
+    );
+  }, [applications, q, isSearching, currentFolderId]);
+
+  // ----- Selection (ctrl/shift-click) ------------------------------------
+
+  // Shared with the settings applications tab; folders select like
+  // scripts. Stale-id pruning and Ctrl+A live in the hook.
+  const {
+    selectedIds,
+    clearSelection,
+    handleSelectClick,
+    handleBackgroundClick,
+  } = useLauncherSelection({ model, orderedItems: visibleItems });
 
   // ----- Drag & drop ------------------------------------------------------
 
@@ -171,17 +205,6 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [query, currentFolderId, selectedIds, clearSelection]);
-
-  // Items can disappear behind the launcher's back (deleted from the
-  // settings window); keep the selection free of stale ids.
-  useEffect(() => {
-    setSelectedIds((prev) => {
-      const next = prev.filter((id) =>
-        applications.some((item) => item.id === id && !isLauncherFolder(item))
-      );
-      return next.length === prev.length ? prev : next;
-    });
-  }, [applications]);
 
   // A folder can disappear while open in the launcher (e.g. deleted from
   // the settings window); fall back to the top level instead of stranding
@@ -240,85 +263,20 @@ function App() {
     [applications]
   );
 
-  // Search looks through every folder; otherwise the view shows the items
-  // of the current folder (or the top level), in their persisted order.
-  const visibleItems = useMemo(() => {
-    if (isSearching) {
-      return applications.filter(
-        (item) =>
-          item.title.toLowerCase().includes(q) ||
-          (!isLauncherFolder(item) && item.command.toLowerCase().includes(q))
-      );
-    }
-    return applications.filter(
-      (item) => (item.parentId ?? null) === currentFolderId
-    );
-  }, [applications, q, isSearching, currentFolderId]);
-
-  // Ctrl+A selects every visible script (never folders) for bulk moves;
-  // skipped while typing so the search field keeps native text selection.
-  useEffect(() => {
-    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'a')
-        return;
-      const active = document.activeElement;
-      if (
-        active instanceof HTMLInputElement ||
-        active instanceof HTMLTextAreaElement ||
-        (active instanceof HTMLElement && active.isContentEditable)
-      ) {
-        return;
-      }
-      const ids = visibleItems
-        .filter((item) => !isLauncherFolder(item))
-        .map((item) => item.id);
-      if (ids.length === 0) return;
-      event.preventDefault();
-      setSelectedIds(ids);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visibleItems]);
+  // A folder's direct children in their persisted order, rendered inline
+  // when the folder is expanded with the chevron in list view.
+  const folderChildren = (folderId: string) =>
+    applications.filter((item) => (item.parentId ?? null) === folderId);
 
   // ----- Selection interactions -----------------------------------------
 
   const handleItemClick = (item: LauncherItem, event: ReactMouseEvent) => {
+    // Ctrl/shift clicks select — folders included; plain clicks fall
+    // through to the launcher's core interactions.
+    if (handleSelectClick(item, event)) return;
+
     if (isLauncherFolder(item)) {
-      if (!event.shiftKey && !(event.ctrlKey || event.metaKey))
-        clearSelection();
       handleOpenFolder(item);
-      return;
-    }
-
-    const index = visibleItems.findIndex((visible) => visible.id === item.id);
-    if (index === -1) return;
-
-    if (event.shiftKey) {
-      // Shift extends the selection: everything between the topmost and
-      // bottommost selected items (plus the clicked one) becomes
-      // selected, without dropping what was already picked.
-      let start = index;
-      let end = index;
-      visibleItems.forEach((visible, visibleIndex) => {
-        if (!selectedIds.includes(visible.id)) return;
-        start = Math.min(start, visibleIndex);
-        end = Math.max(end, visibleIndex);
-      });
-      const range = visibleItems
-        .slice(start, end + 1)
-        .filter((visible) => !isLauncherFolder(visible))
-        .map((visible) => visible.id);
-      setSelectedIds((prev) => Array.from(new Set([...prev, ...range])));
-      return;
-    }
-
-    if (event.ctrlKey || event.metaKey) {
-      setSelectedIds((prev) =>
-        prev.includes(item.id)
-          ? prev.filter((id) => id !== item.id)
-          : [...prev, item.id]
-      );
       return;
     }
 
@@ -392,9 +350,46 @@ function App() {
     onDeleteFolder: model.requestDeleteFolder,
     onMoveToTopLevel: (id) => handleMoveSelectedOut([id]),
     onItemClick: handleItemClick,
-    onDeleteSelected: model.requestDeleteScripts,
+    onDeleteSelected: model.requestDeleteItems,
     onMoveSelectedOut: handleMoveSelectedOut,
     onClearSelection: clearSelection,
+  };
+
+  // A launcher row; folders also host their children inline when expanded
+  // with the chevron (list view, not while searching).
+  const renderRow = (rowItem: LauncherItem) => {
+    const isFolder = isLauncherFolder(rowItem);
+    const children = isFolder && !isSearching ? folderChildren(rowItem.id) : [];
+
+    return (
+      <LauncherRow
+        key={rowItem.id}
+        item={rowItem}
+        folderCount={isFolder ? folderCounts.get(rowItem.id) : undefined}
+        showCommand={showCommands}
+        collapsePath={collapsePaths}
+        dragEnabled={!isSearching}
+        isDwellTarget={dnd.dwellTargetId === rowItem.id}
+        isFolderTarget={dnd.folderTargetId === rowItem.id}
+        isSelected={selectedIds.includes(rowItem.id)}
+        isGhostMover={dnd.isGhostMover(rowItem.id)}
+        dragDelta={dnd.dragDelta}
+        selectedIds={selectedIds}
+        handlers={handlers}
+        canExpand={children.length > 0}
+        isExpanded={expandedFolderIds.includes(rowItem.id)}
+        onToggleExpanded={toggleFolderExpanded}
+      >
+        {children.length > 0 && (
+          <SortableContext
+            items={children.map((child) => child.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {children.map((child) => renderRow(child))}
+          </SortableContext>
+        )}
+      </LauncherRow>
+    );
   };
 
   const emptyState = (
@@ -451,8 +446,8 @@ function App() {
         title={
           model.pendingDelete?.kind === 'folder'
             ? 'Delete folder'
-            : model.pendingDelete?.kind === 'scripts'
-              ? 'Delete scripts'
+            : model.pendingDelete?.kind === 'items'
+              ? 'Delete items'
               : 'Delete script'
         }
         description={
@@ -461,11 +456,12 @@ function App() {
               &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
               The scripts inside are kept and moved to the top level.
             </>
-          ) : model.pendingDelete?.kind === 'scripts' ? (
+          ) : model.pendingDelete?.kind === 'items' ? (
             <>
               This will remove {model.pendingDelete.ids.length}{' '}
-              {model.pendingDelete.ids.length === 1 ? 'script' : 'scripts'}{' '}
-              from your launcher.
+              {model.pendingDelete.ids.length === 1 ? 'item' : 'items'} from
+              your launcher. Scripts inside a removed folder are kept and moved
+              to the top level.
             </>
           ) : (
             <>
@@ -539,7 +535,10 @@ function App() {
           onDragEnd={dnd.onDragEnd}
           onDragCancel={dnd.onDragCancel}
         >
-          <div className="bg-surface min-h-0 min-w-0 flex-1 overflow-y-auto">
+          <div
+            className="bg-surface min-h-0 min-w-0 flex-1 overflow-y-auto"
+            onClick={handleBackgroundClick}
+          >
             {applications.length === 0 && emptyState}
             {applications.length > 0 &&
               visibleItems.length === 0 &&
@@ -585,27 +584,7 @@ function App() {
                   className="flex flex-col gap-0.5 p-2"
                   onKeyDown={handleListKeyDown}
                 >
-                  {visibleItems.map((item) => (
-                    <LauncherRow
-                      key={item.id}
-                      item={item}
-                      folderCount={
-                        isLauncherFolder(item)
-                          ? folderCounts.get(item.id)
-                          : undefined
-                      }
-                      showCommand={showCommands}
-                      collapsePath={collapsePaths}
-                      dragEnabled={!isSearching}
-                      isDwellTarget={dnd.dwellTargetId === item.id}
-                      isFolderTarget={dnd.folderTargetId === item.id}
-                      isSelected={selectedIds.includes(item.id)}
-                      isGhostMover={dnd.isGhostMover(item.id)}
-                      dragDelta={dnd.dragDelta}
-                      selectedIds={selectedIds}
-                      handlers={handlers}
-                    />
-                  ))}
+                  {visibleItems.map((item) => renderRow(item))}
                 </div>
               </SortableContext>
             )}
@@ -671,7 +650,7 @@ function App() {
                 title="Delete selected"
                 aria-label="Delete selected"
                 className={`${interactive} hover:text-danger`}
-                onClick={() => model.requestDeleteScripts(selectedIds)}
+                onClick={() => model.requestDeleteItems(selectedIds)}
               >
                 <Trash2 />
               </Button>
@@ -735,7 +714,7 @@ function FolderHeader({
   title: string;
   onBack: () => void;
 }) {
-  const { setNodeRef, isOver } = useDroppable({ id: ROOT_DROP_ID });
+  const { setNodeRef, isOver } = useDroppable({ id: PARENT_DROP_ID });
 
   return (
     <div
@@ -888,6 +867,10 @@ function LauncherRow({
   dragDelta,
   selectedIds,
   handlers,
+  canExpand,
+  isExpanded,
+  onToggleExpanded,
+  children,
 }: {
   item: LauncherItem;
   folderCount?: number;
@@ -901,6 +884,10 @@ function LauncherRow({
   dragDelta: { x: number; y: number } | null;
   selectedIds: string[];
   handlers: ItemHandlers;
+  canExpand?: boolean;
+  isExpanded?: boolean;
+  onToggleExpanded?: (folderId: string) => void;
+  children?: ReactNode;
 }) {
   const isFolder = isLauncherFolder(item);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -919,6 +906,54 @@ function LauncherRow({
       : isFolder
         ? undefined
         : item.command;
+
+  const stateClasses = isFolderTarget
+    ? 'bg-primary/15 ring-primary/60 ring-[3px]'
+    : isDwellTarget
+      ? 'bg-primary/10 ring-primary/40 ring-2'
+      : isSelected
+        ? 'bg-primary/10 ring-primary/50 ring-2'
+        : '';
+
+  // With the chevron, a folder row becomes a flex pair: the row proper
+  // (still opens the folder) plus the collapse trigger beside it. Hover
+  // and state paint move to the wrapper so both feel like one row.
+  const rowButton = (className: string) => (
+    <ContextMenuTrigger
+      render={(triggerProps: ComponentProps<'button'>) => (
+        <button
+          {...triggerProps}
+          {...dragProps}
+          type="button"
+          data-launcher-item
+          aria-pressed={isSelected}
+          onClick={(event) => handlers.onItemClick(item, event)}
+          className={className}
+        >
+          {isFolder ? (
+            <FolderSquare className="size-6" glyphClassName="size-4" />
+          ) : (
+            <IconSquare app={item} className="size-6" glyphClassName="size-4" />
+          )}
+          <span className="min-w-0 flex-1 truncate text-sm leading-none">
+            {item.title}
+          </span>
+          {isFolder
+            ? showCommand &&
+              folderCount !== undefined && (
+                <span className="text-text-muted shrink-0 translate-y-[1px] text-xs leading-none">
+                  {folderCount} {folderCount === 1 ? 'script' : 'scripts'}
+                </span>
+              )
+            : showCommand && (
+                <span className="text-text-muted min-w-0 max-w-[45%] truncate text-xs leading-none translate-y-[1px]">
+                  {command}
+                </span>
+              )}
+        </button>
+      )}
+    />
+  );
 
   return (
     <ContextMenu
@@ -949,54 +984,56 @@ function LauncherRow({
         ) : isSelected ? (
           <SelectedBadge />
         ) : null}
-        <ContextMenuTrigger
-          render={(triggerProps: ComponentProps<'button'>) => (
-            <button
-              {...triggerProps}
-              {...dragProps}
-              type="button"
-              data-launcher-item
-              aria-pressed={isSelected}
-              onClick={(event) => handlers.onItemClick(item, event)}
-              className={`${interactive} text-text hover:bg-button/60 active:bg-button flex w-full min-w-0 items-center gap-2.5 rounded-md py-1.5 pl-[9px] pr-2 text-left ${
+        {canExpand ? (
+          <Collapsible
+            open={isExpanded}
+            onOpenChange={() => onToggleExpanded?.(item.id)}
+          >
+            <div
+              className={`hover:bg-button/60 active:bg-button flex w-full items-center rounded-md transition-colors duration-150 ${
                 menuOpen ? 'bg-button/60' : ''
-              } ${
-                isFolderTarget
-                  ? 'bg-primary/15 ring-primary/60 ring-[3px]'
-                  : isDwellTarget
-                    ? 'bg-primary/10 ring-primary/40 ring-2'
-                    : isSelected
-                      ? 'bg-primary/10 ring-primary/50 ring-2'
-                      : ''
-              }`}
+              } ${stateClasses}`}
             >
-              {isFolder ? (
-                <FolderSquare className="size-6" glyphClassName="size-4" />
-              ) : (
-                <IconSquare
-                  app={item}
-                  className="size-6"
-                  glyphClassName="size-4"
-                />
+              {rowButton(
+                `${interactive} text-text flex min-w-0 flex-1 items-center gap-2.5 py-1.5 pl-[9px] pr-1 text-left`
               )}
-              <span className="min-w-0 flex-1 truncate text-sm leading-none">
-                {item.title}
-              </span>
-              {isFolder
-                ? showCommand &&
-                  folderCount !== undefined && (
-                    <span className="text-text-muted shrink-0 translate-y-[1px] text-xs leading-none">
-                      {folderCount} {folderCount === 1 ? 'script' : 'scripts'}
-                    </span>
-                  )
-                : showCommand && (
-                    <span className="text-text-muted min-w-0 max-w-[45%] truncate text-xs leading-none translate-y-[1px]">
-                      {command}
-                    </span>
-                  )}
-            </button>
-          )}
-        />
+              <CollapsibleTrigger
+                render={(triggerProps: ComponentProps<'button'>) => (
+                  <button
+                    {...triggerProps}
+                    type="button"
+                    className={`${interactive} text-text-muted hover:text-text group mr-1 flex shrink-0 items-center rounded-sm p-1`}
+                    title={
+                      isExpanded
+                        ? `Collapse ${item.title}`
+                        : `Expand ${item.title}`
+                    }
+                    aria-label={
+                      isExpanded
+                        ? `Collapse ${item.title}`
+                        : `Expand ${item.title}`
+                    }
+                  >
+                    <ChevronDown className="group-data-[panel-open]:rotate-180 size-4 transition-transform duration-200" />
+                  </button>
+                )}
+              />
+            </div>
+            {children && (
+              <CollapsibleContent>
+                <div className="mt-0.5 ml-[21px] flex flex-col gap-0.5 pl-[13px]">
+                  {children}
+                </div>
+              </CollapsibleContent>
+            )}
+          </Collapsible>
+        ) : (
+          rowButton(
+            `${interactive} text-text hover:bg-button/60 active:bg-button flex w-full min-w-0 items-center gap-2.5 rounded-md py-1.5 pl-[9px] pr-2 text-left ${
+              menuOpen ? 'bg-button/60' : ''
+            } ${stateClasses}`
+          )
+        )}
       </div>
       <LauncherContextMenu
         item={item}
@@ -1016,12 +1053,10 @@ function LauncherContextMenu({
   selectedIds: string[];
   handlers: ItemHandlers;
 }) {
-  // Right-clicking a selected script with more selected acts on the
-  // whole selection instead of just the item under the cursor.
-  const isBulk =
-    !isLauncherFolder(item) &&
-    selectedIds.length > 1 &&
-    selectedIds.includes(item.id);
+  // Right-clicking a selected item with more selected acts on the whole
+  // selection instead of just the item under the cursor — folders
+  // included.
+  const isBulk = selectedIds.length > 1 && selectedIds.includes(item.id);
 
   if (isBulk) {
     return (
