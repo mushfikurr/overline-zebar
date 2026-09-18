@@ -14,6 +14,7 @@ import { cn } from '@/utils/cn';
 import {
   DragStackOverlay,
   FolderTargetBadge,
+  ITEM_STATE_CLASSES,
   ROOT_DROP_ID,
   SelectedBadge,
   useLauncherApplications,
@@ -60,11 +61,10 @@ import {
 } from 'react';
 import { ScriptItemContent } from './ScriptItemContent';
 
-const ITEM_RING_CLASSES = {
-  folderTarget: 'ring-primary/60 ring-[3px]',
-  dwellTarget: 'ring-primary/40 ring-2',
-  selected: 'bg-primary/10 ring-primary/50 ring-2',
-};
+// Card state paint mirrors the launcher's shared tokens; the card adds a
+// gentler scale than the tile since it is a much larger surface.
+const CARD_BASE_CLASSES =
+  'cursor-pointer rounded-lg p-0 transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-button-border hover:bg-surface/40 active:scale-[0.99] motion-reduce:transition-[background-color,border-color,box-shadow]';
 
 function ScriptItem({
   app,
@@ -120,13 +120,13 @@ function ScriptItem({
         {...attributes}
         {...listeners}
         className={cn(
-          'cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40',
+          CARD_BASE_CLASSES,
           isFolderTarget
-            ? ITEM_RING_CLASSES.folderTarget
+            ? `${ITEM_STATE_CLASSES.folderTarget} scale-[1.02]`
             : isDwellTarget
-              ? ITEM_RING_CLASSES.dwellTarget
+              ? ITEM_STATE_CLASSES.dwellTarget
               : isSelected
-                ? ITEM_RING_CLASSES.selected
+                ? ITEM_STATE_CLASSES.selected
                 : ''
         )}
         onClick={(event) => onItemClick(app, event)}
@@ -226,13 +226,13 @@ function FolderItem({
           {...attributes}
           {...listeners}
           className={cn(
-            'cursor-pointer rounded-lg p-0 transition-colors hover:border-button-border hover:bg-surface/40',
+            CARD_BASE_CLASSES,
             isFolderTarget
-              ? ITEM_RING_CLASSES.folderTarget
+              ? `${ITEM_STATE_CLASSES.folderTarget} scale-[1.02]`
               : isDwellTarget
-                ? ITEM_RING_CLASSES.dwellTarget
+                ? ITEM_STATE_CLASSES.dwellTarget
                 : isSelected
-                  ? ITEM_RING_CLASSES.selected
+                  ? ITEM_STATE_CLASSES.selected
                   : ''
           )}
           onClick={(event) => onItemClick(folder, event)}
@@ -277,7 +277,11 @@ function FolderItem({
           </div>
         </Card>
       </div>
-      {count > 0 && <div className="pl-[30px] [&>*]:py-1">{children}</div>}
+      {count > 0 && (
+        <div className="ml-[30px] border-l border-border/50 pl-2 [&>*]:py-1">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -321,14 +325,23 @@ export function ApplicationsTab() {
   const items: LauncherItem[] = model.applications;
   const scriptCount = items.filter((item) => !isLauncherFolder(item)).length;
 
-  // Scripts inside a folder, in their persisted order.
+  // Scripts inside each folder, in their persisted order.
+  const scriptsByFolder = useMemo(() => {
+    const map = new Map<string, LauncherCommand[]>();
+    for (const item of items) {
+      if (isLauncherFolder(item)) continue;
+      const parent = item.parentId;
+      if (!parent) continue;
+      const list = map.get(parent);
+      if (list) list.push(item);
+      else map.set(parent, [item]);
+    }
+    return map;
+  }, [items]);
+
   const folderScripts = useCallback(
-    (folderId: string) =>
-      items.filter(
-        (item): item is LauncherCommand =>
-          !isLauncherFolder(item) && item.parentId === folderId
-      ),
-    [items]
+    (folderId: string) => scriptsByFolder.get(folderId) ?? [],
+    [scriptsByFolder]
   );
 
   // Top level of the tree: folders, loose scripts, and any scripts whose
@@ -507,7 +520,7 @@ export function ApplicationsTab() {
           )}
           <div className="flex items-center gap-2">
             {selectedIds.length > 0 && (
-              <ButtonGroup className="h-7">
+              <ButtonGroup className="animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none h-7">
                 <ButtonGroupText role="status" className="select-none">
                   <span className="text-text font-semibold tabular-nums leading-none">
                     {selectedIds.length}

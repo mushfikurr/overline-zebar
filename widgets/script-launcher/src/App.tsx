@@ -21,6 +21,7 @@ import { isFileDialogActive } from '@overline-zebar/config-widget/src/utils/file
 import {
   DragStackOverlay,
   FolderTargetBadge,
+  ITEM_STATE_CLASSES,
   PARENT_DROP_ID,
   SelectedBadge,
   useLauncherApplications,
@@ -88,9 +89,10 @@ const providers = zebar.createProviderGroup({
 });
 
 /** Shared interaction tokens so tiles, rows, and footer buttons feel
- * identical: quick hover, tactile press. */
+ * identical: quick hover, tactile press. Under reduced motion the press
+ * scale still applies, just without traveling. */
 const interactive =
-  'outline-none transition-[background-color,color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:ring-[3px] focus-visible:ring-primary/50';
+  'outline-none transition-[background-color,color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:ring-[3px] focus-visible:ring-primary/50 motion-reduce:transition-[background-color,color,border-color,box-shadow]';
 
 const ITEM_SELECTOR = '[data-launcher-item]';
 
@@ -265,8 +267,26 @@ function App() {
 
   // A folder's direct children in their persisted order, rendered inline
   // when the folder is expanded with the chevron in list view.
-  const folderChildren = (folderId: string) =>
-    applications.filter((item) => (item.parentId ?? null) === folderId);
+  const childrenByFolder = useMemo(() => {
+    const map = new Map<string, LauncherItem[]>();
+    for (const item of applications) {
+      const parent = item.parentId;
+      if (!parent) continue;
+      const list = map.get(parent);
+      if (list) list.push(item);
+      else map.set(parent, [item]);
+    }
+    return map;
+  }, [applications]);
+
+  const folderChildren = useCallback(
+    (folderId: string) => childrenByFolder.get(folderId) ?? [],
+    [childrenByFolder]
+  );
+
+  // While searching, Enter launches the first match — mark it so the
+  // keyboard target is visible.
+  const enterTargetId = isSearching ? (visibleItems[0]?.id ?? null) : null;
 
   // ----- Selection interactions -----------------------------------------
 
@@ -372,6 +392,7 @@ function App() {
         isDwellTarget={dnd.dwellTargetId === rowItem.id}
         isFolderTarget={dnd.folderTargetId === rowItem.id}
         isSelected={selectedIds.includes(rowItem.id)}
+        isEnterTarget={rowItem.id === enterTargetId}
         isGhostMover={dnd.isGhostMover(rowItem.id)}
         dragDelta={dnd.dragDelta}
         selectedIds={selectedIds}
@@ -395,7 +416,9 @@ function App() {
   const emptyState = (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
       <Search className="text-text-muted size-8" strokeWidth={1.5} />
-      <h1 className="text-wrap-balance">Scripts you add will show up here</h1>
+      <p className="text-wrap-balance text-sm font-medium">
+        Scripts you add will show up here
+      </p>
       <p className="text-text-muted max-w-xs text-pretty">
         These can be .exe paths, AHK scripts you commonly use, or generally just
         any shell command.
@@ -405,7 +428,9 @@ function App() {
 
   const noResults = (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
-      <h1 className="text-wrap-balance">No scripts match “{query}”</h1>
+      <p className="text-wrap-balance text-sm font-medium">
+        No scripts match “{query}”
+      </p>
       <p className="text-text-muted">Try a different name or command.</p>
     </div>
   );
@@ -413,7 +438,9 @@ function App() {
   const folderEmptyState = (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
       <Folder className="text-text-muted size-8" strokeWidth={1.5} />
-      <h1 className="text-wrap-balance">Nothing in this folder yet</h1>
+      <p className="text-wrap-balance text-sm font-medium">
+        Nothing in this folder yet
+      </p>
       <p className="text-text-muted max-w-xs text-pretty">
         Add a script with the plus below, or drag one onto the folder.
       </p>
@@ -566,6 +593,7 @@ function App() {
                       isDwellTarget={dnd.dwellTargetId === item.id}
                       isFolderTarget={dnd.folderTargetId === item.id}
                       isSelected={selectedIds.includes(item.id)}
+                      isEnterTarget={item.id === enterTargetId}
                       isGhostMover={dnd.isGhostMover(item.id)}
                       dragDelta={dnd.dragDelta}
                       selectedIds={selectedIds}
@@ -625,7 +653,7 @@ function App() {
           }}
         >
           {selectedIds.length > 0 && (
-            <ButtonGroup className="mr-auto h-7">
+            <ButtonGroup className="animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none mr-auto h-7">
               <ButtonGroupText role="status" className="select-none">
                 <span className="text-text font-semibold tabular-nums leading-none">
                   {selectedIds.length}
@@ -752,6 +780,7 @@ function LauncherTile({
   isDwellTarget,
   isFolderTarget,
   isSelected,
+  isEnterTarget,
   isGhostMover,
   dragDelta,
   selectedIds,
@@ -762,6 +791,7 @@ function LauncherTile({
   isDwellTarget: boolean;
   isFolderTarget: boolean;
   isSelected: boolean;
+  isEnterTarget: boolean;
   isGhostMover: boolean;
   dragDelta: { x: number; y: number } | null;
   selectedIds: string[];
@@ -821,12 +851,14 @@ function LauncherTile({
                 menuOpen ? 'bg-button/60 text-text' : ''
               } ${
                 isFolderTarget
-                  ? 'bg-primary/15 text-text ring-primary/60 scale-105 ring-[3px]'
+                  ? `${ITEM_STATE_CLASSES.folderTarget} scale-105 text-text`
                   : isDwellTarget
-                    ? 'bg-primary/10 ring-primary/40 ring-2'
+                    ? ITEM_STATE_CLASSES.dwellTarget
                     : isSelected
-                      ? 'bg-primary/10 text-text ring-primary/50 ring-2'
-                      : ''
+                      ? `${ITEM_STATE_CLASSES.selected} text-text`
+                      : isEnterTarget
+                        ? 'bg-button/40'
+                        : ''
               }`}
             >
               {isFolder ? (
@@ -863,6 +895,7 @@ function LauncherRow({
   isDwellTarget,
   isFolderTarget,
   isSelected,
+  isEnterTarget,
   isGhostMover,
   dragDelta,
   selectedIds,
@@ -880,6 +913,7 @@ function LauncherRow({
   isDwellTarget: boolean;
   isFolderTarget: boolean;
   isSelected: boolean;
+  isEnterTarget: boolean;
   isGhostMover: boolean;
   dragDelta: { x: number; y: number } | null;
   selectedIds: string[];
@@ -908,11 +942,11 @@ function LauncherRow({
         : item.command;
 
   const stateClasses = isFolderTarget
-    ? 'bg-primary/15 ring-primary/60 ring-[3px]'
+    ? ITEM_STATE_CLASSES.folderTarget
     : isDwellTarget
-      ? 'bg-primary/10 ring-primary/40 ring-2'
+      ? ITEM_STATE_CLASSES.dwellTarget
       : isSelected
-        ? 'bg-primary/10 ring-primary/50 ring-2'
+        ? ITEM_STATE_CLASSES.selected
         : '';
 
   // With the chevron, a folder row becomes a flex pair: the row proper
@@ -990,7 +1024,7 @@ function LauncherRow({
             onOpenChange={() => onToggleExpanded?.(item.id)}
           >
             <div
-              className={`hover:bg-button/60 active:bg-button flex w-full items-center rounded-md transition-colors duration-150 ${
+              className={`hover:bg-button/60 active:bg-button active:scale-[0.98] flex w-full items-center rounded-md transition-[background-color,box-shadow,transform] duration-150 ease-out ${
                 menuOpen ? 'bg-button/60' : ''
               } ${stateClasses}`}
             >
@@ -1021,7 +1055,7 @@ function LauncherRow({
             </div>
             {children && (
               <CollapsibleContent>
-                <div className="mt-0.5 ml-[21px] flex flex-col gap-0.5 pl-[13px]">
+                <div className="mt-0.5 ml-[21px] flex flex-col gap-0.5 border-l border-border/50 pl-[13px]">
                   {children}
                 </div>
               </CollapsibleContent>
@@ -1029,9 +1063,11 @@ function LauncherRow({
           </Collapsible>
         ) : (
           rowButton(
-            `${interactive} text-text hover:bg-button/60 active:bg-button flex w-full min-w-0 items-center gap-2.5 rounded-md py-1.5 pl-[9px] pr-2 text-left ${
+            `${interactive} text-text hover:bg-button/60 active:bg-button active:scale-[0.98] flex w-full min-w-0 items-center gap-2.5 rounded-md py-1.5 pl-[9px] pr-2 text-left ${
               menuOpen ? 'bg-button/60' : ''
-            } ${stateClasses}`
+            } ${stateClasses} ${
+              isEnterTarget && !stateClasses && !menuOpen ? 'bg-button/40' : ''
+            }`
           )
         )}
       </div>
