@@ -155,12 +155,12 @@ export function UpdateScriptModal({
       <DialogContent className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden">
         <DialogHeader className="shrink-0">
           <DialogTitle>
-            {isEditing ? 'Edit Application' : 'Add New Application'}
+            {isEditing ? 'Edit script' : 'Add script'}
           </DialogTitle>
           <DialogDescription>
             {isEditing
-              ? 'Update the details of your application.'
-              : 'Add a new application to your launcher.'}
+              ? 'Update the details of your script.'
+              : 'Add a new script to your launcher.'}
           </DialogDescription>
         </DialogHeader>
         <div className="-mt-2 min-h-0 flex-1 overflow-y-auto pr-1">
@@ -190,7 +190,7 @@ export function UpdateScriptModal({
                     onChange={(e) =>
                       setNewApp({ ...newApp, title: e.target.value })
                     }
-                    placeholder="Title for your application or command"
+                    placeholder="Title for your script"
                     aria-label="Title"
                   />
                 </div>
