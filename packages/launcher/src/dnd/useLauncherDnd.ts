@@ -110,10 +110,17 @@ export function useLauncherDnd({
   const [dragDelta, setDragDelta] = useState<{ x: number; y: number } | null>(
     null
   );
+  /** Coalesces drag-move updates to one per frame: pointermove can fire
+   * far more often than the display refreshes, and each delta update
+   * re-renders the whole surface. */
+  const dragDeltaRafRef = useRef<number | null>(null);
+  const latestDeltaRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     return () => {
       if (hoverTimeout.current !== null) clearTimeout(hoverTimeout.current);
+      if (dragDeltaRafRef.current !== null)
+        cancelAnimationFrame(dragDeltaRafRef.current);
     };
   }, []);
 
@@ -165,10 +172,16 @@ export function useLauncherDnd({
   };
 
   // During a multi-drag, track the pointer delta so the selected siblings
-  // travel alongside the overlay.
+  // travel alongside the overlay. The latest delta is read inside the
+  // frame callback so no intermediate move is ever rendered.
   const handleDragMove = ({ delta }: DragMoveEvent) => {
     if (multiDragIds === null) return;
-    setDragDelta({ x: delta.x, y: delta.y });
+    latestDeltaRef.current = { x: delta.x, y: delta.y };
+    if (dragDeltaRafRef.current !== null) return;
+    dragDeltaRafRef.current = requestAnimationFrame(() => {
+      dragDeltaRafRef.current = null;
+      setDragDelta(latestDeltaRef.current);
+    });
   };
 
   const setDwell = useCallback((targetId: string | null) => {
@@ -254,6 +267,11 @@ export function useLauncherDnd({
 
   const resetDragState = () => {
     setDwell(null);
+    if (dragDeltaRafRef.current !== null) {
+      cancelAnimationFrame(dragDeltaRafRef.current);
+      dragDeltaRafRef.current = null;
+    }
+    latestDeltaRef.current = null;
     frozenRectsRef.current = null;
     setActiveId(null);
     setActiveRect(null);
