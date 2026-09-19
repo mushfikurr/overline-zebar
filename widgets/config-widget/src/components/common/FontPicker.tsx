@@ -13,11 +13,11 @@ import {
   InputGroupButton,
   InputGroupInput,
   InputGroupText,
+  Spinner,
 } from '@overline-zebar/ui';
 import {
   CheckIcon,
   FolderLock,
-  LoaderIcon,
   SearchIcon,
   XIcon,
 } from 'lucide-react';
@@ -189,13 +189,13 @@ export default function FontPicker() {
               !loadError &&
               permission === null && (
                 <div className="text-text-muted flex h-full items-center justify-center gap-2 text-xs">
-                  <LoaderIcon className="size-3.5 animate-spin" />
+                  <Spinner className="size-3.5" />
                   Checking permission...
                 </div>
               )}
             {loading && (
               <div className="text-text-muted flex h-full items-center justify-center gap-2 text-xs">
-                <LoaderIcon className="size-3.5 animate-spin" />
+                <Spinner className="size-3.5" />
                 Loading installed fonts...
               </div>
             )}

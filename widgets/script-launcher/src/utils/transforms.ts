@@ -2,7 +2,7 @@ import {
   isLauncherFolder,
   type LauncherFolder,
   type LauncherItem,
-} from '../types';
+} from '@overline-zebar/config';
 
 function arrayMove<T>(array: T[], from: number, to: number): T[] {
   const copy = array.slice();
@@ -12,11 +12,6 @@ function arrayMove<T>(array: T[], from: number, to: number): T[] {
   return copy;
 }
 
-/**
- * Rewrites the flat array so the items of `level` follow the new on-screen
- * order, leaving items of other levels untouched. Returns the input
- * reference when nothing changes.
- */
 export function reorderWithinLevel(
   items: LauncherItem[],
   activeItemId: string,
@@ -35,11 +30,6 @@ export function reorderWithinLevel(
   );
 }
 
-/**
- * Same as {@link reorderWithinLevel}, but relocates a whole selection as a
- * contiguous block: the selected items keep their relative order and land
- * at the target's position.
- */
 export function reorderBlockWithinLevel(
   items: LauncherItem[],
   dragIds: string[],
@@ -65,10 +55,6 @@ export function reorderBlockWithinLevel(
   );
 }
 
-/**
- * Tucks the dragged scripts into a folder, keeping their persisted order
- * right after the folder.
- */
 export function moveIntoFolder(
   items: LauncherItem[],
   scriptIds: string[],
@@ -96,10 +82,6 @@ export function moveIntoFolder(
   return next;
 }
 
-/**
- * Wraps the members in a named folder that takes the first member's spot,
- * keeping their persisted order. Used for drag grouping.
- */
 export function groupIntoFolder(
   items: LauncherItem[],
   memberIds: string[],
@@ -121,10 +103,6 @@ export function groupIntoFolder(
   });
 }
 
-/**
- * Deleting a folder keeps its scripts: they lift up to the top level,
- * taking the folder's slot in order.
- */
 export function deleteFolderKeepChildren(
   items: LauncherItem[],
   folder: LauncherFolder
@@ -140,8 +118,6 @@ export function deleteFolderKeepChildren(
   return next;
 }
 
-/** Clears the parent folder of the given scripts, lifting them to the top
- * level in place. */
 export function moveToTopLevel(
   items: LauncherItem[],
   scriptIds: string[]
@@ -154,12 +130,6 @@ export function moveToTopLevel(
   );
 }
 
-/**
- * Lifts the given scripts up one level: each joins its parent folder's
- * own level (the top level when the folder sits there), landing right
- * after the folder in persisted order. The destination is read off each
- * folder's own parent, so it stays correct should folders ever nest.
- */
 export function moveUpLevel(
   items: LauncherItem[],
   scriptIds: string[]
@@ -170,7 +140,6 @@ export function moveUpLevel(
   );
   if (moving.length === 0) return items;
 
-  // Scripts leaving each folder, in their persisted order.
   const leaving = new Map<string, LauncherItem[]>();
   for (const script of moving) {
     const parent = script.parentId!;
@@ -187,9 +156,6 @@ export function moveUpLevel(
   const next: LauncherItem[] = [];
   for (const item of items) {
     if (movingIds.has(item.id)) {
-      // Emitted right after its folder below. Scripts whose folder no
-      // longer exists already render at the top level; settle their
-      // parent to match.
       if (folderIds.has(item.parentId!)) continue;
       next.push({ ...item, parentId: undefined });
       continue;
@@ -207,13 +173,6 @@ export function moveUpLevel(
   return next;
 }
 
-/**
- * Cross-level drop: the dragged scripts join the level of the item they
- * were dropped on, taking its position — dragging a script out of a
- * folder onto the enclosing list lifts it up a level. The destination is
- * read off the hovered item, so any future nesting depth needs no
- * changes here. Folders stay put; they only reorder within their level.
- */
 export function moveBlockToLevel(
   items: LauncherItem[],
   dragIds: string[],
@@ -247,7 +206,6 @@ export function moveBlockToLevel(
   return next;
 }
 
-/** Number of scripts per folder id. */
 export function getFolderCounts(items: LauncherItem[]): Map<string, number> {
   const counts = new Map<string, number>();
   for (const item of items) {

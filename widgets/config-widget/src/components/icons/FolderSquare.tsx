@@ -1,11 +1,7 @@
-import { resolveIconBackground } from '@overline-zebar/config/src/utils/icon-backgrounds';
+import { resolveIconBackground } from '@overline-zebar/config';
 import { Folder } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-/**
- * Folder counterpart of IconSquare: the same gradient square, seated with
- * the same sheen and hairline edge, but always carrying a folder glyph.
- */
 export function FolderSquare({
   className = '',
   glyphClassName = 'size-5',

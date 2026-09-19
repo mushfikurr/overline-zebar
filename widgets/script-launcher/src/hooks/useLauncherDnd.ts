@@ -1,11 +1,13 @@
 import {
   isLauncherFolder,
-  moveBlockToLevel,
-  reorderBlockWithinLevel,
-  reorderWithinLevel,
   type LauncherCommand,
   type LauncherItem,
 } from '@overline-zebar/config';
+import {
+  moveBlockToLevel,
+  reorderBlockWithinLevel,
+  reorderWithinLevel,
+} from '../utils/transforms';
 import {
   KeyboardSensor,
   PointerSensor,
@@ -20,39 +22,21 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { LauncherApplicationsModel } from '../model/useLauncherApplications';
+import type { LauncherApplicationsModel } from './useLauncherApplications';
 
-/**
- * How long a script must dwell on another item before the folder action
- * commits (join an existing folder / create a new one). Matches Apple's
- * spring-loading guidance: highlight instantly, commit after roughly half
- * a second — long enough to not fire mid-pass, short enough to feel
- * responsive.
- */
 export const FOLDER_HOVER_DELAY = 600;
 
-/** Droppable id of a surface-level drop zone (the settings list
- * heading); dropping on it moves scripts out to the top level. */
 export const ROOT_DROP_ID = 'launcher-root-drop';
 
-/** Droppable id of the launcher's folder-view header; dropping on it
- * lifts scripts up one level — out of the open folder into its parent,
- * which is the top level for top-level folders. */
 export const PARENT_DROP_ID = 'launcher-parent-drop';
 
 type FrozenRect = { left: number; top: number; right: number; bottom: number };
 
-/** Selection controller of the hosting surface; multi-item drags follow
- * it. Surfaces without selection omit it. */
 export type LauncherDndSelection = {
   selectedIds: string[];
   clearSelection: () => void;
 };
 
-/**
- * Grouping two scripts into a new folder only applies at the top level;
- * folder children reorder or move onto folders instead.
- */
 function canReceiveSpringLoad(
   dragged: LauncherCommand,
   target: LauncherItem
@@ -63,16 +47,6 @@ function canReceiveSpringLoad(
   );
 }
 
-/**
- * The launcher drag & drop behavior shared by the launcher widget and the
- * settings applications tab: reorder with dnd-kit, spring-loaded folder
- * actions (dwell on an item to tuck into a folder or group into a new
- * one), lift-out drop zones, and multi-drag of a selection.
- *
- * The hook is view-agnostic: it hit-tests items via their
- * `[data-launcher-id]` attribute and talks to the data through the model
- * hook, so any layout can host it.
- */
 export function useLauncherDnd({
   model,
   selection,
@@ -80,8 +54,6 @@ export function useLauncherDnd({
 }: {
   model: LauncherApplicationsModel;
   selection?: LauncherDndSelection;
-  /** Whether spring-loaded folder actions are active. The launcher
-   * disables them while searching and inside a folder. */
   springLoadEnabled?: boolean;
 }) {
   const { applications, setApplications, stageGrouping } = model;
@@ -93,28 +65,17 @@ export function useLauncherDnd({
     width: number;
     height: number;
   } | null>(null);
-  /** Item currently dwelled on with the dwell timer running (soft ring). */
   const [dwellTargetId, setDwellTargetId] = useState<string | null>(null);
-  /** Item whose folder action has committed (full affordance). */
   const [folderTargetId, setFolderTargetId] = useState<string | null>(null);
   const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dwellTargetRef = useRef<string | null>(null);
   const folderTargetRef = useRef<string | null>(null);
-  /** Item rects captured at drag start; dwell hit-testing stays anchored
-   * to these stable boxes while sortable items shuffle around. */
   const frozenRectsRef = useRef<Map<string, FrozenRect> | null>(null);
 
-  /** When a selected item starts dragging with more selected, these move
-   * together; null means a plain single-item drag. */
   const [multiDragIds, setMultiDragIds] = useState<string[] | null>(null);
-  /** Pointer delta during a multi-drag, applied to the selected siblings
-   * so the whole stack travels with the cursor. */
   const [dragDelta, setDragDelta] = useState<{ x: number; y: number } | null>(
     null
   );
-  /** Coalesces drag-move updates to one per frame: pointermove can fire
-   * far more often than the display refreshes, and each delta update
-   * re-renders the whole surface. */
   const dragDeltaRafRef = useRef<number | null>(null);
   const latestDeltaRef = useRef<{ x: number; y: number } | null>(null);
 
@@ -126,9 +87,6 @@ export function useLauncherDnd({
     };
   }, []);
 
-  // Space picks a draggable up, arrows move it, Space drops, Escape
-  // cancels. Enter stays free so it keeps activating buttons (launch,
-  // edit) instead of starting a drag.
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, {
@@ -141,9 +99,6 @@ export function useLauncherDnd({
     })
   );
 
-  // Pointer-precise detection so "over" always reflects the item actually
-  // under the cursor. While a folder action is engaged, collisions are
-  // suppressed so shuffled items settle back and the target stays put.
   const collisionDetection = useCallback<CollisionDetection>((args) => {
     if (folderTargetRef.current !== null) return [];
     const pointerCollisions = pointerWithin(args);
@@ -158,15 +113,10 @@ export function useLauncherDnd({
     const rect = active.rect.current.initial;
     setActiveRect(rect ? { width: rect.width, height: rect.height } : null);
 
-    // Dragging an unselected item while others are selected starts a
-    // fresh single-item drag, like in Explorer.
     const isSelected = selectedIds.includes(activeItemId);
     if (!isSelected && selectedIds.length > 0) clearSelection();
     setMultiDragIds(isSelected && selectedIds.length > 1 ? selectedIds : null);
 
-    // Freeze item boxes as they are at pickup. dnd-kit's own "over" jumps
-    // around as sortable items shift out of the way (endlessly in list
-    // view), so dwell detection cannot rely on it.
     const rects = new Map<string, FrozenRect>();
     document
       .querySelectorAll<HTMLElement>('[data-launcher-id]')
@@ -184,9 +134,6 @@ export function useLauncherDnd({
     frozenRectsRef.current = rects;
   };
 
-  // During a multi-drag, track the pointer delta so the selected siblings
-  // travel alongside the overlay. The latest delta is read inside the
-  // frame callback so no intermediate move is ever rendered.
   const handleDragMove = ({ delta }: DragMoveEvent) => {
     if (multiDragIds === null) return;
     latestDeltaRef.current = { x: delta.x, y: delta.y };
@@ -236,9 +183,6 @@ export function useLauncherDnd({
     [activeId]
   );
 
-  // Spring-loading state machine: the item under the pointer (per the
-  // frozen boxes) highlights instantly; holding still for the dwell
-  // commits the folder action, moving away disengages it.
   const runDwell = useCallback(
     (x: number, y: number) => {
       if (!springLoadEnabled) {
@@ -256,8 +200,6 @@ export function useLauncherDnd({
         target !== null
           ? (applications.find((item) => item.id === target) ?? null)
           : null;
-      // Only highlight targets that can actually receive the folder
-      // action, so the ring always implies the drop.
       if (targetItem && !canReceiveSpringLoad(draggedItem, targetItem)) {
         setDwell(null);
         return;
@@ -292,10 +234,6 @@ export function useLauncherDnd({
     setDragDelta(null);
   };
 
-  // Spring-loaded folder action for one or more dragged scripts: dropping
-  // on a folder tucks them all inside; dropping on a script stages a new
-  // folder wrapping the whole group, applied only once the dialog is
-  // confirmed.
   const commitFolderDrop = (dragIds: string[], targetItemId: string) => {
     const targetItem = applications.find((item) => item.id === targetItemId);
     if (!targetItem) return;
@@ -331,17 +269,12 @@ export function useLauncherDnd({
         ? multiDragIds
         : [activeItemId];
 
-    // Dropped on a root-level drop zone: move the scripts out to the top
-    // level.
     if (overId === ROOT_DROP_ID) {
       model.moveScriptsToTopLevel(dragIds);
       clearSelection();
       return;
     }
 
-    // Dropped on the folder-view header: lift the scripts up one level,
-    // into the open folder's own parent — dynamic, so nested folders
-    // would keep working unchanged.
     if (overId === PARENT_DROP_ID) {
       model.moveScriptsUpLevel(dragIds);
       clearSelection();
@@ -360,10 +293,6 @@ export function useLauncherDnd({
     if (!overItem) return;
     const level = draggedItem.parentId ?? null;
 
-    // Dropped on an item of another level: dragging a script out of its
-    // folder lifts it into the target level at the drop position. The
-    // destination comes off the hovered item, so any nesting depth needs
-    // no changes here.
     if ((overItem.parentId ?? null) !== level) {
       const next = moveBlockToLevel(applications, dragIds, overId);
       if (next !== applications) {
@@ -401,8 +330,6 @@ export function useLauncherDnd({
       ? (applications.find((item) => item.id === activeId) ?? null)
       : null;
 
-  // Selected items other than the one being dragged follow the pointer
-  // during a multi-drag.
   const isGhostMover = (itemId: string) =>
     multiDragIds !== null &&
     multiDragIds.includes(itemId) &&

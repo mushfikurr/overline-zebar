@@ -1,17 +1,7 @@
-import { LauncherCommand } from '@overline-zebar/config/src/types';
-import { resolveIconBackground } from '@overline-zebar/config/src/utils/icon-backgrounds';
+import { LauncherCommand, resolveIconBackground } from '@overline-zebar/config';
 import { cn } from '../../utils/cn';
 import { AppIcon } from './AppIcon';
 
-/**
- * Raycast-style square rendered behind an application icon: a subtle
- * two-stop gradient with a soft sheen and hairline edge so it seats nicely
- * on light and dark themes. The glyph keeps its own size inside the square;
- * pick both with `className` (square) and `glyphClassName` (icon).
- *
- * Colour comes from `app.iconColor`: a preset id, 'none' to disable the
- * square, or undefined for the theme-primary default.
- */
 export function IconSquare({
   app,
   className = '',

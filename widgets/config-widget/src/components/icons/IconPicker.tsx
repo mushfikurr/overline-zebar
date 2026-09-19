@@ -4,7 +4,7 @@ import {
   defaultIconBackground,
   iconBackgroundGradient,
   iconBackgroundPresets,
-} from '@overline-zebar/config/src/utils/icon-backgrounds';
+} from '@overline-zebar/config';
 import {
   Button,
   Dialog,
@@ -18,6 +18,7 @@ import {
   InputGroupButton,
   InputGroupInput,
   InputGroupText,
+  Skeleton,
 } from '@overline-zebar/ui';
 import { Image, Search, Slash, X } from 'lucide-react';
 import {
@@ -38,7 +39,6 @@ import { beginFileDialog, endFileDialog } from '../../utils/fileDialogGuard';
 
 const BATCH_SIZE = 96;
 
-/** Upper bound for picked icon files, so configs don't balloon. */
 const MAX_ICON_BYTES = 512 * 1024;
 
 const IMAGE_MIME_BY_EXTENSION: Record<string, string> = {
@@ -61,7 +61,6 @@ export interface IconPickerValue {
   icon?: string;
   iconPath?: string;
   iconData?: string;
-  /** Background square: preset id, 'none', or undefined for theme primary. */
   iconColor?: string;
 }
 
@@ -118,8 +117,6 @@ function GridIcon({
 }) {
   const Icon = useLucideIcon(name);
 
-  // rounded-sm nests within 1px of concentric inside the rounded-lg
-  // bordered container above (the ideal would be 5px at default radius).
   return (
     <button
       type="button"
@@ -136,13 +133,12 @@ function GridIcon({
       {Icon ? (
         <Icon className="size-4" strokeWidth={1.75} />
       ) : (
-        <span className="bg-button size-4 animate-pulse rounded-sm" />
+        <Skeleton className="size-4 rounded-sm" />
       )}
     </button>
   );
 }
 
-/** Reads an image file and inlines it as a data URL for config storage. */
 async function readFileAsDataUrl(file: File): Promise<string> {
   const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
   const mimeType =
@@ -159,11 +155,6 @@ async function readFileAsDataUrl(file: File): Promise<string> {
   return `data:${mimeType};base64,${btoa(binary)}`;
 }
 
-/**
- * WYSIWYG icon picker: searchable grid over every Lucide icon (lazy-loaded
- * per icon), plus a custom image picked via the file input (stored inline
- * as a data URL).
- */
 export function IconPicker({ value, onChange }: IconPickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -172,9 +163,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
   const [pickedName, setPickedName] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  // Bumped by the ref callbacks below: the dialog portal mounts the grid
-  // after this component's effects have run, so the scroll observer must
-  // wait until both nodes are actually attached.
   const [gridMountCount, setGridMountCount] = useState(0);
 
   const attachScrollRef = useCallback((node: HTMLDivElement | null) => {
@@ -198,7 +186,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
       iconData: undefined,
     });
 
-  // Reveal icon batches as the grid is scrolled.
   useEffect(() => {
     if (!open) return;
     const sentinel = sentinelRef.current;
@@ -217,7 +204,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
     return () => observer.disconnect();
   }, [open, gridMountCount]);
 
-  // Reset paging and scroll whenever the query or open state changes.
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
     scrollRef.current?.scrollTo({ top: 0 });
@@ -250,10 +236,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
     }
   };
 
-  // Opening the native dialog steals OS focus from the widget window, so
-  // flag it to let blur-to-close widgets ignore the resulting blur. The
-  // webview regains focus (and `change` fires) once the dialog closes,
-  // whether a file was picked or it was cancelled.
   const handleFileInputClick = (event: MouseEvent<HTMLInputElement>) => {
     const input = event.currentTarget;
 
@@ -270,9 +252,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
 
   return (
     <>
-      {/* p-1 with a -ml-px nudge gives the icon an even 4px gutter, and
-      rounded-lg - 4px = rounded-sm keeps its curve exactly concentric
-      (custom images add a 1px outline, which stays concentric too). */}
       <Button
         variant="outline"
         className="shrink-0 rounded-lg p-1 pr-2.5"
@@ -312,9 +291,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Scrolls when the viewport is short; the grid itself keeps a
-          fixed height so it always shows a usable number of icons. The
-          padding run-out keeps the swatches clear of the scroll edge. */}
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="flex flex-col gap-4 pb-1 [@media(max-height:39.99rem)]:gap-3">
               <InputGroup>
@@ -370,12 +346,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
               </div>
 
               <div className="flex flex-col gap-1">
-                {/* A native file input lays its internal button and
-                filename out in the browser's shadow DOM, which outside
-                CSS can't center - so the visible row is our own flex
-                label wrapping a visually hidden input. Clicking the
-                label (or pressing Enter on the focused input) opens the
-                native dialog. */}
                 <label className="bg-background-deeper focus-within:border-primary focus-within:ring-primary/50 flex h-7 w-full cursor-pointer items-center gap-2 rounded-md border border-border px-2.5 text-sm shadow-xs transition-[color,box-shadow] outline-none">
                   <input
                     type="file"
@@ -445,7 +415,6 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
   );
 }
 
-/** Small rounded gradient swatch for choosing an icon's background square. */
 function BackgroundSwatch({
   title,
   selected,

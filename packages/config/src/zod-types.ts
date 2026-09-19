@@ -68,18 +68,11 @@ export const LauncherCommandSchema = z.object({
   command: z.string(),
   args: z.array(z.string()),
   title: z.string(),
-  /** Discriminator for the LauncherItem union. Absent on legacy data. */
   type: z.literal('command').optional(),
-  /** Id of the folder this script lives in. Undefined means top level. */
   parentId: z.string().optional(),
   icon: z.string().optional(),
   iconPath: z.string().optional(),
-  /** Inline data URL of a picked icon image. */
   iconData: z.string().optional(),
-  /**
-   * Background square behind the icon: undefined shows the theme primary,
-   * 'none' disables it, otherwise an id from iconBackgrounds presets.
-   */
   iconColor: z.string().optional(),
 });
 
@@ -87,10 +80,6 @@ export const LauncherFolderSchema = z.object({
   id: z.string(),
   type: z.literal('folder'),
   title: z.string(),
-  /**
-   * Id of a parent folder. Folders currently only live at the top level,
-   * but the field keeps the flat-array helpers uniform.
-   */
   parentId: z.string().optional(),
 });
 

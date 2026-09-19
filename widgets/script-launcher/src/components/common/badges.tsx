@@ -1,12 +1,8 @@
 import { Check, FolderPlus } from 'lucide-react';
 
-/** Shared pop-in for the small affordance badges: quick zoom from 75%,
- * gentle enough to not slow ctrl-click selection spam. */
 const badgeMotion =
   'animate-in fade-in zoom-in-75 duration-150 motion-reduce:animate-none';
 
-/** Affordance shown on an item whose spring-loaded folder action has
- * committed: release to tuck in / group. */
 export function FolderTargetBadge() {
   return (
     <span
@@ -25,4 +21,18 @@ export function SelectedBadge() {
       <Check className="size-2.5" strokeWidth={3.5} />
     </span>
   );
+}
+
+export function LauncherItemBadges({
+  isFolderTarget,
+  isSelected,
+}: {
+  isFolderTarget: boolean;
+  isSelected: boolean;
+}) {
+  return isFolderTarget ? (
+    <FolderTargetBadge />
+  ) : isSelected ? (
+    <SelectedBadge />
+  ) : null;
 }

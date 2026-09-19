@@ -1,6 +1,5 @@
 import { AppIcon, IconSquare } from '../../../../icons';
-import { LauncherCommand } from '@overline-zebar/config/src/types';
-import { resolveIconBackground } from '@overline-zebar/config/src/utils/icon-backgrounds';
+import { LauncherCommand, resolveIconBackground } from '@overline-zebar/config';
 import {
   Tooltip,
   TooltipPopup,
@@ -10,11 +9,6 @@ import {
 } from '@overline-zebar/ui';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 
-/**
- * The visual identity of a script: icon tile, title, command, and argument
- * chips. Shared by the settings list and the edit modal's live preview so
- * the two can never drift apart.
- */
 export function ScriptItemContent({
   app,
   fallbackTitle = app.title,

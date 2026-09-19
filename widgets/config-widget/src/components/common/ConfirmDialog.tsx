@@ -20,10 +20,6 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
 }
 
-/**
- * Small confirmation modal shown before consequential actions such as
- * deleting a script or folder.
- */
 export function ConfirmDialog({
   open,
   onOpenChange,

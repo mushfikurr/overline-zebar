@@ -1,4 +1,4 @@
-import { LauncherCommand } from '@overline-zebar/config/src/types';
+import { LauncherCommand } from '@overline-zebar/config';
 import {
   Button,
   Dialog,
@@ -26,7 +26,6 @@ export function ArgumentEditor({
   args: string[];
   onChange: (newArgs: string[]) => void;
 }) {
-  // Set when a row is added so its input focuses on mount.
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
 
   const handleArgChange = (index: number, value: string) => {
@@ -99,7 +98,11 @@ export function ArgumentEditor({
                 </Button>
               </div>
             ))}
-            <button type="button" onClick={handleAddArg} className={`${addRowClassName} h-7`}>
+            <button
+              type="button"
+              onClick={handleAddArg}
+              className={`${addRowClassName} h-7`}
+            >
               <Plus className="size-3" />
               Add argument
             </button>
@@ -154,9 +157,7 @@ export function UpdateScriptModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden">
         <DialogHeader className="shrink-0">
-          <DialogTitle>
-            {isEditing ? 'Edit script' : 'Add script'}
-          </DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit script' : 'Add script'}</DialogTitle>
           <DialogDescription>
             {isEditing
               ? 'Update the details of your script.'
@@ -181,7 +182,13 @@ export function UpdateScriptModal({
                     iconColor: newApp.iconColor,
                   }}
                   onChange={({ icon, iconPath, iconData, iconColor }) =>
-                    setNewApp({ ...newApp, icon, iconPath, iconData, iconColor })
+                    setNewApp({
+                      ...newApp,
+                      icon,
+                      iconPath,
+                      iconData,
+                      iconColor,
+                    })
                   }
                 />
                 <div className="min-w-0 flex-1">

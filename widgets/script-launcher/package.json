@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,12 +18,13 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@overline-zebar/config": "workspace:*",
     "@overline-zebar/config-widget": "workspace:*",
-    "@overline-zebar/launcher": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.460.0",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "tailwind-merge": "^2.6.0",
     "zebar": "catalog:"
   },
   "devDependencies": {
@@ -43,4 +46,3 @@
     "vite": "^5.4.10"
   }
 }
-

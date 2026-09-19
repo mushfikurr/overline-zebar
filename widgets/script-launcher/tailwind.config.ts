@@ -3,10 +3,9 @@ import sharedConfig from '@overline-zebar/tailwind';
 
 const config: Pick<Config, 'prefix' | 'presets' | 'content'> = {
   content: [
-    './src/**/*.tsx',
+    './src/**/*.{ts,tsx}',
     '../../packages/ui/src/**/*.tsx',
     '../config-widget/src/**/*.tsx',
-    '../../packages/launcher/src/**/*.{ts,tsx}',
   ],
   presets: [sharedConfig],
 };

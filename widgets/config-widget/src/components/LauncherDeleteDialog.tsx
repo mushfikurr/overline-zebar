@@ -1,11 +1,6 @@
-import type { PendingLauncherDelete } from '@overline-zebar/launcher';
+import type { PendingLauncherDelete } from '@overline-zebar/script-launcher';
 import { ConfirmDialog } from './common/ConfirmDialog';
 
-/**
- * The delete confirmation shared by the launcher widget and the settings
- * applications tab; renders whatever the model's PendingLauncherDelete is
- * staging so the two surfaces can never drift apart.
- */
 export function LauncherDeleteDialog({
   pendingDelete,
   onConfirm,

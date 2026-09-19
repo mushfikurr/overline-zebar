@@ -1,10 +1,5 @@
 import type { ReactNode } from 'react';
 
-/**
- * Wraps a drag preview with the multi-drag affordances: stacked sheets
- * behind the preview and a count badge, shown only when `count` is more
- * than one.
- */
 export function DragStackOverlay({
   count,
   children,

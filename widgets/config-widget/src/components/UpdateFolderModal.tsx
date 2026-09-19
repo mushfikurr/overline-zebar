@@ -15,7 +15,6 @@ import {
 import { FolderOpen } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
-/** Modal for creating or renaming a launcher folder. */
 export function UpdateFolderModal({
   open,
   setOpen,

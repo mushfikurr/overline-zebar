@@ -29,11 +29,6 @@ export type LauncherCommand = z.infer<typeof LauncherCommandSchema>;
 export type LauncherFolder = z.infer<typeof LauncherFolderSchema>;
 export type LauncherItem = z.infer<typeof LauncherItemSchema>;
 
-/**
- * Type guard for launcher items. Legacy scripts persisted before folders
- * existed have no `type` field, so anything that isn't explicitly a folder
- * is treated as a command.
- */
 export function isLauncherFolder(item: LauncherItem): item is LauncherFolder {
   return item.type === 'folder';
 }

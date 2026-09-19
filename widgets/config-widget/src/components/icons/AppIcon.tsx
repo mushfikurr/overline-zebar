@@ -1,14 +1,8 @@
-import { LauncherCommand } from '@overline-zebar/config/src/types';
+import { LauncherCommand } from '@overline-zebar/config';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ICON_NAME, useLucideIcon } from './lucide-icons';
 
-/**
- * Renders an application icon: the inline data URL when one is set, then the
- * custom image file path (falling back to the Lucide icon if the file can't
- * be loaded), otherwise the selected Lucide icon. Occupies its full
- * className box while loading.
- */
 export function AppIcon({
   app,
   className,
