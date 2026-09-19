@@ -6,21 +6,30 @@ export function LauncherSelectionToolbar({
   onMoveOut,
   onDelete,
   onClear,
+  size = 'md',
   className,
 }: {
   selectedIds: string[];
   onMoveOut?: (ids: string[]) => void;
   onDelete: (ids: string[]) => void;
   onClear: () => void;
+  size?: 'sm' | 'md';
   className?: string;
 }) {
   if (selectedIds.length === 0) return null;
 
+  const iconSize = size === 'sm' ? 'icon-sm' : 'icon';
+
   return (
     <ButtonGroup
-      className={`animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none h-7 ${className ?? ''}`}
+      className={`animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none ${
+        size === 'sm' ? 'h-6' : 'h-7'
+      } ${className ?? ''}`}
     >
-      <ButtonGroupText role="status" className="select-none">
+      <ButtonGroupText
+        role="status"
+        className={`select-none ${size === 'sm' ? 'text-xs' : ''}`}
+      >
         <span className="text-text font-semibold tabular-nums leading-none">
           {selectedIds.length}
         </span>
@@ -29,7 +38,7 @@ export function LauncherSelectionToolbar({
       {onMoveOut && (
         <Button
           variant="default"
-          size="icon"
+          size={iconSize}
           title="Move to top level"
           aria-label="Move selected to top level"
           onClick={() => onMoveOut(selectedIds)}
@@ -39,7 +48,7 @@ export function LauncherSelectionToolbar({
       )}
       <Button
         variant="default"
-        size="icon"
+        size={iconSize}
         title="Delete selected"
         aria-label="Delete selected"
         className="hover:bg-danger/15 hover:text-danger"
@@ -49,7 +58,7 @@ export function LauncherSelectionToolbar({
       </Button>
       <Button
         variant="default"
-        size="icon"
+        size={iconSize}
         title="Clear selection (Esc)"
         aria-label="Clear selection"
         onClick={onClear}

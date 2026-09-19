@@ -211,15 +211,11 @@ export function ApplicationsTab() {
               onDelete={model.requestDeleteItems}
               onClear={clearSelection}
             />
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={model.openFolderModalForAdd}
-            >
+            <Button variant="outline" onClick={model.openFolderModalForAdd}>
               <FolderPlus />
               Add folder
             </Button>
-            <Button size="sm" onClick={() => model.openScriptModalForAdd()}>
+            <Button onClick={() => model.openScriptModalForAdd()}>
               <Plus />
               Add script
             </Button>
