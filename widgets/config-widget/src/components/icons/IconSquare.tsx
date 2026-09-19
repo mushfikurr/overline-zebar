@@ -19,8 +19,7 @@ export function IconSquare({
     <span
       className={cn(
         'flex shrink-0 items-center justify-center rounded-[22%]',
-        background &&
-          'shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.1)]',
+        background && 'shadow-icon-tile',
         className
       )}
       style={{ background, color: iconColor }}

@@ -63,6 +63,10 @@ const config: Omit<Config, 'content'> = {
         '11': '44px',
         '12': '48px',
       },
+      boxShadow: {
+        'icon-tile':
+          'inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.1)',
+      },
       borderRadius: {
         sm: 'calc(var(--radius) * 0.75)',
         md: 'var(--radius)',
