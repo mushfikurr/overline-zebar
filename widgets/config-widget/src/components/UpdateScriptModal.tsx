@@ -19,6 +19,9 @@ import { IconPicker } from './icons';
 import { ScriptItemContent } from './pages/widgets/script-launcher/components/ScriptItemContent';
 import { cn } from '../utils/cn';
 
+const dashedStyles =
+  'w-full border-dashed border-border/60 bg-transparent text-text-muted shadow-none hover:border-button-border hover:bg-background-deeper/40 hover:text-text focus-visible:border-primary';
+
 // Component for editing arguments
 export function ArgumentEditor({
   args,
@@ -46,18 +49,18 @@ export function ArgumentEditor({
     onChange([...args, '']);
   };
 
-  const addRowClassName =
-    'border-border/60 text-text-muted hover:border-button-border hover:bg-background-deeper/40 hover:text-text focus-visible:border-primary focus-visible:ring-primary/50 flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed text-xs outline-none transition-[background-color,border-color,box-shadow,color] duration-150 ease-out focus-visible:ring-[3px]';
-
   return (
     <FormField>
       <FieldTitle>Arguments</FieldTitle>
       <FieldInput className="space-y-2">
         {args.length === 0 ? (
-          <button
-            type="button"
+          <Button
+            variant="outline"
             onClick={handleAddArg}
-            className="border-border/60 hover:border-button-border hover:bg-background-deeper/40 focus-visible:border-primary focus-visible:ring-primary/50 group flex w-full flex-col items-center gap-1 rounded-md border border-dashed px-4 py-5 text-center outline-none transition-[background-color,border-color,box-shadow,color] duration-150 ease-out focus-visible:ring-[3px]"
+            className={cn(
+              dashedStyles,
+              'group flex flex-col items-center gap-1 px-4 py-5 text-center font-normal whitespace-normal'
+            )}
           >
             <Terminal
               className="text-text-muted group-hover:text-text size-5 transition-colors duration-150"
@@ -67,7 +70,7 @@ export function ArgumentEditor({
             <span className="text-text-muted text-pretty text-xs">
               Click to add flags that run after the command, like --new-window.
             </span>
-          </button>
+          </Button>
         ) : (
           <>
             {args.map((arg, index) => (
@@ -99,14 +102,14 @@ export function ArgumentEditor({
                 </Button>
               </div>
             ))}
-            <button
-              type="button"
+            <Button
+              variant="outline"
               onClick={handleAddArg}
-              className={cn(addRowClassName, 'h-7')}
+              className={cn(dashedStyles, 'gap-1.5 text-xs')}
             >
               <Plus className="size-3" />
               Add argument
-            </button>
+            </Button>
           </>
         )}
       </FieldInput>
