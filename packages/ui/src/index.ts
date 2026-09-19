@@ -74,6 +74,7 @@ export {
   PopoverPositioner,
 } from './components/popover/Popover';
 export * from './components/dialog';
+export * from './components/alert-dialog';
 export {
   Collapsible,
   CollapsibleTrigger,
