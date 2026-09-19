@@ -1,4 +1,5 @@
 import { Separator } from '@/components/common/Separator';
+import { cn } from '@/utils/cn';
 import { LauncherDeleteDialog } from '@/components/LauncherDeleteDialog';
 import { UpdateFolderModal } from '@/components/UpdateFolderModal';
 import { UpdateScriptModal } from '@/components/UpdateScriptModal';
@@ -189,9 +190,10 @@ export function ApplicationsTab() {
       <section className="space-y-4">
         <div
           ref={setRootDropRef}
-          className={`flex items-center justify-between gap-4 rounded-md transition-colors duration-150 ${
-            isOverRootDrop ? 'bg-primary/15' : ''
-          }`}
+          className={cn(
+            'flex items-center justify-between gap-4 rounded-md transition-colors duration-150',
+            isOverRootDrop && 'bg-primary/15'
+          )}
         >
           <FieldTitle>
             Your Scripts

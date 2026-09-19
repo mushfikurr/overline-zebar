@@ -3,6 +3,7 @@ import { Button } from '@overline-zebar/ui';
 import { useDroppable } from '@dnd-kit/core';
 import { ChevronLeft } from 'lucide-react';
 import { FolderSquare } from '@overline-zebar/config-widget';
+import { cn } from '../utils/cn';
 
 export function FolderHeader({
   title,
@@ -16,9 +17,10 @@ export function FolderHeader({
   return (
     <div
       ref={setNodeRef}
-      className={`bg-surface flex shrink-0 items-center gap-1.5 rounded-md px-2 pt-3 pb-1.5 transition-colors duration-150 ${
-        isOver ? 'bg-primary/15' : ''
-      }`}
+      className={cn(
+        'bg-surface flex shrink-0 items-center gap-1.5 rounded-md px-2 pt-3 pb-1.5 transition-colors duration-150',
+        isOver && 'bg-primary/15'
+      )}
     >
       <Button
         variant="ghost"

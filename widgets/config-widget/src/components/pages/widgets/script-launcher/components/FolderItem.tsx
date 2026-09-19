@@ -48,7 +48,7 @@ export function FolderItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`space-y-2 ${isGhostMover ? 'relative' : ''} ${className}`}
+      className={cn('space-y-2', isGhostMover && 'relative', className)}
     >
       <div data-launcher-id={folder.id} className="relative">
         <LauncherItemBadges

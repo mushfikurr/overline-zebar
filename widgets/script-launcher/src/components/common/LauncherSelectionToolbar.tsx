@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, ButtonGroupText } from '@overline-zebar/ui';
 import { FolderOutput, Trash2, X } from 'lucide-react';
+import { cn } from '../../utils/cn';
 
 export function LauncherSelectionToolbar({
   selectedIds,
@@ -22,13 +23,15 @@ export function LauncherSelectionToolbar({
 
   return (
     <ButtonGroup
-      className={`animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none ${
-        size === 'sm' ? 'h-6' : 'h-7'
-      } ${className ?? ''}`}
+      className={cn(
+        'animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none',
+        size === 'sm' ? 'h-6' : 'h-7',
+        className
+      )}
     >
       <ButtonGroupText
         role="status"
-        className={`select-none ${size === 'sm' ? 'text-xs' : ''}`}
+        className={cn('select-none', size === 'sm' && 'text-xs')}
       >
         <span className="text-text font-semibold tabular-nums leading-none">
           {selectedIds.length}

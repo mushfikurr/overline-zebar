@@ -17,6 +17,7 @@ import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 import { useTauriFileDrop } from '../hooks/useTauriFileDrop';
 import { IconPicker } from './icons';
 import { ScriptItemContent } from './pages/widgets/script-launcher/components/ScriptItemContent';
+import { cn } from '../utils/cn';
 
 // Component for editing arguments
 export function ArgumentEditor({
@@ -101,7 +102,7 @@ export function ArgumentEditor({
             <button
               type="button"
               onClick={handleAddArg}
-              className={`${addRowClassName} h-7`}
+              className={cn(addRowClassName, 'h-7')}
             >
               <Plus className="size-3" />
               Add argument
@@ -204,9 +205,10 @@ export function UpdateScriptModal({
               </div>
               <div
                 ref={commandRowRef}
-                className={`flex items-center gap-2 rounded-md transition-shadow duration-150 ${
-                  isDragOver ? 'ring-primary/60 ring-[3px]' : ''
-                }`}
+                className={cn(
+                  'flex items-center gap-2 rounded-md transition-shadow duration-150',
+                  isDragOver && 'ring-primary/60 ring-[3px]'
+                )}
               >
                 <Input
                   value={newApp.command}

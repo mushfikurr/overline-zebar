@@ -8,6 +8,7 @@ import {
   Input,
 } from '@overline-zebar/ui';
 import { useState } from 'react';
+import { cn } from '@/utils/cn';
 import SettingsPage from '../SettingsPage';
 import { Separator } from '../common/Separator';
 
@@ -70,7 +71,10 @@ export function ConfigManagement() {
       <div className="pb-1">
         {feedback && (
           <div
-            className={`px-3 py-1.5 rounded-md  border border-border ${feedback.type === 'success' ? 'bg-background' : 'bg-danger'}`}
+            className={cn(
+              'rounded-md border border-border px-3 py-1.5',
+              feedback.type === 'success' ? 'bg-background' : 'bg-danger'
+            )}
           >
             {feedback.message}
           </div>

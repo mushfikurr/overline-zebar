@@ -134,7 +134,7 @@ export function LauncherRow({
         ref={setNodeRef}
         data-launcher-id={item.id}
         style={style}
-        className={`relative ${className}`}
+        className={cn('relative', className)}
       >
         <LauncherItemBadges
           isFolderTarget={isFolderTarget}
@@ -146,9 +146,11 @@ export function LauncherRow({
             onOpenChange={() => onToggleExpanded?.(item.id)}
           >
             <div
-              className={`hover:bg-button/60 active:bg-button active:scale-[0.98] flex w-full items-center rounded-md transition-[background-color,box-shadow,transform] duration-150 ease-out ${
-                menuOpen ? 'bg-button/60' : ''
-              } ${stateClasses}`}
+              className={cn(
+                'hover:bg-button/60 active:bg-button active:scale-[0.98] flex w-full items-center rounded-md transition-[background-color,box-shadow,transform] duration-150 ease-out',
+                menuOpen && 'bg-button/60',
+                stateClasses
+              )}
             >
               {rowButton(
                 cn(

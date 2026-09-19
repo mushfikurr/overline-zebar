@@ -45,7 +45,7 @@ export function ScriptItem({
       ref={setNodeRef}
       data-launcher-id={app.id}
       style={style}
-      className={`relative ${className}`}
+      className={cn('relative', className)}
     >
       <LauncherItemBadges
         isFolderTarget={isFolderTarget}

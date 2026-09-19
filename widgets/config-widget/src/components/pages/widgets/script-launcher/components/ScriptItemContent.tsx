@@ -8,6 +8,7 @@ import {
   TooltipTrigger,
 } from '@overline-zebar/ui';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { cn } from '../../../../../utils/cn';
 
 export function ScriptItemContent({
   app,
@@ -64,11 +65,12 @@ export function ScriptItemContent({
                   type="button"
                   onClick={handleCopyCommand}
                   aria-label={`Copy command to clipboard: ${app.command}`}
-                  className={`-ml-1.5 block max-w-full cursor-pointer truncate rounded-sm bg-background-deeper px-1.5 py-0.5 text-xs leading-none outline-none transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-primary/50 ${
+                  className={cn(
+                    '-ml-1.5 block max-w-full cursor-pointer truncate rounded-sm bg-background-deeper px-1.5 py-0.5 text-xs leading-none outline-none transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-primary/50',
                     copied
                       ? 'text-success'
                       : 'text-text-muted hover:bg-button/60 hover:text-text'
-                  }`}
+                  )}
                 >
                   {app.command}
                 </button>

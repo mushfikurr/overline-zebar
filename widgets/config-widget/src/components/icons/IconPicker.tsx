@@ -124,11 +124,12 @@ function GridIcon({
       aria-label={name}
       aria-pressed={selected}
       onClick={() => onSelect(name)}
-      className={`rounded-sm flex size-8 items-center justify-center outline-none transition-[background-color,color,box-shadow] duration-150 ease-out focus-visible:ring-primary/50 focus-visible:ring-[3px] active:scale-[0.96] ${
+      className={cn(
+        'rounded-sm flex size-8 items-center justify-center outline-none transition-[background-color,color,box-shadow] duration-150 ease-out focus-visible:ring-primary/50 focus-visible:ring-[3px] active:scale-[0.96]',
         selected
           ? 'bg-primary/25 text-text ring-1 ring-primary-border'
           : 'text-text-muted hover:bg-button hover:text-text'
-      }`}
+      )}
     >
       {Icon ? (
         <Icon className="size-4" strokeWidth={1.75} />
@@ -360,9 +361,10 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
                     aria-hidden
                   />
                   <span
-                    className={`truncate ${
+                    className={cn(
+                      'truncate',
                       hasData && pickedName ? 'text-text' : 'text-text-muted'
-                    }`}
+                    )}
                   >
                     {hasData && pickedName ? pickedName : 'Choose image...'}
                   </span>
@@ -438,11 +440,13 @@ function BackgroundSwatch({
       aria-pressed={selected}
       onClick={onSelect}
       style={style}
-      className={`flex size-5 items-center justify-center rounded-[22%] outline-none transition-[box-shadow,transform] duration-150 ease-out focus-visible:ring-[3px] focus-visible:ring-primary/50 active:scale-95 ${
+      className={cn(
+        'flex size-5 items-center justify-center rounded-[22%] outline-none transition-[box-shadow,transform] duration-150 ease-out focus-visible:ring-[3px] focus-visible:ring-primary/50 active:scale-95',
         selected
           ? 'ring-primary-border ring-offset-surface ring-2 ring-offset-1'
-          : 'hover:scale-105'
-      } ${className}`}
+          : 'hover:scale-105',
+        className
+      )}
     >
       {children}
     </button>

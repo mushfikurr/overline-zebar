@@ -63,7 +63,7 @@ export function LauncherTile({
         ref={setNodeRef}
         data-launcher-id={item.id}
         style={style}
-        className={`relative ${className}`}
+        className={cn('relative', className)}
       >
         <LauncherItemBadges
           isFolderTarget={isFolderTarget}

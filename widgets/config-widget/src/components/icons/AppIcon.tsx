@@ -2,6 +2,7 @@ import { LauncherCommand } from '@overline-zebar/config';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ICON_NAME, useLucideIcon } from './lucide-icons';
+import { cn } from '../../utils/cn';
 
 export function AppIcon({
   app,
@@ -24,7 +25,7 @@ export function AppIcon({
       <img
         src={app.iconData}
         onError={() => setImageFailed(true)}
-        className={`${className ?? ''} object-contain`}
+        className={cn(className, 'object-contain')}
         alt=""
       />
     );
@@ -35,7 +36,7 @@ export function AppIcon({
       <img
         src={convertFileSrc(app.iconPath)}
         onError={() => setImageFailed(true)}
-        className={`${className ?? ''} object-contain`}
+        className={cn(className, 'object-contain')}
         alt=""
       />
     );
