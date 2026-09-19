@@ -59,7 +59,7 @@ export function ArgumentEditor({
             onClick={handleAddArg}
             className={cn(
               dashedStyles,
-              'group flex flex-col items-center gap-1 px-4 py-5 text-center font-normal whitespace-normal'
+              'group flex h-auto flex-col items-center gap-1 px-4 py-5 text-center font-normal whitespace-normal'
             )}
           >
             <Terminal
