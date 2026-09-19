@@ -72,7 +72,7 @@ export function ScriptItem({
           onActivate(app);
         }}
       >
-        <div className="flex items-center gap-3 px-3 py-2.5">
+        <div className="flex w-full items-center gap-3 px-3 py-2.5">
           <ScriptItemContent app={app} />
           <ItemActionButtons
             editTitle={`Edit ${app.title}`}

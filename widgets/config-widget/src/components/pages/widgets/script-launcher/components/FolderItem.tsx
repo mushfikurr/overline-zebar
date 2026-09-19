@@ -76,7 +76,7 @@ export function FolderItem({
             onActivate(folder);
           }}
         >
-          <div className="flex items-center gap-3 px-3 py-2.5">
+          <div className="flex w-full items-center gap-3 px-3 py-2.5">
             <FolderSquare className="size-9" glyphClassName="size-5" />
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">
               <span className="truncate text-sm font-medium leading-none">
