@@ -30,3 +30,5 @@ export {
   launcherItemStateClasses,
 } from './components/common/state-classes';
 export { LauncherSelectionToolbar } from './components/common/LauncherSelectionToolbar';
+export { LauncherContextMenu } from './components/LauncherContextMenu';
+export type { ItemHandlers } from './components/types';

@@ -6,7 +6,7 @@ import type {
 import type { MouseEvent as ReactMouseEvent } from 'react';
 
 export type ItemHandlers = {
-  onOpenFolder: (folder: LauncherFolder) => void;
+  onOpenFolder?: (folder: LauncherFolder) => void;
   onEditScript: (script: LauncherCommand) => void;
   onDelete: (id: string) => void;
   onRenameFolder: (folder: LauncherFolder) => void;

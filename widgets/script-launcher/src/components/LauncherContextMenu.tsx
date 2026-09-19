@@ -83,9 +83,11 @@ export function LauncherContextMenu({
         </ContextMenuLabel>
         {isLauncherFolder(item) ? (
           <>
-            <ContextMenuItem onClick={() => handlers.onOpenFolder(item)}>
-              Open
-            </ContextMenuItem>
+            {handlers.onOpenFolder && (
+              <ContextMenuItem onClick={() => handlers.onOpenFolder?.(item)}>
+                Open
+              </ContextMenuItem>
+            )}
             <ContextMenuItem onClick={() => handlers.onRenameFolder(item)}>
               Rename
             </ContextMenuItem>

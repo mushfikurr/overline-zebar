@@ -18,6 +18,7 @@ import {
   useLauncherApplications,
   useLauncherDnd,
   useLauncherSelection,
+  type ItemHandlers,
 } from '@overline-zebar/script-launcher';
 import {
   Button,
@@ -64,6 +65,11 @@ export function ApplicationsTab() {
 
   const scriptsByFolder = useMemo(() => groupScriptsByFolder(items), [items]);
 
+  const folderOptions = useMemo(
+    () => items.filter(isLauncherFolder),
+    [items]
+  );
+
   const folderScripts = useCallback(
     (folderId: string) => scriptsByFolder.get(folderId) ?? [],
     [scriptsByFolder]
@@ -107,6 +113,22 @@ export function ApplicationsTab() {
     clearSelection();
   };
 
+  const handlers: ItemHandlers = {
+    onEditScript: model.openScriptModalForEdit,
+    onDelete: model.requestDeleteScript,
+    onRenameFolder: model.openFolderModalForRename,
+    onDeleteFolder: model.requestDeleteFolder,
+    onMoveToTopLevel: (id) => handleMoveSelectedOut([id]),
+    onMoveToFolder: (ids, folderId) => {
+      model.moveScriptsIntoFolder(ids, folderId);
+      clearSelection();
+    },
+    onItemClick: handleItemClick,
+    onDeleteSelected: model.requestDeleteItems,
+    onMoveSelectedOut: handleMoveSelectedOut,
+    onClearSelection: clearSelection,
+  };
+
   const selectedInFolder = items.some(
     (item) => item.parentId && selectedIds.includes(item.id)
   );
@@ -119,6 +141,9 @@ export function ApplicationsTab() {
     <ScriptItem
       key={app.id}
       app={app}
+      folders={folderOptions}
+      selectedIds={selectedIds}
+      handlers={handlers}
       isDwellTarget={dnd.dwellTargetId === app.id}
       isFolderTarget={dnd.folderTargetId === app.id}
       isSelected={selectedIds.includes(app.id)}
@@ -245,6 +270,9 @@ export function ApplicationsTab() {
                     <FolderItem
                       key={item.id}
                       folder={item}
+                      folders={folderOptions}
+                      selectedIds={selectedIds}
+                      handlers={handlers}
                       count={folderScripts(item.id).length}
                       isDwellTarget={dnd.dwellTargetId === item.id}
                       isFolderTarget={dnd.folderTargetId === item.id}
