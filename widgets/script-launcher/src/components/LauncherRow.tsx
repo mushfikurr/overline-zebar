@@ -9,7 +9,7 @@ import {
   type LauncherDragDelta,
 } from '../hooks/useSortableItem';
 import { launcherItemStateClasses } from './common/state-classes';
-import { LauncherItemBadges } from './common/badges';
+import { LauncherItemBadges } from './common/LauncherItemBadges';
 import {
   Collapsible,
   CollapsibleContent,

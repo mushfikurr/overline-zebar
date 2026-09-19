@@ -24,7 +24,7 @@ export {
   FolderTargetBadge,
   LauncherItemBadges,
   SelectedBadge,
-} from './components/common/badges';
+} from './components/common/LauncherItemBadges';
 export {
   ITEM_STATE_CLASSES,
   launcherItemStateClasses,

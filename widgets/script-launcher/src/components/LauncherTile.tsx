@@ -7,7 +7,7 @@ import {
   useSortableItem,
   type LauncherDragDelta,
 } from '../hooks/useSortableItem';
-import { LauncherItemBadges } from './common/badges';
+import { LauncherItemBadges } from './common/LauncherItemBadges';
 import { ITEM_STATE_CLASSES } from './common/state-classes';
 import { ContextMenu, ContextMenuTrigger, itemVariants } from '@overline-zebar/ui';
 import { FolderSquare, IconSquare } from '@overline-zebar/config-widget';
