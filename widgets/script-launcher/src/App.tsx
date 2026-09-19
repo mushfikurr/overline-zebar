@@ -9,7 +9,7 @@ import type {
   LauncherItem,
 } from '@overline-zebar/config';
 import {
-  ConfirmDialog,
+  LauncherDeleteDialog,
   UpdateFolderModal,
   UpdateScriptModal,
 } from '@overline-zebar/config-widget';
@@ -41,6 +41,9 @@ import {
   ContextMenuGroup,
   ContextMenuItem,
   ContextMenuLabel,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
   ContextMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
@@ -62,12 +65,12 @@ import { CSS } from '@dnd-kit/utilities';
 import {
   ChevronDown,
   ChevronLeft,
+  FileCode,
   FilePlus2,
   Folder,
   FolderOutput,
   FolderPlus,
   Plus,
-  Search,
   Settings,
   Trash2,
   X,
@@ -103,6 +106,7 @@ type ItemHandlers = {
   onRenameFolder: (folder: LauncherFolder) => void;
   onDeleteFolder: (folder: LauncherFolder) => void;
   onMoveToTopLevel: (id: string) => void;
+  onMoveToFolder: (ids: string[], folderId: string) => void;
   onItemClick: (item: LauncherItem, event: ReactMouseEvent) => void;
   onDeleteSelected: (ids: string[]) => void;
   onMoveSelectedOut: (ids: string[]) => void;
@@ -135,6 +139,8 @@ function App() {
 
   // Search looks through every folder; otherwise the view shows the items
   // of the current folder (or the top level), in their persisted order.
+  // Like the settings tab, the top level also claims orphans whose parent
+  // folder no longer exists, so they never vanish from the launcher.
   const visibleItems = useMemo(() => {
     if (isSearching) {
       return applications.filter(
@@ -143,9 +149,15 @@ function App() {
           (!isLauncherFolder(item) && item.command.toLowerCase().includes(q))
       );
     }
-    return applications.filter(
-      (item) => (item.parentId ?? null) === currentFolderId
-    );
+    return applications.filter((item) => {
+      if ((item.parentId ?? null) === currentFolderId) return true;
+      if (currentFolderId === null && item.parentId) {
+        return !applications.some(
+          (other) => isLauncherFolder(other) && other.id === item.parentId
+        );
+      }
+      return false;
+    });
   }, [applications, q, isSearching, currentFolderId]);
 
   // ----- Selection (ctrl/shift-click) ------------------------------------
@@ -181,10 +193,11 @@ function App() {
   // Escape walks back out: selection first, then search, then the open
   // folder, then it closes the widget the same way a blur does.
   // Menus/modals handle their own Escape and stop it from reaching here,
-  // so they close first.
+  // so they close first; canceling a keyboard drag preventDefaults the
+  // event, which lands here too and must not close the widget.
   useEffect(() => {
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (event.key !== 'Escape' || event.defaultPrevented) return;
 
       if (selectedIds.length > 0) {
         clearSelection();
@@ -265,6 +278,16 @@ function App() {
     [applications]
   );
 
+  // Every folder, offered as a "Move to folder" target in the context
+  // menu — the keyboard path for the pointer-only spring-load dwell.
+  const folderOptions = useMemo(
+    () =>
+      applications.filter((item): item is LauncherFolder =>
+        isLauncherFolder(item)
+      ),
+    [applications]
+  );
+
   // A folder's direct children in their persisted order, rendered inline
   // when the folder is expanded with the chevron in list view.
   const childrenByFolder = useMemo(() => {
@@ -309,6 +332,9 @@ function App() {
   // ----- Focus navigation ----------------------------------------------
 
   const moveFocus = useCallback((event: KeyboardEvent, columns: number) => {
+    // Arrow keys drive the keyboard drag while one is active (the sensor
+    // preventDefaults them), so focus navigation must stand down.
+    if (event.defaultPrevented) return;
     const items = Array.from(
       (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
         ITEM_SELECTOR
@@ -369,6 +395,10 @@ function App() {
     onRenameFolder: model.openFolderModalForRename,
     onDeleteFolder: model.requestDeleteFolder,
     onMoveToTopLevel: (id) => handleMoveSelectedOut([id]),
+    onMoveToFolder: (ids, folderId) => {
+      model.moveScriptsIntoFolder(ids, folderId);
+      clearSelection();
+    },
     onItemClick: handleItemClick,
     onDeleteSelected: model.requestDeleteItems,
     onMoveSelectedOut: handleMoveSelectedOut,
@@ -386,6 +416,7 @@ function App() {
         key={rowItem.id}
         item={rowItem}
         folderCount={isFolder ? folderCounts.get(rowItem.id) : undefined}
+        folders={folderOptions}
         showCommand={showCommands}
         collapsePath={collapsePaths}
         dragEnabled={!isSearching}
@@ -415,7 +446,7 @@ function App() {
 
   const emptyState = (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
-      <Search className="text-text-muted size-8" strokeWidth={1.5} />
+      <FileCode className="text-text-muted size-8" strokeWidth={1.5} />
       <p className="text-wrap-balance text-sm font-medium">
         Scripts you add will show up here
       </p>
@@ -465,42 +496,10 @@ function App() {
         editing={model.editingFolderId !== null}
         onSubmit={model.commitFolder}
       />
-      <ConfirmDialog
-        open={model.pendingDelete !== null}
-        onOpenChange={(open) => {
-          if (!open) model.dismissDelete();
-        }}
-        title={
-          model.pendingDelete?.kind === 'folder'
-            ? 'Delete folder'
-            : model.pendingDelete?.kind === 'items'
-              ? 'Delete items'
-              : 'Delete script'
-        }
-        description={
-          model.pendingDelete?.kind === 'folder' ? (
-            <>
-              &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
-              The scripts inside are kept and moved to the top level.
-            </>
-          ) : model.pendingDelete?.kind === 'items' ? (
-            <>
-              This will remove {model.pendingDelete.ids.length}{' '}
-              {model.pendingDelete.ids.length === 1 ? 'item' : 'items'} from
-              your launcher. Scripts inside a removed folder are kept and moved
-              to the top level.
-            </>
-          ) : (
-            <>
-              This will remove &ldquo;
-              {model.pendingDelete?.app.title || 'Untitled script'}&rdquo; from
-              your launcher.
-            </>
-          )
-        }
-        confirmLabel="Delete"
-        destructive
+      <LauncherDeleteDialog
+        pendingDelete={model.pendingDelete}
         onConfirm={handleConfirmDelete}
+        onDismiss={model.dismissDelete}
       />
       <div className="flex h-full w-full flex-col">
         {applications.length > 0 && (
@@ -550,6 +549,15 @@ function App() {
                   </InputGroupAddon>
                 )}
               </InputGroup>
+              {/* Stable live region so filtering and the no-results state
+               * reach screen readers, not just the eye. */}
+              <span role="status" className="sr-only">
+                {isSearching
+                  ? visibleItems.length > 0
+                    ? `${visibleItems.length} ${visibleItems.length === 1 ? 'result' : 'results'}`
+                    : `No scripts match ${query}`
+                  : ''}
+              </span>
             </div>
           </>
         )}
@@ -589,6 +597,7 @@ function App() {
                     <LauncherTile
                       key={item.id}
                       item={item}
+                      folders={folderOptions}
                       dragEnabled={!isSearching}
                       isDwellTarget={dnd.dwellTargetId === item.id}
                       isFolderTarget={dnd.folderTargetId === item.id}
@@ -677,7 +686,7 @@ function App() {
                 size="icon"
                 title="Delete selected"
                 aria-label="Delete selected"
-                className={`${interactive} hover:text-danger`}
+                className={`${interactive} hover:bg-danger/15 hover:text-danger`}
                 onClick={() => model.requestDeleteItems(selectedIds)}
               >
                 <Trash2 />
@@ -725,6 +734,7 @@ function App() {
             onClick={handleOnSettingsClick}
             size="icon"
             title="Settings"
+            aria-label="Settings"
             className={interactive}
           >
             <Settings className="h-5 w-5" strokeWidth={2.5} />
@@ -766,7 +776,7 @@ function FolderHeader({
         {title}
       </span>
       {isOver && (
-        <span className="text-text-muted shrink-0 text-[10px] leading-none">
+        <span className="text-text-muted shrink-0 text-xs leading-none">
           Release to move out
         </span>
       )}
@@ -776,6 +786,7 @@ function FolderHeader({
 
 function LauncherTile({
   item,
+  folders,
   dragEnabled,
   isDwellTarget,
   isFolderTarget,
@@ -787,6 +798,7 @@ function LauncherTile({
   handlers,
 }: {
   item: LauncherItem;
+  folders: LauncherFolder[];
   dragEnabled: boolean;
   isDwellTarget: boolean;
   isFolderTarget: boolean;
@@ -879,6 +891,7 @@ function LauncherTile({
       </div>
       <LauncherContextMenu
         item={item}
+        folders={folders}
         selectedIds={selectedIds}
         handlers={handlers}
       />
@@ -889,6 +902,7 @@ function LauncherTile({
 function LauncherRow({
   item,
   folderCount,
+  folders,
   showCommand,
   collapsePath,
   dragEnabled,
@@ -907,6 +921,7 @@ function LauncherRow({
 }: {
   item: LauncherItem;
   folderCount?: number;
+  folders: LauncherFolder[];
   showCommand?: boolean;
   collapsePath?: boolean;
   dragEnabled: boolean;
@@ -973,8 +988,7 @@ function LauncherRow({
             {item.title}
           </span>
           {isFolder
-            ? showCommand &&
-              folderCount !== undefined && (
+            ? folderCount !== undefined && (
                 <span className="text-text-muted shrink-0 translate-y-[1px] text-xs leading-none">
                   {folderCount} {folderCount === 1 ? 'script' : 'scripts'}
                 </span>
@@ -1055,7 +1069,7 @@ function LauncherRow({
             </div>
             {children && (
               <CollapsibleContent>
-                <div className="mt-0.5 ml-[21px] flex flex-col gap-0.5 border-l border-border/50 pl-[13px]">
+                <div className="mt-0.5 ml-[21px] flex flex-col gap-0.5 pl-[13px]">
                   {children}
                 </div>
               </CollapsibleContent>
@@ -1073,6 +1087,7 @@ function LauncherRow({
       </div>
       <LauncherContextMenu
         item={item}
+        folders={folders}
         selectedIds={selectedIds}
         handlers={handlers}
       />
@@ -1082,10 +1097,12 @@ function LauncherRow({
 
 function LauncherContextMenu({
   item,
+  folders,
   selectedIds,
   handlers,
 }: {
   item: LauncherItem;
+  folders: LauncherFolder[];
   selectedIds: string[];
   handlers: ItemHandlers;
 }) {
@@ -1094,6 +1111,34 @@ function LauncherContextMenu({
   // included.
   const isBulk = selectedIds.length > 1 && selectedIds.includes(item.id);
 
+  // The keyboard path for tucking items into folders: the spring-load
+  // dwell only exists for the pointer. Folders already holding the item
+  // (or part of the selection) are not offered as targets.
+  const movableIds = isBulk ? selectedIds : [item.id];
+  const targetFolders = !isLauncherFolder(item)
+    ? folders.filter(
+        (folder) =>
+          !movableIds.includes(folder.id) &&
+          (isBulk || folder.id !== item.parentId)
+      )
+    : [];
+  const moveToFolderSubmenu =
+    targetFolders.length > 0 ? (
+      <ContextMenuSub>
+        <ContextMenuSubTrigger>Move to folder</ContextMenuSubTrigger>
+        <ContextMenuSubContent>
+          {targetFolders.map((folder) => (
+            <ContextMenuItem
+              key={folder.id}
+              onClick={() => handlers.onMoveToFolder(movableIds, folder.id)}
+            >
+              {folder.title}
+            </ContextMenuItem>
+          ))}
+        </ContextMenuSubContent>
+      </ContextMenuSub>
+    ) : null;
+
   if (isBulk) {
     return (
       <ContextMenuContent>
@@ -1101,6 +1146,7 @@ function LauncherContextMenu({
           <ContextMenuLabel className="max-w-56 truncate">
             {selectedIds.length} selected
           </ContextMenuLabel>
+          {moveToFolderSubmenu}
           {item.parentId && (
             <ContextMenuItem
               onClick={() => handlers.onMoveSelectedOut(selectedIds)}
@@ -1109,6 +1155,7 @@ function LauncherContextMenu({
             </ContextMenuItem>
           )}
           <ContextMenuItem
+            variant="destructive"
             onClick={() => handlers.onDeleteSelected(selectedIds)}
           >
             Delete {selectedIds.length} items
@@ -1132,7 +1179,10 @@ function LauncherContextMenu({
             <ContextMenuItem onClick={() => handlers.onRenameFolder(item)}>
               Rename
             </ContextMenuItem>
-            <ContextMenuItem onClick={() => handlers.onDeleteFolder(item)}>
+            <ContextMenuItem
+              variant="destructive"
+              onClick={() => handlers.onDeleteFolder(item)}
+            >
               Delete
             </ContextMenuItem>
           </>
@@ -1141,6 +1191,7 @@ function LauncherContextMenu({
             <ContextMenuItem onClick={() => handlers.onEditScript(item)}>
               Edit
             </ContextMenuItem>
+            {moveToFolderSubmenu}
             {item.parentId && (
               <ContextMenuItem
                 onClick={() => handlers.onMoveToTopLevel(item.id)}
@@ -1148,7 +1199,10 @@ function LauncherContextMenu({
                 Move to top level
               </ContextMenuItem>
             )}
-            <ContextMenuItem onClick={() => handlers.onDelete(item.id)}>
+            <ContextMenuItem
+              variant="destructive"
+              onClick={() => handlers.onDelete(item.id)}
+            >
               Delete
             </ContextMenuItem>
           </>

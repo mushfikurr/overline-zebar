@@ -30,7 +30,7 @@ export function DragStackOverlay({
       )}
       {children}
       {stacked && (
-        <span className="bg-primary animate-in fade-in zoom-in-75 duration-150 motion-reduce:animate-none pointer-events-none absolute -top-2 -right-2 z-10 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none text-white shadow-md">
+        <span className="bg-primary animate-in fade-in zoom-in-75 duration-150 motion-reduce:animate-none pointer-events-none absolute -top-2 -right-2 z-10 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-xs font-semibold leading-none text-white shadow-md">
           {count}
         </span>
       )}

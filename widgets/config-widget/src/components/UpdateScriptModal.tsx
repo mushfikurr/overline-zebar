@@ -206,7 +206,7 @@ export function UpdateScriptModal({
                   onChange={(e) =>
                     setNewApp({ ...newApp, command: e.target.value })
                   }
-                  placeholder="Shell command, AHK script, .exe directory, etc. Or drag a file here"
+                  placeholder="Shell command, AHK script, .exe path, etc. Or drag a file here"
                   aria-label="Command"
                 />
               </div>

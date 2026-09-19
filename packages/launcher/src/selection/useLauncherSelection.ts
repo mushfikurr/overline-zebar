@@ -123,7 +123,10 @@ export function useLauncherSelection({
   useEffect(() => {
     if (!escapeClears) return;
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') clearSelection();
+      // Canceling a keyboard drag preventDefaults Escape; the selection
+      // must survive the cancel.
+      if (event.defaultPrevented || event.key !== 'Escape') return;
+      clearSelection();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);

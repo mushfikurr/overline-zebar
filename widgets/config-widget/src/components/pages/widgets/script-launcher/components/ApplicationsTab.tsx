@@ -1,5 +1,5 @@
 import { Separator } from '@/components/common/Separator';
-import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import { LauncherDeleteDialog } from '@/components/LauncherDeleteDialog';
 import { UpdateFolderModal } from '@/components/UpdateFolderModal';
 import { UpdateScriptModal } from '@/components/UpdateScriptModal';
 import {
@@ -62,9 +62,12 @@ import {
 import { ScriptItemContent } from './ScriptItemContent';
 
 // Card state paint mirrors the launcher's shared tokens; the card adds a
-// gentler scale than the tile since it is a much larger surface.
+// gentler scale than the tile since it is a much larger surface. The
+// scale skips presses on the inner edit/delete buttons (:active fires on
+// ancestors, but those buttons carry their own press feedback). Focus
+// stays visible for the keyboard drag and Enter activation path.
 const CARD_BASE_CLASSES =
-  'cursor-pointer rounded-lg p-0 transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-button-border hover:bg-surface/40 active:scale-[0.99] motion-reduce:transition-[background-color,border-color,box-shadow]';
+  'cursor-pointer rounded-lg p-0 outline-none transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-button-border hover:bg-surface/40 [:active:not(:has(button:active))]:scale-[0.99] focus-visible:ring-[3px] focus-visible:ring-primary/50 motion-reduce:transition-[background-color,border-color,box-shadow]';
 
 function ScriptItem({
   app,
@@ -74,6 +77,7 @@ function ScriptItem({
   isGhostMover,
   dragDelta,
   onItemClick,
+  onActivate,
   onEdit,
   onRequestDelete,
 }: {
@@ -84,6 +88,7 @@ function ScriptItem({
   isGhostMover: boolean;
   dragDelta: { x: number; y: number } | null;
   onItemClick: (item: LauncherItem, event: ReactMouseEvent) => void;
+  onActivate: (item: LauncherItem) => void;
   onEdit: (app: LauncherCommand) => void;
   onRequestDelete: (app: LauncherCommand) => void;
 }) {
@@ -130,6 +135,15 @@ function ScriptItem({
                 : ''
         )}
         onClick={(event) => onItemClick(app, event)}
+        onKeyDown={(event) => {
+          // Enter opens the editor; Space is left to the keyboard drag
+          // sensor, which preventDefaults it before React sees it.
+          if (event.defaultPrevented || event.target !== event.currentTarget)
+            return;
+          if (event.key !== 'Enter') return;
+          event.preventDefault();
+          onActivate(app);
+        }}
       >
         <div className="flex items-center gap-3 px-3 py-2.5">
           <ScriptItemContent app={app} />
@@ -175,6 +189,7 @@ function FolderItem({
   isGhostMover,
   dragDelta,
   onItemClick,
+  onActivate,
   onRename,
   onRequestDelete,
   children,
@@ -187,6 +202,7 @@ function FolderItem({
   isGhostMover: boolean;
   dragDelta: { x: number; y: number } | null;
   onItemClick: (item: LauncherItem, event: ReactMouseEvent) => void;
+  onActivate: (item: LauncherItem) => void;
   onRename: (folder: LauncherFolder) => void;
   onRequestDelete: (folder: LauncherFolder) => void;
   children?: ReactNode;
@@ -236,6 +252,15 @@ function FolderItem({
                   : ''
           )}
           onClick={(event) => onItemClick(folder, event)}
+          onKeyDown={(event) => {
+            // Enter opens the rename dialog; Space is left to the
+            // keyboard drag sensor.
+            if (event.defaultPrevented || event.target !== event.currentTarget)
+              return;
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            onActivate(folder);
+          }}
         >
           <div className="flex items-center gap-3 px-3 py-2.5">
             <FolderSquare className="size-9" glyphClassName="size-5" />
@@ -383,10 +408,14 @@ export function ApplicationsTab() {
     selection: { selectedIds, clearSelection },
   });
 
-  // Ctrl/shift clicks select; plain clicks keep the tab's core
-  // interactions — edit a script, rename a folder.
+  // Ctrl/shift clicks select; plain clicks and Enter on a focused card
+  // keep the tab's core interactions — edit a script, rename a folder.
   const handleItemClick = (item: LauncherItem, event: ReactMouseEvent) => {
     if (handleSelectClick(item, event)) return;
+    handleItemActivate(item);
+  };
+
+  const handleItemActivate = (item: LauncherItem) => {
     clearSelection();
     if (isLauncherFolder(item)) model.openFolderModalForRename(item);
     else model.openScriptModalForEdit(item);
@@ -419,6 +448,7 @@ export function ApplicationsTab() {
       isGhostMover={dnd.isGhostMover(app.id)}
       dragDelta={dnd.dragDelta}
       onItemClick={handleItemClick}
+      onActivate={handleItemActivate}
       onEdit={model.openScriptModalForEdit}
       onRequestDelete={(appToDelete) =>
         model.requestDeleteScript(appToDelete.id)
@@ -514,7 +544,7 @@ export function ApplicationsTab() {
             )}
           </FieldTitle>
           {isOverRootDrop && (
-            <span className="text-text-muted mr-2 shrink-0 text-[10px] leading-none">
+            <span className="text-text-muted mr-2 shrink-0 text-xs leading-none">
               Release to move to top level
             </span>
           )}
@@ -543,7 +573,7 @@ export function ApplicationsTab() {
                   size="icon"
                   title="Delete selected"
                   aria-label="Delete selected"
-                  className="hover:text-danger"
+                  className="hover:bg-danger/15 hover:text-danger"
                   onClick={() => model.requestDeleteItems(selectedIds)}
                 >
                   <Trash2 />
@@ -602,6 +632,7 @@ export function ApplicationsTab() {
                       isGhostMover={dnd.isGhostMover(item.id)}
                       dragDelta={dnd.dragDelta}
                       onItemClick={handleItemClick}
+                      onActivate={handleItemActivate}
                       onRename={model.openFolderModalForRename}
                       onRequestDelete={(folder) =>
                         model.requestDeleteFolder(folder)
@@ -656,45 +687,13 @@ export function ApplicationsTab() {
         editing={model.editingFolderId !== null}
         onSubmit={model.commitFolder}
       />
-      <ConfirmDialog
-        open={model.pendingDelete !== null}
-        onOpenChange={(open) => {
-          if (!open) model.dismissDelete();
-        }}
-        title={
-          model.pendingDelete?.kind === 'folder'
-            ? 'Delete folder'
-            : model.pendingDelete?.kind === 'items'
-              ? 'Delete items'
-              : 'Delete script'
-        }
-        description={
-          model.pendingDelete?.kind === 'folder' ? (
-            <>
-              &ldquo;{model.pendingDelete.folder.title}&rdquo; will be removed.
-              The scripts inside are kept and moved to the top level.
-            </>
-          ) : model.pendingDelete?.kind === 'items' ? (
-            <>
-              This will remove {model.pendingDelete.ids.length}{' '}
-              {model.pendingDelete.ids.length === 1 ? 'item' : 'items'} from
-              your launcher. Scripts inside a removed folder are kept and moved
-              to the top level.
-            </>
-          ) : (
-            <>
-              This will remove &ldquo;
-              {model.pendingDelete?.app.title || 'Untitled script'}&rdquo; from
-              your launcher.
-            </>
-          )
-        }
-        confirmLabel="Delete"
-        destructive
+      <LauncherDeleteDialog
+        pendingDelete={model.pendingDelete}
         onConfirm={() => {
           model.confirmDelete();
           clearSelection();
         }}
+        onDismiss={model.dismissDelete}
       />
     </div>
   );

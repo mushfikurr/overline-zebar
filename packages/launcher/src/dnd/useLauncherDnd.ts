@@ -7,6 +7,7 @@ import {
   type LauncherItem,
 } from '@overline-zebar/config';
 import {
+  KeyboardSensor,
   PointerSensor,
   pointerWithin,
   rectIntersection,
@@ -17,6 +18,7 @@ import {
   type DragMoveEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LauncherApplicationsModel } from '../model/useLauncherApplications';
 
@@ -124,8 +126,19 @@ export function useLauncherDnd({
     };
   }, []);
 
+  // Space picks a draggable up, arrows move it, Space drops, Escape
+  // cancels. Enter stays free so it keeps activating buttons (launch,
+  // edit) instead of starting a drag.
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+      keyboardCodes: {
+        start: ['Space'],
+        end: ['Space', 'Enter', 'Tab'],
+        cancel: ['Escape'],
+      },
+    })
   );
 
   // Pointer-precise detection so "over" always reflects the item actually

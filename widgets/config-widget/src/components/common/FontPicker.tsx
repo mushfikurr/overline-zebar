@@ -8,8 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
 } from '@overline-zebar/ui';
-import { CheckIcon, FolderLock, LoaderIcon, SearchIcon } from 'lucide-react';
+import {
+  CheckIcon,
+  FolderLock,
+  LoaderIcon,
+  SearchIcon,
+  XIcon,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useFontPermission } from '../../hooks/useFontPermission';
 import { useLocalFontAccess } from '../../hooks/useLocalFontAccess';
@@ -121,13 +132,32 @@ export default function FontPicker() {
               Font used across all widgets. Defaults to Geist Mono.
             </DialogDescription>
           </DialogHeader>
-          <Input
-            leadingIcon={<SearchIcon className="size-3.5" />}
-            placeholder="Search fonts..."
-            value={query}
-            autoFocus
-            onChange={(e) => setQuery(e.target.value)}
-          />
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <InputGroupText>
+                <SearchIcon className="size-3.5" />
+              </InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
+              className="px-2"
+              placeholder="Search fonts..."
+              value={query}
+              autoFocus
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {query && (
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label="Clear search"
+                  title="Clear"
+                  onClick={() => setQuery('')}
+                >
+                  <XIcon />
+                </InputGroupButton>
+              </InputGroupAddon>
+            )}
+          </InputGroup>
           <div className="border-border bg-background-deeper h-[60vh] overflow-y-auto rounded-md border p-1">
             {fonts === null &&
               !loading &&

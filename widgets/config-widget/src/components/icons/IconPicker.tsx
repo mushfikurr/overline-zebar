@@ -13,7 +13,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
 } from '@overline-zebar/ui';
 import { Image, Search, Slash, X } from 'lucide-react';
 import {
@@ -313,9 +317,14 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
           padding run-out keeps the swatches clear of the scroll edge. */}
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="flex flex-col gap-4 pb-1 [@media(max-height:39.99rem)]:gap-3">
-              <div className="flex items-center gap-2">
-                <Input
-                  leadingIcon={<Search />}
+              <InputGroup>
+                <InputGroupAddon align="inline-start">
+                  <InputGroupText>
+                    <Search />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  className="px-2"
                   placeholder="Search icons..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -323,23 +332,19 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
                   spellCheck={false}
                   autoFocus
                 />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  title="Reset to default icon"
-                  aria-label="Reset to default icon"
-                  onClick={() =>
-                    onChange({
-                      ...value,
-                      icon: undefined,
-                      iconPath: undefined,
-                      iconData: undefined,
-                    })
-                  }
-                >
-                  <X />
-                </Button>
-              </div>
+                {query && (
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      size="icon-xs"
+                      aria-label="Clear search"
+                      title="Clear"
+                      onClick={() => setQuery('')}
+                    >
+                      <X />
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                )}
+              </InputGroup>
 
               <div
                 ref={attachScrollRef}
