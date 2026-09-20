@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { mergeProps } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react/use-render';
