@@ -1,17 +1,17 @@
 import { isLauncherFolder, type LauncherItem } from '@overline-zebar/config';
-import { useSortableItem } from '../hooks/useSortableItem';
-import { LauncherItemBadges } from './common/LauncherItemBadges';
-import { ITEM_STATE_CLASSES } from './common/state-classes';
+import { useSortableItem } from '@/components/dnd';
+import { LauncherItemBadges } from './components/LauncherItemBadges';
+import { ITEM_STATE_CLASSES } from './components/state-classes';
 import {
   ContextMenu,
   ContextMenuTrigger,
   itemVariants,
 } from '@overline-zebar/ui';
-import { FolderSquare, IconSquare } from './icons';
+import { FolderSquare, IconSquare } from '@/components/icons';
 import type { ComponentProps } from 'react';
 import { useState } from 'react';
 import { LauncherContextMenu } from './LauncherContextMenu';
-import { cn } from '../utils/cn';
+import { cn } from '@/utils/cn';
 import type { LauncherItemInteraction, LauncherListState } from './types';
 
 export function LauncherTile({

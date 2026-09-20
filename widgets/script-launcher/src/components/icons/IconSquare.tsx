@@ -1,6 +1,6 @@
 import { LauncherCommand } from '@overline-zebar/config';
-import { resolveIconBackground } from '../../utils/icon-backgrounds';
-import { cn } from '../../utils/cn';
+import { resolveIconBackground } from '@/utils/icon-backgrounds';
+import { cn } from '@/utils/cn';
 import { AppIcon } from './AppIcon';
 
 export function IconSquare({

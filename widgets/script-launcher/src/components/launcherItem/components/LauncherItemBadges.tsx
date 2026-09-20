@@ -1,5 +1,5 @@
 import { Check, FolderPlus } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 const badgeMotion =
   'animate-in fade-in zoom-in-75 duration-150 motion-reduce:animate-none';

@@ -2,7 +2,7 @@ import { LauncherCommand } from '@overline-zebar/config';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ICON_NAME, useLucideIcon } from './lucide-icons';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 export function AppIcon({
   app,

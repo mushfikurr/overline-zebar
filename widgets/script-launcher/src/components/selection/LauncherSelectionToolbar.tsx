@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, ButtonGroupText } from '@overline-zebar/ui';
 import { FolderOutput, Trash2, X } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 export function LauncherSelectionToolbar({
   selectedIds,

@@ -2,17 +2,22 @@ import { isLauncherFolder, useWidgetSetting } from '@overline-zebar/config';
 import type { LauncherFolder, LauncherItem } from '@overline-zebar/config';
 import { getFolderCounts } from './utils/transforms';
 import { getFolderContents, groupScriptsByFolder } from './utils/queries';
-import { LauncherDeleteDialog } from './components/LauncherDeleteDialog';
-import { UpdateFolderModal } from './components/UpdateFolderModal';
-import { UpdateScriptModal } from './components/UpdateScriptModal';
-import { isFileDialogActive } from './utils/fileDialogGuard';
+import { useLauncherApplications } from './hooks/useLauncherApplications';
+import {
+  LauncherDeleteDialog,
+  UpdateFolderModal,
+  UpdateScriptModal,
+} from './components/modals';
 import {
   DragStackOverlay,
-  LauncherSelectionToolbar,
-  useLauncherApplications,
+  LauncherDragPreview,
   useLauncherDnd,
+} from './components/dnd';
+import {
+  LauncherSelectionToolbar,
   useLauncherSelection,
-} from './index';
+} from './components/selection';
+import { isFileDialogActive } from './utils/fileDialogGuard';
 import {
   Button,
   DropdownMenu,
@@ -44,16 +49,14 @@ import {
   LauncherEmptyState,
   LauncherFolderEmptyState,
   LauncherNoResults,
-} from './components/EmptyStates';
-import { FolderHeader } from './components/FolderHeader';
-import { LauncherDragPreview } from './components/LauncherDragPreview';
-import { LauncherRow } from './components/LauncherRow';
-import { LauncherTile } from './components/LauncherTile';
+} from './components/emptyStates';
+import { FolderHeader } from './components/folderHeader';
+import { LauncherRow, LauncherTile } from './components/launcherItem';
 import type {
   ItemHandlers,
   LauncherItemInteraction,
   LauncherListState,
-} from './components/types';
+} from './components/launcherItem';
 import { useRovingFocus } from './hooks/useRovingFocus';
 import { launch } from './utils/launch';
 

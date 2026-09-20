@@ -1,7 +1,7 @@
 import { Skeleton } from '@overline-zebar/ui';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { searchLucideIcons, useLucideIcon } from './lucide-icons';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 const BATCH_SIZE = 96;
 

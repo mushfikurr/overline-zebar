@@ -7,7 +7,7 @@ import {
   moveBlockToLevel,
   reorderBlockWithinLevel,
   reorderWithinLevel,
-} from '../utils/transforms';
+} from '@/utils/transforms';
 import {
   KeyboardSensor,
   PointerSensor,
@@ -22,7 +22,7 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { LauncherApplicationsModel } from './useLauncherApplications';
+import type { LauncherApplicationsModel } from '@/hooks/useLauncherApplications';
 
 export const FOLDER_HOVER_DELAY = 600;
 

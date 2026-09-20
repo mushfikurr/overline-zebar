@@ -1,9 +1,9 @@
-import { PARENT_DROP_ID } from '../hooks/useLauncherDnd';
+import { PARENT_DROP_ID } from '@/components/dnd';
 import { Button } from '@overline-zebar/ui';
 import { useDroppable } from '@dnd-kit/core';
 import { ChevronLeft } from 'lucide-react';
-import { FolderSquare } from './icons';
-import { cn } from '../utils/cn';
+import { FolderSquare } from '@/components/icons';
+import { cn } from '@/utils/cn';
 
 export function FolderHeader({
   title,

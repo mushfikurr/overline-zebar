@@ -3,7 +3,7 @@ import type {
   LauncherFolder,
   LauncherItem,
 } from '@overline-zebar/config';
-import type { LauncherDragDelta } from '../hooks/useSortableItem';
+import type { LauncherDragDelta } from '@/components/dnd';
 import type { MouseEvent as ReactMouseEvent } from 'react';
 
 export type LauncherListState = {

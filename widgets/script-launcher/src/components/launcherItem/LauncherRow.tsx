@@ -1,8 +1,8 @@
 import { isLauncherFolder, type LauncherItem } from '@overline-zebar/config';
-import { collapseCommandPath } from '../utils/queries';
-import { useSortableItem } from '../hooks/useSortableItem';
-import { launcherItemStateClasses } from './common/state-classes';
-import { LauncherItemBadges } from './common/LauncherItemBadges';
+import { collapseCommandPath } from '@/utils/queries';
+import { useSortableItem } from '@/components/dnd';
+import { launcherItemStateClasses } from './components/state-classes';
+import { LauncherItemBadges } from './components/LauncherItemBadges';
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,12 +11,12 @@ import {
   ContextMenuTrigger,
   itemVariants,
 } from '@overline-zebar/ui';
-import { FolderSquare, IconSquare } from './icons';
+import { FolderSquare, IconSquare } from '@/components/icons';
 import { ChevronDown } from 'lucide-react';
 import type { ComponentProps, ReactNode } from 'react';
 import { useState } from 'react';
 import { LauncherContextMenu } from './LauncherContextMenu';
-import { cn } from '../utils/cn';
+import { cn } from '@/utils/cn';
 import type { LauncherItemInteraction, LauncherListState } from './types';
 
 export function LauncherRow({

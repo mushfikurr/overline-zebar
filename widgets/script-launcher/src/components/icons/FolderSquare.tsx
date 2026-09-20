@@ -1,6 +1,6 @@
-import { resolveIconBackground } from '../../utils/icon-backgrounds';
+import { resolveIconBackground } from '@/utils/icon-backgrounds';
 import { Folder } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 export function FolderSquare({
   className = '',

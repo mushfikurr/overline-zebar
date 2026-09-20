@@ -3,7 +3,7 @@ import {
   defaultIconBackground,
   iconBackgroundGradient,
   iconBackgroundPresets,
-} from '../../utils/icon-backgrounds';
+} from '@/utils/icon-backgrounds';
 import {
   Button,
   Dialog,
@@ -24,13 +24,13 @@ import { BackgroundSwatch } from './BackgroundSwatch';
 import { CustomIconPreview } from './CustomIconPreview';
 import { IconSquare } from './IconSquare';
 import { LucideIconGrid } from './LucideIconGrid';
-import { cn } from '../../utils/cn';
-import { beginFileDialog, endFileDialog } from '../../utils/fileDialogGuard';
+import { cn } from '@/utils/cn';
+import { beginFileDialog, endFileDialog } from '@/utils/fileDialogGuard';
 import {
   IMAGE_ACCEPT,
   MAX_ICON_BYTES,
   readFileAsDataUrl,
-} from '../../utils/imageFile';
+} from '@/utils/imageFile';
 
 export interface IconPickerValue {
   icon?: string;

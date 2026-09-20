@@ -1,5 +1,5 @@
-import type { PendingLauncherDelete } from '../hooks/useLauncherApplications';
-import { ConfirmDialog } from './ConfirmDialog';
+import type { PendingLauncherDelete } from '@/hooks/useLauncherApplications';
+import { ConfirmDialog } from './components/ConfirmDialog';
 
 export function LauncherDeleteDialog({
   pendingDelete,

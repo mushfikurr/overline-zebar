@@ -14,10 +14,10 @@ import {
 } from '@overline-zebar/ui';
 import { Plus, Terminal, Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
-import { useTauriFileDrop } from '../hooks/useTauriFileDrop';
-import { IconPicker } from './icons';
-import { ScriptItemContent } from './ScriptItemContent';
-import { cn } from '../utils/cn';
+import { useTauriFileDrop } from '@/hooks/useTauriFileDrop';
+import { IconPicker } from '@/components/icons';
+import { ScriptItemContent } from './components/ScriptItemContent';
+import { cn } from '@/utils/cn';
 
 const dashedStyles =
   'w-full border-dashed border-border/60 bg-transparent text-text-muted shadow-none hover:border-button-border hover:bg-background-deeper/40 hover:text-text focus-visible:border-primary';

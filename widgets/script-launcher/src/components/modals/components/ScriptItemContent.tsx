@@ -7,9 +7,9 @@ import {
   TooltipTrigger,
 } from '@overline-zebar/ui';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
-import { AppIcon, IconSquare } from './icons';
-import { cn } from '../utils/cn';
-import { resolveIconBackground } from '../utils/icon-backgrounds';
+import { AppIcon, IconSquare } from '@/components/icons';
+import { cn } from '@/utils/cn';
+import { resolveIconBackground } from '@/utils/icon-backgrounds';
 
 export function ScriptItemContent({
   app,

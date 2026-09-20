@@ -5,7 +5,7 @@ import {
   useState,
   type MouseEvent as ReactMouseEvent,
 } from 'react';
-import type { LauncherApplicationsModel } from './useLauncherApplications';
+import type { LauncherApplicationsModel } from '@/hooks/useLauncherApplications';
 
 export function useLauncherSelection({
   model,
