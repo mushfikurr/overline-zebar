@@ -9,15 +9,6 @@ export { useThemePreview } from './hooks/useThemePreview';
 export { useThemes } from './hooks/useThemes';
 export { useSystemThemeSync } from './hooks/useSystemThemeSync';
 export { generateThemeFromColor } from './utils/theme-generator';
-export {
-  ICON_BACKGROUND_NONE,
-  defaultIconBackground,
-  iconBackgroundGradient,
-  iconBackgroundPresets,
-  resolveIconBackground,
-  type IconBackgroundPreset,
-  type ResolvedIconBackground,
-} from './utils/icon-backgrounds';
 export type {
   AllWidgetSettings,
   AppSettings,

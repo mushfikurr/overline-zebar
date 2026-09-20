@@ -1,4 +1,5 @@
-import { LauncherCommand, resolveIconBackground } from '@overline-zebar/config';
+import { LauncherCommand } from '@overline-zebar/config';
+import { resolveIconBackground } from '../../utils/icon-backgrounds';
 import { cn } from '../../utils/cn';
 import { AppIcon } from './AppIcon';
 

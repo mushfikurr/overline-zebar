@@ -1,4 +1,4 @@
-import { resolveIconBackground } from '@overline-zebar/config';
+import { resolveIconBackground } from '../../utils/icon-backgrounds';
 import { Folder } from 'lucide-react';
 import { cn } from '../../utils/cn';
 

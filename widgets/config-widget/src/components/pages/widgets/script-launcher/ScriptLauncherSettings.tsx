@@ -5,7 +5,7 @@ export function ScriptLauncherSettings() {
   return (
     <SettingsPage
       title="Script Launcher"
-      description="Manage the scripts shown in your launcher widget."
+      description="Configure how the launcher widget displays your scripts."
     >
       <ApplicationsTab />
     </SettingsPage>

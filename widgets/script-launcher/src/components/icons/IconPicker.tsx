@@ -3,7 +3,7 @@ import {
   defaultIconBackground,
   iconBackgroundGradient,
   iconBackgroundPresets,
-} from '@overline-zebar/config';
+} from '../../utils/icon-backgrounds';
 import {
   Button,
   Dialog,

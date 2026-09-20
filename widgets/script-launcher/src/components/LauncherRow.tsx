@@ -1,13 +1,6 @@
-import {
-  isLauncherFolder,
-  type LauncherFolder,
-  type LauncherItem,
-} from '@overline-zebar/config';
+import { isLauncherFolder, type LauncherItem } from '@overline-zebar/config';
 import { collapseCommandPath } from '../utils/queries';
-import {
-  useSortableItem,
-  type LauncherDragDelta,
-} from '../hooks/useSortableItem';
+import { useSortableItem } from '../hooks/useSortableItem';
 import { launcherItemStateClasses } from './common/state-classes';
 import { LauncherItemBadges } from './common/LauncherItemBadges';
 import {
@@ -18,53 +11,49 @@ import {
   ContextMenuTrigger,
   itemVariants,
 } from '@overline-zebar/ui';
-import { FolderSquare, IconSquare } from '@overline-zebar/config-widget';
+import { FolderSquare, IconSquare } from './icons';
 import { ChevronDown } from 'lucide-react';
 import type { ComponentProps, ReactNode } from 'react';
 import { useState } from 'react';
 import { LauncherContextMenu } from './LauncherContextMenu';
 import { cn } from '../utils/cn';
-import type { ItemHandlers } from './types';
+import type { LauncherItemInteraction, LauncherListState } from './types';
 
 export function LauncherRow({
   item,
+  list,
+  interaction,
   folderCount,
-  folders,
-  showCommand,
-  collapsePath,
-  dragEnabled,
-  isDwellTarget,
-  isFolderTarget,
-  isSelected,
-  isEnterTarget,
-  isGhostMover,
-  dragDelta,
-  selectedIds,
-  handlers,
   canExpand,
   isExpanded,
   onToggleExpanded,
   children,
 }: {
   item: LauncherItem;
+  list: LauncherListState;
+  interaction: LauncherItemInteraction;
   folderCount?: number;
-  folders: LauncherFolder[];
-  showCommand?: boolean;
-  collapsePath?: boolean;
-  dragEnabled: boolean;
-  isDwellTarget: boolean;
-  isFolderTarget: boolean;
-  isSelected: boolean;
-  isEnterTarget: boolean;
-  isGhostMover: boolean;
-  dragDelta: LauncherDragDelta;
-  selectedIds: string[];
-  handlers: ItemHandlers;
   canExpand?: boolean;
   isExpanded?: boolean;
   onToggleExpanded?: (folderId: string) => void;
   children?: ReactNode;
 }) {
+  const {
+    folders,
+    selectedIds,
+    handlers,
+    dragEnabled,
+    dragDelta,
+    showCommand,
+    collapsePath,
+  } = list;
+  const {
+    isSelected,
+    isDwellTarget,
+    isFolderTarget,
+    isEnterTarget,
+    isGhostMover,
+  } = interaction;
   const isFolder = isLauncherFolder(item);
   const [menuOpen, setMenuOpen] = useState(false);
   const { dragProps, setNodeRef, style, className } = useSortableItem({

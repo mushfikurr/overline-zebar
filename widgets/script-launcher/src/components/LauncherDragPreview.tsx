@@ -1,6 +1,6 @@
 import { isLauncherFolder, type LauncherItem } from '@overline-zebar/config';
 import { collapseCommandPath } from '../utils/queries';
-import { FolderSquare, IconSquare } from '@overline-zebar/config-widget';
+import { FolderSquare, IconSquare } from './icons';
 
 export function LauncherDragPreview({
   item,

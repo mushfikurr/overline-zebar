@@ -16,7 +16,7 @@ import { Plus, Terminal, Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 import { useTauriFileDrop } from '../hooks/useTauriFileDrop';
 import { IconPicker } from './icons';
-import { ScriptItemContent } from './pages/widgets/script-launcher/components/ScriptItemContent';
+import { ScriptItemContent } from './ScriptItemContent';
 import { cn } from '../utils/cn';
 
 const dashedStyles =

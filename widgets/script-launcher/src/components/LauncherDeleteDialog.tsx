@@ -1,5 +1,5 @@
-import type { PendingLauncherDelete } from '@overline-zebar/script-launcher';
-import { ConfirmDialog } from './common/ConfirmDialog';
+import type { PendingLauncherDelete } from '../hooks/useLauncherApplications';
+import { ConfirmDialog } from './ConfirmDialog';
 
 export function LauncherDeleteDialog({
   pendingDelete,

@@ -2,7 +2,7 @@ import { PARENT_DROP_ID } from '../hooks/useLauncherDnd';
 import { Button } from '@overline-zebar/ui';
 import { useDroppable } from '@dnd-kit/core';
 import { ChevronLeft } from 'lucide-react';
-import { FolderSquare } from '@overline-zebar/config-widget';
+import { FolderSquare } from './icons';
 import { cn } from '../utils/cn';
 
 export function FolderHeader({

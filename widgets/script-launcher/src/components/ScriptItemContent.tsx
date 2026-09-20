@@ -1,5 +1,4 @@
-import { AppIcon, IconSquare } from '../../../../icons';
-import { LauncherCommand, resolveIconBackground } from '@overline-zebar/config';
+import { LauncherCommand } from '@overline-zebar/config';
 import {
   Tooltip,
   TooltipPopup,
@@ -8,7 +7,9 @@ import {
   TooltipTrigger,
 } from '@overline-zebar/ui';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
-import { cn } from '../../../../../utils/cn';
+import { AppIcon, IconSquare } from './icons';
+import { cn } from '../utils/cn';
+import { resolveIconBackground } from '../utils/icon-backgrounds';
 
 export function ScriptItemContent({
   app,

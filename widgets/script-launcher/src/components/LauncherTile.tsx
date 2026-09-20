@@ -1,47 +1,36 @@
-import {
-  isLauncherFolder,
-  type LauncherFolder,
-  type LauncherItem,
-} from '@overline-zebar/config';
-import {
-  useSortableItem,
-  type LauncherDragDelta,
-} from '../hooks/useSortableItem';
+import { isLauncherFolder, type LauncherItem } from '@overline-zebar/config';
+import { useSortableItem } from '../hooks/useSortableItem';
 import { LauncherItemBadges } from './common/LauncherItemBadges';
 import { ITEM_STATE_CLASSES } from './common/state-classes';
-import { ContextMenu, ContextMenuTrigger, itemVariants } from '@overline-zebar/ui';
-import { FolderSquare, IconSquare } from '@overline-zebar/config-widget';
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  itemVariants,
+} from '@overline-zebar/ui';
+import { FolderSquare, IconSquare } from './icons';
 import type { ComponentProps } from 'react';
 import { useState } from 'react';
 import { LauncherContextMenu } from './LauncherContextMenu';
 import { cn } from '../utils/cn';
-import type { ItemHandlers } from './types';
+import type { LauncherItemInteraction, LauncherListState } from './types';
 
 export function LauncherTile({
   item,
-  folders,
-  dragEnabled,
-  isDwellTarget,
-  isFolderTarget,
-  isSelected,
-  isEnterTarget,
-  isGhostMover,
-  dragDelta,
-  selectedIds,
-  handlers,
+  list,
+  interaction,
 }: {
   item: LauncherItem;
-  folders: LauncherFolder[];
-  dragEnabled: boolean;
-  isDwellTarget: boolean;
-  isFolderTarget: boolean;
-  isSelected: boolean;
-  isEnterTarget: boolean;
-  isGhostMover: boolean;
-  dragDelta: LauncherDragDelta;
-  selectedIds: string[];
-  handlers: ItemHandlers;
+  list: LauncherListState;
+  interaction: LauncherItemInteraction;
 }) {
+  const { folders, selectedIds, handlers, dragEnabled, dragDelta } = list;
+  const {
+    isSelected,
+    isDwellTarget,
+    isFolderTarget,
+    isEnterTarget,
+    isGhostMover,
+  } = interaction;
   const isFolder = isLauncherFolder(item);
   const [menuOpen, setMenuOpen] = useState(false);
   const { dragProps, setNodeRef, style, className } = useSortableItem({

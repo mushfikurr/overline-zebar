@@ -1,7 +1,6 @@
 export {
   useLauncherApplications,
   type LauncherApplicationsModel,
-  type PendingLauncherDelete,
 } from './hooks/useLauncherApplications';
 export {
   useLauncherDnd,
@@ -31,4 +30,8 @@ export {
 } from './components/common/state-classes';
 export { LauncherSelectionToolbar } from './components/common/LauncherSelectionToolbar';
 export { LauncherContextMenu } from './components/LauncherContextMenu';
-export type { ItemHandlers } from './components/types';
+export type {
+  ItemHandlers,
+  LauncherItemInteraction,
+  LauncherListState,
+} from './components/types';

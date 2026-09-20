@@ -2,12 +2,10 @@ import { isLauncherFolder, useWidgetSetting } from '@overline-zebar/config';
 import type { LauncherFolder, LauncherItem } from '@overline-zebar/config';
 import { getFolderCounts } from './utils/transforms';
 import { getFolderContents, groupScriptsByFolder } from './utils/queries';
-import {
-  isFileDialogActive,
-  LauncherDeleteDialog,
-  UpdateFolderModal,
-  UpdateScriptModal,
-} from '@overline-zebar/config-widget';
+import { LauncherDeleteDialog } from './components/LauncherDeleteDialog';
+import { UpdateFolderModal } from './components/UpdateFolderModal';
+import { UpdateScriptModal } from './components/UpdateScriptModal';
+import { isFileDialogActive } from './utils/fileDialogGuard';
 import {
   DragStackOverlay,
   LauncherSelectionToolbar,
@@ -51,7 +49,11 @@ import { FolderHeader } from './components/FolderHeader';
 import { LauncherDragPreview } from './components/LauncherDragPreview';
 import { LauncherRow } from './components/LauncherRow';
 import { LauncherTile } from './components/LauncherTile';
-import type { ItemHandlers } from './components/types';
+import type {
+  ItemHandlers,
+  LauncherItemInteraction,
+  LauncherListState,
+} from './components/types';
 import { useRovingFocus } from './hooks/useRovingFocus';
 import { launch } from './utils/launch';
 
@@ -245,6 +247,24 @@ function App() {
     onClearSelection: clearSelection,
   };
 
+  const list: LauncherListState = {
+    folders: folderOptions,
+    selectedIds,
+    handlers,
+    dragEnabled: !isSearching,
+    dragDelta: dnd.dragDelta,
+    showCommand: showCommands,
+    collapsePath: collapsePaths,
+  };
+
+  const interactionFor = (entry: LauncherItem): LauncherItemInteraction => ({
+    isSelected: selectedIds.includes(entry.id),
+    isDwellTarget: dnd.dwellTargetId === entry.id,
+    isFolderTarget: dnd.folderTargetId === entry.id,
+    isEnterTarget: entry.id === enterTargetId,
+    isGhostMover: dnd.isGhostMover(entry.id),
+  });
+
   const renderRow = (rowItem: LauncherItem) => {
     const isFolder = isLauncherFolder(rowItem);
     const children = isFolder && !isSearching ? folderChildren(rowItem.id) : [];
@@ -253,19 +273,9 @@ function App() {
       <LauncherRow
         key={rowItem.id}
         item={rowItem}
+        list={list}
+        interaction={interactionFor(rowItem)}
         folderCount={isFolder ? folderCounts.get(rowItem.id) : undefined}
-        folders={folderOptions}
-        showCommand={showCommands}
-        collapsePath={collapsePaths}
-        dragEnabled={!isSearching}
-        isDwellTarget={dnd.dwellTargetId === rowItem.id}
-        isFolderTarget={dnd.folderTargetId === rowItem.id}
-        isSelected={selectedIds.includes(rowItem.id)}
-        isEnterTarget={rowItem.id === enterTargetId}
-        isGhostMover={dnd.isGhostMover(rowItem.id)}
-        dragDelta={dnd.dragDelta}
-        selectedIds={selectedIds}
-        handlers={handlers}
         canExpand={children.length > 0}
         isExpanded={expandedFolderIds.includes(rowItem.id)}
         onToggleExpanded={toggleFolderExpanded}
@@ -397,16 +407,8 @@ function App() {
                     <LauncherTile
                       key={item.id}
                       item={item}
-                      folders={folderOptions}
-                      dragEnabled={!isSearching}
-                      isDwellTarget={dnd.dwellTargetId === item.id}
-                      isFolderTarget={dnd.folderTargetId === item.id}
-                      isSelected={selectedIds.includes(item.id)}
-                      isEnterTarget={item.id === enterTargetId}
-                      isGhostMover={dnd.isGhostMover(item.id)}
-                      dragDelta={dnd.dragDelta}
-                      selectedIds={selectedIds}
-                      handlers={handlers}
+                      list={list}
+                      interaction={interactionFor(item)}
                     />
                   ))}
                 </div>
