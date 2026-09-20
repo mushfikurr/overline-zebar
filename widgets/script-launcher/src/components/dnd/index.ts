@@ -8,3 +8,4 @@ export {
 export { useSortableItem, type LauncherDragDelta } from './useSortableItem';
 export { LauncherDragPreview } from './LauncherDragPreview';
 export { DragStackOverlay } from './DragStackOverlay';
+export { LauncherDragOverlayContent } from './LauncherDragOverlayContent';
