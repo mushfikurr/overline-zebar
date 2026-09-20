@@ -3,8 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,7 +14,6 @@
     "@overline-zebar/config": "workspace:*",
     "@overline-zebar/tailwind": "workspace:*",
     "@overline-zebar/ui": "workspace:*",
-    "@radix-ui/react-slider": "^1.2.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",

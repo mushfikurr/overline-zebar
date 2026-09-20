@@ -71,9 +71,7 @@ export function configReducer(state: State, action: Action): State {
         ...freshConfig,
         app: {
           ...freshConfig.app,
-          themes: freshConfig.app.themes.filter(
-            (t) => t.id !== action.themeId
-          ),
+          themes: freshConfig.app.themes.filter((t) => t.id !== action.themeId),
         },
       };
       configService.saveConfig(newState);

@@ -10,10 +10,15 @@ function ContextMenu({
 }
 
 function ContextMenuTrigger({
+  className,
   ...props
 }: React.ComponentProps<typeof BaseContextMenu.Trigger>) {
   return (
-    <BaseContextMenu.Trigger data-slot="context-menu-trigger" {...props} />
+    <BaseContextMenu.Trigger
+      data-slot="context-menu-trigger"
+      className={cn('select-none', className)}
+      {...props}
+    />
   );
 }
 
@@ -53,24 +58,32 @@ function ContextMenuRadioGroup({
 
 function ContextMenuContent({
   className,
-  sideOffset = 4,
   align = 'start',
+  alignOffset = 4,
+  side = 'right',
+  sideOffset = 0,
   ...props
-}: React.ComponentProps<typeof BaseContextMenu.Popup> & {
-  align?: BaseContextMenu.Positioner.Props['align'];
-  sideOffset?: BaseContextMenu.Positioner.Props['sideOffset'];
-}) {
+}: React.ComponentProps<typeof BaseContextMenu.Popup> &
+  Pick<
+    BaseContextMenu.Positioner.Props,
+    'align' | 'alignOffset' | 'side' | 'sideOffset'
+  >) {
   return (
     <ContextMenuPortal>
       <ContextMenuPositioner
-        className="max-h-[var(--available-height)]"
+        className="isolate z-50 outline-none"
         align={align}
+        alignOffset={alignOffset}
+        side={side}
         sideOffset={sideOffset}
       >
         <BaseContextMenu.Popup
           data-slot="context-menu-content"
           className={cn(
-            'bg-surface/75 text-text data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[12rem] origin-[var(--transform-origin)] overflow-hidden rounded-md border border-border p-1 shadow-md outline-none backdrop-blur-2xl',
+            'relative z-50 max-h-[var(--available-height)] min-w-36 origin-[var(--transform-origin)] overflow-x-hidden overflow-y-auto rounded-lg bg-surface/70 p-1 text-text shadow-md ring-1 ring-text/10 duration-100 outline-none',
+            'before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:rounded-[inherit] before:backdrop-blur-2xl before:backdrop-saturate-150',
+            'data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
+            'data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
             className
           )}
           {...props}
@@ -95,7 +108,7 @@ function ContextMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "hover:bg-button/80 focus:bg-button/80 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive-foreground data-[variant=destructive]:*:[svg]:!text-destructive focus:data-[variant=destructive]:*:[svg]:!text-destructive-foreground [&_svg:not([class*='text-'])]:text-text-muted relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-all select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:transition-all [&_svg:not([class*='size-'])]:size-4",
+        "group/context-menu-item relative flex cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-none select-none focus:bg-text/10 data-[inset]:pl-7 data-[variant=destructive]:text-danger data-[variant=destructive]:focus:bg-text/10 data-[variant=destructive]:focus:text-danger data-[variant=destructive]:[&_svg:not([class*='text-'])]:text-danger data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -107,21 +120,25 @@ function ContextMenuCheckboxItem({
   className,
   children,
   checked,
+  inset,
   ...props
-}: React.ComponentProps<typeof BaseContextMenu.CheckboxItem>) {
+}: React.ComponentProps<typeof BaseContextMenu.CheckboxItem> & {
+  inset?: boolean;
+}) {
   return (
     <BaseContextMenu.CheckboxItem
       data-slot="context-menu-checkbox-item"
+      data-inset={inset}
       className={cn(
-        "hover:bg-button/80 focus:bg-button/80 relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-none select-none focus:bg-text/10 data-[inset]:pl-7 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       checked={checked}
       {...props}
     >
-      <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="pointer-events-none absolute right-2">
         <BaseContextMenu.CheckboxItemIndicator>
-          <CheckIcon className="size-4" />
+          <CheckIcon />
         </BaseContextMenu.CheckboxItemIndicator>
       </span>
       {children}
@@ -132,18 +149,22 @@ function ContextMenuCheckboxItem({
 function ContextMenuRadioItem({
   className,
   children,
+  inset,
   ...props
-}: React.ComponentProps<typeof BaseContextMenu.RadioItem>) {
+}: React.ComponentProps<typeof BaseContextMenu.RadioItem> & {
+  inset?: boolean;
+}) {
   return (
     <BaseContextMenu.RadioItem
       data-slot="context-menu-radio-item"
+      data-inset={inset}
       className={cn(
-        "hover:bg-button/80 focus:bg-button/80 relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-none select-none focus:bg-text/10 data-[inset]:pl-7 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
     >
-      <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="pointer-events-none absolute right-2">
         <BaseContextMenu.RadioItemIndicator>
           <CircleIcon className="size-2 fill-current" />
         </BaseContextMenu.RadioItemIndicator>
@@ -165,7 +186,7 @@ function ContextMenuLabel({
       data-slot="context-menu-label"
       data-inset={inset}
       className={cn(
-        'text-muted-foreground px-2 py-1.5 text-xs font-medium data-[inset]:pl-8',
+        'px-1.5 py-1 text-xs font-medium text-text-muted data-[inset]:pl-7',
         className
       )}
       {...props}
@@ -180,7 +201,7 @@ function ContextMenuSeparator({
   return (
     <BaseContextMenu.Separator
       data-slot="context-menu-separator"
-      className={cn('bg-border -mx-1 my-1 h-px', className)}
+      className={cn('-mx-1 my-1 h-px bg-text/5', className)}
       {...props}
     />
   );
@@ -194,7 +215,7 @@ function ContextMenuShortcut({
     <span
       data-slot="context-menu-shortcut"
       className={cn(
-        'text-muted-foreground ml-auto text-xs tracking-widest',
+        'text-text-muted ml-auto text-xs tracking-widest group-focus/context-menu-item:text-text',
         className
       )}
       {...props}
@@ -223,60 +244,44 @@ function ContextMenuSubTrigger({
       data-slot="context-menu-sub-trigger"
       data-inset={inset}
       className={cn(
-        'hover:bg-button/80 focus:bg-button/80 data-popup-open:bg-button/80 flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[inset]:pl-8',
+        "flex cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-none select-none focus:bg-text/10 data-[inset]:pl-7 data-[popup-open]:bg-text/10 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      <ChevronRightIcon className="ml-auto" />
     </BaseContextMenu.SubmenuTrigger>
   );
 }
 
 function ContextMenuSubContent({
-  className,
-  sideOffset = 0,
-  align = 'start',
   ...props
-}: React.ComponentProps<typeof BaseContextMenu.Popup> & {
-  align?: BaseContextMenu.Positioner.Props['align'];
-  sideOffset?: BaseContextMenu.Positioner.Props['sideOffset'];
-}) {
+}: React.ComponentProps<typeof ContextMenuContent>) {
   return (
-    <ContextMenuPortal>
-      <ContextMenuPositioner
-        className="max-h-[var(--available-height)]"
-        sideOffset={sideOffset}
-        align={align}
-      >
-        <BaseContextMenu.Popup
-          data-slot="context-menu-sub-content"
-          className={cn(
-            'bg-surface/75 text-text data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[12rem] origin-[var(--transform-origin)] overflow-hidden rounded-md border border-border p-1 shadow-md backdrop-blur-2xl',
-            className
-          )}
-          {...props}
-        />
-      </ContextMenuPositioner>
-    </ContextMenuPortal>
+    <ContextMenuContent
+      data-slot="context-menu-sub-content"
+      className="shadow-lg"
+      side="right"
+      {...props}
+    />
   );
 }
 
 export {
   ContextMenu,
+  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuShortcut,
-  ContextMenuTrigger,
-  ContextMenuSeparator,
-  ContextMenuGroup,
-  ContextMenuLabel,
   ContextMenuCheckboxItem,
-  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
   ContextMenuPortal,
   ContextMenuPositioner,
-  ContextMenuRadioItem,
+  ContextMenuRadioGroup,
   ContextMenuSub,
   ContextMenuSubTrigger,
   ContextMenuSubContent,

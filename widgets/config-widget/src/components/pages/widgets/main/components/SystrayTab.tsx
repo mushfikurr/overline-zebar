@@ -4,7 +4,11 @@ import {
   FieldInput,
   FieldTitle,
   FormField,
-  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
   Switch,
   Table,
   TableBody,
@@ -18,7 +22,7 @@ import {
   TooltipPositioner,
   TooltipTrigger,
 } from '@overline-zebar/ui';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import * as zebar from 'zebar';
 
@@ -28,10 +32,7 @@ const providers = zebar.createProviderGroup({
 
 function SystrayTab() {
   const [output, setOutput] = useState(providers.outputMap);
-  const [showSystray, setShowSystray] = useWidgetSetting(
-    'main',
-    'showSystray'
-  );
+  const [showSystray, setShowSystray] = useWidgetSetting('main', 'showSystray');
   const [pinnedSystrayIcons, setPinnedSystrayIcons] = useWidgetSetting(
     'main',
     'pinnedSystrayIcons'
@@ -71,10 +72,7 @@ function SystrayTab() {
       <FormField switch>
         <FieldTitle>Show System Tray</FieldTitle>
         <FieldInput>
-          <Switch
-            checked={showSystray}
-            onCheckedChange={setShowSystray}
-          />
+          <Switch checked={showSystray} onCheckedChange={setShowSystray} />
         </FieldInput>
         <FieldDescription>
           Show the system tray icons in the topbar.
@@ -91,16 +89,33 @@ function SystrayTab() {
           between expanded or collapsed.
         </p>
       </div>
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 size-4 -translate-y-1/2 text-text-muted" />
-        <Input
-          className="pl-9"
+      <InputGroup>
+        <InputGroupAddon align="inline-start">
+          <InputGroupText>
+            <Search />
+          </InputGroupText>
+        </InputGroupAddon>
+        <InputGroupInput
+          className="px-2"
           placeholder="Search tray icons..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           disabled={!showSystray}
         />
-      </div>
+        {search && (
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton
+              size="icon-xs"
+              aria-label="Clear search"
+              title="Clear"
+              disabled={!showSystray}
+              onClick={() => setSearch('')}
+            >
+              <X />
+            </InputGroupButton>
+          </InputGroupAddon>
+        )}
+      </InputGroup>
       <div className="min-h-0 min-w-0 flex-1 overflow-y-auto rounded-md border border-border bg-background-deeper">
         <Table>
           <TableHeader>
