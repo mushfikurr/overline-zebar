@@ -18,32 +18,7 @@ export function ScriptItemContent({
   app: LauncherCommand;
   fallbackTitle?: string;
 }) {
-  const visibleArgs = app.args.filter((arg) => arg.trim() !== '');
   const { background } = resolveIconBackground(app.iconColor);
-  const [copied, setCopied] = useState(false);
-  const copyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (copyResetTimer.current !== null) clearTimeout(copyResetTimer.current);
-    };
-  }, []);
-
-  const handleCopyCommand: MouseEventHandler<HTMLButtonElement> = (event) => {
-    event.stopPropagation();
-    navigator.clipboard
-      .writeText(app.command)
-      .then(() => {
-        setCopied(true);
-        if (copyResetTimer.current !== null) {
-          clearTimeout(copyResetTimer.current);
-        }
-        copyResetTimer.current = setTimeout(() => setCopied(false), 1000);
-      })
-      .catch((err) => {
-        console.error('Failed to copy command to clipboard:', err);
-      });
-  };
 
   return (
     <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -58,47 +33,83 @@ export function ScriptItemContent({
         <span className="max-w-full truncate text-sm font-medium leading-none">
           {fallbackTitle}
         </span>
-        {app.command && (
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <button
-                  type="button"
-                  onClick={handleCopyCommand}
-                  aria-label={`Copy command to clipboard: ${app.command}`}
-                  className={cn(
-                    '-ml-1.5 block max-w-full cursor-pointer truncate rounded-sm bg-background-deeper px-1.5 py-0.5 text-xs leading-none outline-none transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-primary/50',
-                    copied
-                      ? 'text-success'
-                      : 'text-text-muted hover:bg-button/60 hover:text-text'
-                  )}
-                >
-                  {app.command}
-                </button>
-              }
-            />
-            <TooltipPortal>
-              <TooltipPositioner>
-                <TooltipPopup>
-                  {copied ? 'Copied to clipboard' : app.command}
-                </TooltipPopup>
-              </TooltipPositioner>
-            </TooltipPortal>
-          </Tooltip>
-        )}
-        {visibleArgs.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {visibleArgs.map((arg, index) => (
-              <span
-                key={index}
-                className="border-border bg-background-deeper text-text w-fit rounded-md border px-1.5 py-0.5 text-xs leading-none"
-              >
-                {arg}
-              </span>
-            ))}
-          </div>
-        )}
+        <CopyableCommand command={app.command} />
+        <ArgsList args={app.args} />
       </div>
     </div>
+  );
+}
+
+function ArgsList({ args }: { args: string[] }) {
+  const visibleArgs = args.filter((arg) => arg.trim() !== '');
+  if (visibleArgs.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-1">
+      {visibleArgs.map((arg, index) => (
+        <span
+          key={index}
+          className="border-border bg-background-deeper text-text w-fit rounded-md border px-1.5 py-0.5 text-xs leading-none"
+        >
+          {arg}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function CopyableCommand({ command }: { command: string }) {
+  const [copied, setCopied] = useState(false);
+  const copyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyResetTimer.current !== null) clearTimeout(copyResetTimer.current);
+    };
+  }, []);
+
+  if (!command) return null;
+
+  const handleCopyCommand: MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.stopPropagation();
+    navigator.clipboard
+      .writeText(command)
+      .then(() => {
+        setCopied(true);
+        if (copyResetTimer.current !== null) {
+          clearTimeout(copyResetTimer.current);
+        }
+        copyResetTimer.current = setTimeout(() => setCopied(false), 1000);
+      })
+      .catch((err) => {
+        console.error('Failed to copy command to clipboard:', err);
+      });
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <button
+            type="button"
+            onClick={handleCopyCommand}
+            aria-label={`Copy command to clipboard: ${command}`}
+            className={cn(
+              '-ml-1.5 block max-w-full cursor-pointer truncate rounded-sm bg-background-deeper px-1.5 py-0.5 text-xs leading-none outline-none transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-primary/50',
+              copied
+                ? 'text-success'
+                : 'text-text-muted hover:bg-button/60 hover:text-text'
+            )}
+          >
+            {command}
+          </button>
+        }
+      />
+      <TooltipPortal>
+        <TooltipPositioner>
+          <TooltipPopup>{copied ? 'Copied to clipboard' : command}</TooltipPopup>
+        </TooltipPositioner>
+      </TooltipPortal>
+    </Tooltip>
   );
 }
