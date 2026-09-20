@@ -15,12 +15,7 @@ import {
   InputGroupText,
   Spinner,
 } from '@overline-zebar/ui';
-import {
-  CheckIcon,
-  FolderLock,
-  SearchIcon,
-  XIcon,
-} from 'lucide-react';
+import { CheckIcon, FolderLock, SearchIcon, XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useFontPermission } from '../../hooks/useFontPermission';
 import { useLocalFontAccess } from '../../hooks/useLocalFontAccess';
