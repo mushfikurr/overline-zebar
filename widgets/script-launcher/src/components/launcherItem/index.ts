@@ -1,6 +1,7 @@
 export { LauncherRow } from './LauncherRow';
 export { LauncherTile } from './LauncherTile';
 export { LauncherContextMenu } from './LauncherContextMenu';
+export { LauncherGridView, LauncherListView } from './LauncherItemsView';
 export type {
   ItemHandlers,
   LauncherItemInteraction,

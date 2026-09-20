@@ -30,11 +30,7 @@ import {
   InputGroupInput,
 } from '@overline-zebar/ui';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
-import {
-  SortableContext,
-  rectSortingStrategy,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { FilePlus2, FolderPlus, Plus, Settings, X } from 'lucide-react';
 import {
   useCallback,
@@ -51,7 +47,11 @@ import {
   LauncherNoResults,
 } from './components/emptyStates';
 import { FolderHeader } from './components/folderHeader';
-import { LauncherRow, LauncherTile } from './components/launcherItem';
+import {
+  LauncherGridView,
+  LauncherListView,
+  LauncherRow,
+} from './components/launcherItem';
 import type {
   ItemHandlers,
   LauncherItemInteraction,
@@ -173,6 +173,24 @@ function App() {
     clearSelection();
     setQuery('');
     setCurrentFolderId(folderId);
+  };
+
+  const handleFolderBack = () => {
+    clearSelection();
+    setCurrentFolderId(null);
+  };
+
+  const handleSearchSubmit = () => {
+    const first = visibleItems[0];
+    if (!first) return;
+
+    if (isLauncherFolder(first)) {
+      handleOpenFolder(first.id);
+      return;
+    }
+
+    clearSelection();
+    launch(first, output.glazewm);
   };
 
   const handleConfirmDelete = () => {
@@ -319,63 +337,20 @@ function App() {
         onDismiss={model.dismissDelete}
       />
       <div className="flex h-full w-full flex-col">
-        {applications.length > 0 && (
-          <>
-            {currentFolder && !isSearching && (
-              <FolderHeader
-                title={currentFolder.title}
-                onBack={() => {
-                  clearSelection();
-                  setCurrentFolderId(null);
-                }}
-              />
-            )}
-            <div className="bg-surface flex shrink-0 items-center p-2 pb-0.5">
-              <InputGroup>
-                <InputGroupInput
-                  className="px-2"
-                  placeholder="Search scripts..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && visibleItems.length > 0) {
-                      const first = visibleItems[0];
-                      if (!first) return;
-                      if (isLauncherFolder(first)) {
-                        handleOpenFolder(first.id);
-                      } else {
-                        clearSelection();
-                        launch(first, output.glazewm);
-                      }
-                    }
-                  }}
-                  autoFocus
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                {query && (
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      size="icon-xs"
-                      aria-label="Clear search"
-                      title="Clear (Esc)"
-                      onClick={() => setQuery('')}
-                    >
-                      <X />
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                )}
-              </InputGroup>
-              <span role="status" className="sr-only">
-                {isSearching
-                  ? visibleItems.length > 0
-                    ? `${visibleItems.length} ${visibleItems.length === 1 ? 'result' : 'results'}`
-                    : `No scripts match ${query}`
-                  : ''}
-              </span>
-            </div>
-          </>
+        {currentFolder && !isSearching && (
+          <FolderHeader
+            title={currentFolder.title}
+            onBack={handleFolderBack}
+          />
         )}
+        <LauncherSearchBar
+          hasApplications={applications.length > 0}
+          query={query}
+          resultCount={visibleItems.length}
+          isSearching={isSearching}
+          onQueryChange={setQuery}
+          onSubmit={handleSearchSubmit}
+        />
 
         <DndContext
           sensors={dnd.sensors}
@@ -389,67 +364,36 @@ function App() {
             className="bg-surface min-h-0 min-w-0 flex-1 overflow-y-auto"
             onClick={handleBackgroundClick}
           >
-            {applications.length === 0 && <LauncherEmptyState />}
-            {applications.length > 0 &&
-              visibleItems.length === 0 &&
-              isSearching && <LauncherNoResults query={query} />}
-            {applications.length > 0 &&
-              visibleItems.length === 0 &&
-              !isSearching &&
-              currentFolder && <LauncherFolderEmptyState />}
-            {visibleItems.length > 0 && view !== 'list' && (
-              <SortableContext
-                items={visibleItems.map((item) => item.id)}
-                strategy={rectSortingStrategy}
-              >
-                <div
-                  className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] content-start gap-1 p-2"
-                  onKeyDown={handleGridKeyDown}
-                >
-                  {visibleItems.map((item) => (
-                    <LauncherTile
-                      key={item.id}
-                      item={item}
-                      list={list}
-                      interaction={interactionFor(item)}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            )}
-            {visibleItems.length > 0 && view === 'list' && (
-              <SortableContext
-                items={visibleItems.map((item) => item.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div
-                  className="flex flex-col gap-0.5 p-2"
-                  onKeyDown={handleListKeyDown}
-                >
-                  {visibleItems.map((item) => renderRow(item))}
-                </div>
-              </SortableContext>
+            <LauncherItemsEmptyState
+              hasApplications={applications.length > 0}
+              hasVisibleItems={visibleItems.length > 0}
+              isSearching={isSearching}
+              query={query}
+              inFolder={currentFolder !== undefined}
+            />
+            {view === 'list' ? (
+              <LauncherListView
+                items={visibleItems}
+                renderRow={renderRow}
+                onKeyDown={handleListKeyDown}
+              />
+            ) : (
+              <LauncherGridView
+                items={visibleItems}
+                list={list}
+                interactionFor={interactionFor}
+                onKeyDown={handleGridKeyDown}
+              />
             )}
           </div>
 
           <DragOverlay>
-            {dnd.activeItem ? (
-              <DragStackOverlay
-                count={
-                  dnd.multiDragIds !== null ? dnd.multiDragIds.length : null
-                }
-              >
-                <LauncherDragPreview
-                  item={dnd.activeItem}
-                  view={view}
-                  width={dnd.activeRect?.width}
-                  showCommand={
-                    showCommands === true && !isLauncherFolder(dnd.activeItem)
-                  }
-                  collapsePath={collapsePaths === true}
-                />
-              </DragStackOverlay>
-            ) : null}
+            <LauncherDragOverlayContent
+              dnd={dnd}
+              view={view}
+              showCommand={showCommands === true}
+              collapsePath={collapsePaths === true}
+            />
           </DragOverlay>
         </DndContext>
 
@@ -471,32 +415,11 @@ function App() {
             onClear={clearSelection}
             className="mr-auto"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={(triggerProps: ComponentProps<typeof Button>) => (
-                <Button
-                  {...triggerProps}
-                  size="icon"
-                  title="Add"
-                  aria-label="Add"
-                >
-                  <Plus className="h-5 w-5" strokeWidth={2.5} />
-                </Button>
-              )}
-            />
-            <DropdownMenuContent side="top" align="end" sideOffset={6}>
-              <DropdownMenuItem onClick={handleOpenModalForAdd}>
-                <FilePlus2 />
-                Add script
-              </DropdownMenuItem>
-              {!currentFolderId && (
-                <DropdownMenuItem onClick={model.openFolderModalForAdd}>
-                  <FolderPlus />
-                  Add folder
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <LauncherAddMenu
+            onAddScript={handleOpenModalForAdd}
+            onAddFolder={model.openFolderModalForAdd}
+            canAddFolder={!currentFolderId}
+          />
           <Button
             onClick={handleOnSettingsClick}
             size="icon"
@@ -509,6 +432,172 @@ function App() {
       </div>
     </div>
   );
+}
+
+function LauncherSearchBar({
+  hasApplications,
+  query,
+  resultCount,
+  isSearching,
+  onQueryChange,
+  onSubmit,
+}: {
+  hasApplications: boolean;
+  query: string;
+  resultCount: number;
+  isSearching: boolean;
+  onQueryChange: (value: string) => void;
+  onSubmit: () => void;
+}) {
+  if (!hasApplications) return null;
+
+  return (
+    <div className="bg-surface flex shrink-0 items-center p-2 pb-0.5">
+      <InputGroup>
+        <InputGroupInput
+          className="px-2"
+          placeholder="Search scripts..."
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' || resultCount === 0) return;
+            onSubmit();
+          }}
+          autoFocus
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <ClearSearchButton query={query} onClear={() => onQueryChange('')} />
+      </InputGroup>
+      <span role="status" className="sr-only">
+        <SearchStatusText
+          isSearching={isSearching}
+          resultCount={resultCount}
+          query={query}
+        />
+      </span>
+    </div>
+  );
+}
+
+function ClearSearchButton({
+  query,
+  onClear,
+}: {
+  query: string;
+  onClear: () => void;
+}) {
+  if (!query) return null;
+
+  return (
+    <InputGroupAddon align="inline-end">
+      <InputGroupButton
+        size="icon-xs"
+        aria-label="Clear search"
+        title="Clear (Esc)"
+        onClick={onClear}
+      >
+        <X />
+      </InputGroupButton>
+    </InputGroupAddon>
+  );
+}
+
+function SearchStatusText({
+  isSearching,
+  resultCount,
+  query,
+}: {
+  isSearching: boolean;
+  resultCount: number;
+  query: string;
+}) {
+  if (!isSearching) return null;
+  if (resultCount === 0) return `No scripts match ${query}`;
+  return `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`;
+}
+
+function LauncherAddMenu({
+  onAddScript,
+  onAddFolder,
+  canAddFolder,
+}: {
+  onAddScript: () => void;
+  onAddFolder: () => void;
+  canAddFolder: boolean;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={(triggerProps: ComponentProps<typeof Button>) => (
+          <Button {...triggerProps} size="icon" title="Add" aria-label="Add">
+            <Plus className="h-5 w-5" strokeWidth={2.5} />
+          </Button>
+        )}
+      />
+      <DropdownMenuContent side="top" align="end" sideOffset={6}>
+        <DropdownMenuItem onClick={onAddScript}>
+          <FilePlus2 />
+          Add script
+        </DropdownMenuItem>
+        {canAddFolder && (
+          <DropdownMenuItem onClick={onAddFolder}>
+            <FolderPlus />
+            Add folder
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function LauncherDragOverlayContent({
+  dnd,
+  view,
+  showCommand,
+  collapsePath,
+}: {
+  dnd: ReturnType<typeof useLauncherDnd>;
+  view: 'grid' | 'list' | undefined;
+  showCommand?: boolean;
+  collapsePath?: boolean;
+}) {
+  const item = dnd.activeItem;
+  if (!item) return null;
+
+  return (
+    <DragStackOverlay
+      count={dnd.multiDragIds !== null ? dnd.multiDragIds.length : null}
+    >
+      <LauncherDragPreview
+        item={item}
+        view={view}
+        width={dnd.activeRect?.width}
+        showCommand={showCommand && !isLauncherFolder(item)}
+        collapsePath={collapsePath}
+      />
+    </DragStackOverlay>
+  );
+}
+
+function LauncherItemsEmptyState({
+  hasApplications,
+  hasVisibleItems,
+  isSearching,
+  query,
+  inFolder,
+}: {
+  hasApplications: boolean;
+  hasVisibleItems: boolean;
+  isSearching: boolean;
+  query: string;
+  inFolder: boolean;
+}) {
+  if (!hasApplications) return <LauncherEmptyState />;
+  if (hasVisibleItems) return null;
+  if (isSearching) return <LauncherNoResults query={query} />;
+  if (inFolder) return <LauncherFolderEmptyState />;
+  return null;
 }
 
 export default App;
