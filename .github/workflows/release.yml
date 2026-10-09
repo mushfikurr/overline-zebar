@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
         with:
@@ -47,6 +49,30 @@ jobs:
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve release notes
+        id: notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [ -n "$RELEASE_BODY" ]; then
+            NOTES="$RELEASE_BODY"
+          else
+            PREV_TAG=$(gh release list --limit 5 --json tagName --jq '[.[] | select(.tagName != env.TAG)][0].tagName')
+            RANGE="${PREV_TAG:+$PREV_TAG..}$TAG"
+            NOTES=$(git log "$RANGE" --no-merges --pretty=format:'- %s' | grep -E '^- (feat|fix|refactor|perf|revert)' || true)
+            if [ -z "$NOTES" ]; then
+              NOTES=$(git log "$RANGE" --no-merges --pretty=format:'- %s' | head -n 20)
+            fi
+          fi
+          {
+            echo 'notes<<RELEASE_NOTES_EOF'
+            echo "$NOTES"
+            echo 'RELEASE_NOTES_EOF'
+          } >> "$GITHUB_OUTPUT"
+          gh release edit "$TAG" --notes "$NOTES"
 
       - name: Stage widget pack
         run: |
@@ -86,11 +112,11 @@ jobs:
           ZEBAR_PUBLISH_TOKEN: ${{ secrets.ZEBAR_PUBLISH_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
           RELEASE_URL: ${{ github.event.release.html_url }}
-          RELEASE_NOTES: ${{ github.event.release.body }}
+          NOTES: ${{ steps.notes.outputs.notes }}
         run: |
           xvfb-run -a zebar publish \
             --pack-config ./zpack.json \
             --version-override "${{ steps.version.outputs.version }}" \
             --commit-sha "$GITHUB_SHA" \
-            --release-notes "$RELEASE_NOTES" \
+            --release-notes "$NOTES" \
             --release-url "$RELEASE_URL"
