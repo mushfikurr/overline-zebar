@@ -62,7 +62,7 @@ jobs:
           else
             PREV_TAG=$(gh release list --limit 5 --json tagName --jq '[.[] | select(.tagName != env.TAG)][0].tagName')
             RANGE="${PREV_TAG:+$PREV_TAG..}$TAG"
-            NOTES=$(git log "$RANGE" --no-merges --pretty=format:'- %s' | grep -E '^- (feat|fix|refactor|perf|revert)' || true)
+            NOTES=$(git log "$RANGE" --no-merges --pretty=format:'- %s' | grep -vE '^- (ci|chore|style|docs)([:(]|$)' | head -n 40 || true)
             if [ -z "$NOTES" ]; then
               NOTES=$(git log "$RANGE" --no-merges --pretty=format:'- %s' | head -n 20)
             fi
