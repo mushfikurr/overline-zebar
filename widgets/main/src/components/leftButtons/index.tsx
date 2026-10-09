@@ -46,7 +46,10 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
             exit={{ opacity: 0 }}
             className="flex items-center h-full"
           >
-            <Button size="sm" onClick={() => glazewm.runCommand('wm-toggle-pause')}>
+            <Button
+              size="sm"
+              onClick={() => glazewm.runCommand('wm-toggle-pause')}
+            >
               paused
             </Button>
           </motion.div>
