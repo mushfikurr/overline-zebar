@@ -13,6 +13,9 @@ export type {
   AllWidgetSettings,
   AppSettings,
   LabelColor,
+  LauncherCommand,
+  LauncherFolder,
+  LauncherItem,
   MainWidgetSettings,
   ProviderSettings,
   RootConfig,
@@ -21,3 +24,6 @@ export type {
   Threshold,
   WidgetSettingsMap,
 } from './types';
+export { isLauncherFolder } from './types';
+export { generateId } from './utils/generateId';
+export { logger } from './utils/logger';

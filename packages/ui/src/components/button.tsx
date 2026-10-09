@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { mergeProps } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react/use-render';
@@ -7,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-all duration-200 outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5 shrink-0 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm rounded-md font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-[background-color,border-color,color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5 shrink-0 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -20,13 +18,13 @@ const buttonVariants = cva(
           'border border-button-border/60 hover:border-button-border bg-transparent text-text shadow-xs',
         link: 'text-foreground hover:underline',
         destructive:
-          'bg-button border border-button-border text-text hover:bg-danger/80 focus-visible:ring-danger/50 shadow-xs',
+          'bg-danger border border-danger/60 text-white hover:bg-danger/90 focus-visible:ring-danger/50 shadow-xs',
       },
       size: {
-        sm: 'text-xs py-1 px-2 gap-1',
-        md: 'py-1.5 px-2.5',
-        lg: 'py-2 px-3',
-        'icon-xs': "size-5 [&_svg:not([class*='size-'])]:size-2.5",
+        sm: 'h-6 px-2 py-1 text-xs gap-1',
+        md: 'h-7 px-2.5 py-1.5',
+        lg: 'h-8 px-3 py-2',
+        'icon-xs': "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-2.5",
         'icon-sm': "px-3 size-6 [&_svg:not([class*='size-'])]:size-3",
         icon: 'size-7',
         'icon-lg': "size-8 [&_svg:not([class*='size-'])]:size-3.5",

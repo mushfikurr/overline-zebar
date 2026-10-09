@@ -15,6 +15,7 @@
   "devDependencies": {
     "@overline-zebar/typescript": "workspace:*",
     "tailwindcss": "catalog:",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.3"
   }
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { Popover as BasePopover } from '@base-ui-components/react';
 import { cn } from '../../utils/cn';

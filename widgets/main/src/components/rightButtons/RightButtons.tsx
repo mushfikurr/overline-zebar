@@ -1,4 +1,4 @@
-import { logger } from '@overline-zebar/config/src/utils/logger';
+import { logger } from '@overline-zebar/config';
 import { Button } from '@overline-zebar/ui';
 import { Power, X } from 'lucide-react';
 import { useState } from 'react';

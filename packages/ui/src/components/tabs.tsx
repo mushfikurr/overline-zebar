@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { Tabs as BaseTabs } from '@base-ui-components/react/tabs';
 

@@ -68,12 +68,32 @@ export const LauncherCommandSchema = z.object({
   command: z.string(),
   args: z.array(z.string()),
   title: z.string(),
+  type: z.literal('command').optional(),
+  parentId: z.string().optional(),
   icon: z.string().optional(),
+  iconPath: z.string().optional(),
+  iconData: z.string().optional(),
+  iconColor: z.string().optional(),
 });
+
+export const LauncherFolderSchema = z.object({
+  id: z.string(),
+  type: z.literal('folder'),
+  title: z.string(),
+  parentId: z.string().optional(),
+});
+
+export const LauncherItemSchema = z.union([
+  LauncherFolderSchema,
+  LauncherCommandSchema,
+]);
 
 export const ScriptLauncherWidgetSettingsSchema =
   BaseWidgetSettingsSchema.extend({
-    applications: z.array(LauncherCommandSchema),
+    applications: z.array(LauncherItemSchema),
+    view: z.enum(['grid', 'list']).default('grid'),
+    showCommands: z.boolean().default(true),
+    collapsePaths: z.boolean().default(false),
   });
 
 export const AllWidgetSettingsSchema = z.object({
