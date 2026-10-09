@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint and check formatting
+        run: |
+          pnpm lint
+          pnpm check-format
+
+      - name: Build
+        run: pnpm build
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Stage widget pack
+        run: |
+          mkdir -p stage/overline-zebar
+          cp zpack.json README.md stage/overline-zebar/
+          cp -r resources stage/overline-zebar/resources
+          for widget in $(jq -r '.widgets[].name' zpack.json); do
+            mkdir -p "stage/overline-zebar/widgets/$widget"
+            cp -r "widgets/$widget/dist" "stage/overline-zebar/widgets/$widget/dist"
+            if [ -f "widgets/$widget/README.md" ]; then
+              cp "widgets/$widget/README.md" "stage/overline-zebar/widgets/$widget/"
+            fi
+          done
+
+      - name: Zip widget pack
+        run: cd stage && zip -r "../overline-zebar-v${{ steps.version.outputs.version }}.zip" overline-zebar
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "overline-zebar-v${{ steps.version.outputs.version }}.zip" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag
+
+      - name: Install Zebar CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download --repo glzr-io/zebar --pattern '*x64.deb' --output zebar.deb
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb libwebkit2gtk-4.1-0
+          dpkg-deb -x zebar.deb zebar-extracted
+          sudo install -m 755 zebar-extracted/usr/bin/zebar /usr/local/bin/zebar
+          xvfb-run -a zebar --version
+
+      - name: Publish to Zebar marketplace
+        env:
+          ZEBAR_PUBLISH_TOKEN: ${{ secrets.ZEBAR_PUBLISH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_URL="$(gh release view "$GITHUB_REF_NAME" --json url --jq .url)"
+          RELEASE_NOTES="$(gh release view "$GITHUB_REF_NAME" --json body --jq .body)"
+          xvfb-run -a zebar publish \
+            --pack-config ./zpack.json \
+            --version-override "${{ steps.version.outputs.version }}" \
+            --commit-sha "$GITHUB_SHA" \
+            --release-notes "$RELEASE_NOTES" \
+            --release-url "$RELEASE_URL"
