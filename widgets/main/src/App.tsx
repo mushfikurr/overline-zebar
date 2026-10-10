@@ -16,7 +16,6 @@ import { useAutoTiling } from './utils/useAutoTiling';
 
 const providers = zebar.createProviderGroup({
   media: { type: 'media' },
-  network: { type: 'network' },
   glazewm: { type: 'glazewm' },
   cpu: { type: 'cpu' },
   date: { type: 'date', formatting: 'EEE d MMM t', locale: 'en-GB' },
