@@ -1,4 +1,8 @@
-import { catppuccinThemes, defaultTheme } from '../defaults/theme-presets';
+import {
+  catppuccinThemes,
+  defaultTheme,
+  nordTheme,
+} from '../defaults/theme-presets';
 import { RootConfig } from '../types';
 
 export const defaultConfig: RootConfig = {
@@ -6,7 +10,7 @@ export const defaultConfig: RootConfig = {
   app: {
     useAutoTiling: false,
     zebarWebsocketUri: 'ws://localhost:6123',
-    themes: [defaultTheme, ...catppuccinThemes],
+    themes: [defaultTheme, ...catppuccinThemes, nordTheme],
     currentThemeId: 'default',
     radius: '0.5rem',
     windowEffect: 'acrylic',

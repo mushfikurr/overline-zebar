@@ -41,6 +41,21 @@ function loadConfig(forceReload = false): RootConfig {
     // if (parsed.version < CURRENT_VERSION) parsed = migrate(parsed);
 
     cachedConfig = deepMerge(defaultConfig, parsed);
+
+    const presetIds = new Set(
+      defaultConfig.app.themes.map((theme) => theme.id)
+    );
+    const userThemes = parsed.app?.themes?.filter(
+      (theme) => !presetIds.has(theme.id)
+    );
+    cachedConfig = {
+      ...cachedConfig,
+      app: {
+        ...cachedConfig.app,
+        themes: [...defaultConfig.app.themes, ...(userThemes ?? [])],
+      },
+    };
+
     logger.log('Successfully merged default config with user config');
 
     return cachedConfig;
