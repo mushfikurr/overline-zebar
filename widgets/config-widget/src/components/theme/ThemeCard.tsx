@@ -66,14 +66,14 @@ export function ThemeCard({
   return (
     <div
       className={cn(
-        'bg-surface/40 group cursor-pointer overflow-hidden rounded-lg border transition-colors hover:bg-surface/70',
+        'bg-surface/40 group flex cursor-pointer flex-col overflow-hidden rounded-lg border transition-colors hover:bg-surface/70',
         isActive
           ? 'border-primary shadow-[inset_0_0_0_1px] shadow-primary/60'
           : 'border-border hover:border-button-border'
       )}
       onClick={onUse}
     >
-      <div className="relative flex items-center justify-center py-4">
+      <div className="relative flex flex-1 items-center justify-center py-4">
         <button
           type="button"
           aria-pressed={systemMode ? ownsLight || ownsDark : isActive}
@@ -125,7 +125,7 @@ export function ThemeCard({
           </div>
         )}
       </div>
-      <div className="flex items-center gap-1 px-2.5 pb-2">
+      <div className="flex h-7 items-center gap-1 px-2.5 pb-2">
         <span className="text-text min-w-0 flex-1 truncate text-sm">
           {theme.name}
         </span>
