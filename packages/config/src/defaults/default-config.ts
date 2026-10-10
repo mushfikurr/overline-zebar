@@ -43,6 +43,8 @@ export const defaultConfig: RootConfig = {
       pinnedSystrayIcons: [],
       showSystray: true,
       weatherUnit: 'celsius',
+      weatherLatitude: null,
+      weatherLongitude: null,
       dynamicWorkspaceIndicator: false,
       marginX: 0,
       paddingLeft: 4,

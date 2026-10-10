@@ -49,6 +49,8 @@ export const MainWidgetSettingsSchema = BaseWidgetSettingsSchema.extend({
   weatherUnit: z
     .union([z.literal('celsius'), z.literal('fahrenheit')])
     .default('celsius'),
+  weatherLatitude: z.number().nullable().default(null),
+  weatherLongitude: z.number().nullable().default(null),
   pinnedSystrayIcons: z.array(SystrayIconSchema).default([]),
   showSystray: z.boolean().default(true),
   marginX: z.number().default(0),
