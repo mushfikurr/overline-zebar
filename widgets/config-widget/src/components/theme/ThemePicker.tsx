@@ -78,7 +78,7 @@ export function ThemePicker() {
       : null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <FormField switch>
         <FieldTitle>Adapt to Windows theme</FieldTitle>
         <FieldInput>

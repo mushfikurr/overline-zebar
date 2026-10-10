@@ -49,7 +49,7 @@ export default function SystemStatsTab() {
             Enable or disable individual system stat providers.
           </p>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-6">
           {(Object.keys(providers) as Array<keyof ProviderSettings>).map(
             (key) => (
               <FormField switch key={key}>
@@ -72,7 +72,7 @@ export default function SystemStatsTab() {
       {(providers.cpu || providers.memory) && (
         <>
           <Separator />
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-0.5 mb-4">
               <h1 className="text-text">CPU & RAM Display</h1>
               <p className="text-text-muted">
@@ -113,7 +113,7 @@ export default function SystemStatsTab() {
 
       {/* Weather Specific Settings */}
       {providers.weather && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <h1 className="text-text-muted font-medium">Weather Settings</h1>
           <FormField switch>
             <FieldTitle>Toggle Fahrenheit</FieldTitle>
