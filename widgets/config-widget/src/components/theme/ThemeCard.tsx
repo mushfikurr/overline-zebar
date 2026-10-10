@@ -67,7 +67,7 @@ export function ThemeCard({
     <div
       className={cn(
         'bg-surface/40 group cursor-pointer overflow-hidden rounded-lg border transition-colors hover:bg-surface/70',
-        isActive && !systemMode
+        isActive
           ? 'border-primary shadow-[inset_0_0_0_1px] shadow-primary/60'
           : 'border-border hover:border-button-border'
       )}
