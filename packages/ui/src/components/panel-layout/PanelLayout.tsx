@@ -1,7 +1,7 @@
 import { cn } from '../../utils/cn';
 import React from 'react';
 
-interface PanelLayoutProps extends React.HTMLAttributes<HTMLDivElement> {}
+type PanelLayoutProps = React.HTMLAttributes<HTMLDivElement>;
 
 export default function PanelLayout({
   children,

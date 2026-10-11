@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 import { LucideIcon } from 'lucide-react';
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
+type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, children, ...props }, ref) => {

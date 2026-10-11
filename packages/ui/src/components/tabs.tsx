@@ -7,11 +7,11 @@ import { cn } from '../utils/cn';
 
 type TabsVariant = 'capsule' | 'underline';
 
-type TabsContext = {
+type TabsContextValue = {
   variant: TabsVariant;
 };
 
-const TabsContext = React.createContext<TabsContext | null>(null);
+const TabsContext = React.createContext<TabsContextValue | null>(null);
 
 const useTabs = () => {
   const context = React.useContext(TabsContext);
