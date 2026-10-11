@@ -9,9 +9,9 @@ type WindowTitleProps = {
 };
 
 export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
-  ({ glazewm }, ref) => {
-    if (!glazewm) return;
+  function WindowTitle({ glazewm }, ref) {
     const [show, setShow] = useState(false);
+    if (!glazewm) return;
 
     const title = getWindowTitle(glazewm);
     const ANIMATION_EXIT_OFFSET = 3;

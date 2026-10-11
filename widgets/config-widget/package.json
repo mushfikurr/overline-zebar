@@ -36,6 +36,7 @@
     "@types/node": "^22.10.5",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "typescript-eslint": "^8.0.0",
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",

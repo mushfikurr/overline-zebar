@@ -10,7 +10,7 @@ import { Chip } from '@overline-zebar/ui';
 export const TitleDetailsMemo = React.memo(TitleDetails);
 
 type MediaProps = {
-  media: MediaOutput | null;
+  media: MediaOutput;
 };
 // To allow cycling of Media sessions with Alt+Click we have to handle our own current session
 // This is why there are two current sessions defined here:
@@ -18,7 +18,6 @@ type MediaProps = {
 // currentSession: Our own local state of Zebar session.
 // This is not ideal and hopefully future Zebar releases will provide a way to change sessions internally.
 export default function Media({ media }: MediaProps) {
-  if (!media) return;
   const {
     allSessions,
     togglePlayPause,

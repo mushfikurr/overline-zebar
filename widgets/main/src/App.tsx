@@ -94,7 +94,7 @@ function App() {
           <WorkspaceControls glazewm={output.glazewm} />
         </div>
         <div className="flex items-center justify-center h-full">
-          <Media media={output.media} />
+          {output.media && <Media media={output.media} />}
         </div>
       </div>
 

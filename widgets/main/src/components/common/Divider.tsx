@@ -1,6 +1,6 @@
 import { cn } from '../../utils/cn';
 
-interface DividerProps extends React.ComponentPropsWithoutRef<'span'> {}
+type DividerProps = React.ComponentPropsWithoutRef<'span'>;
 
 export default function Divider({ className, ...props }: DividerProps) {
   return (

@@ -11,14 +11,15 @@ type WorkspaceControlsProps = {
 };
 
 export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
-  if (!glazewm) return null;
-
-  const workspaces = glazewm.currentWorkspaces;
-  const focusedWorkspace = glazewm.focusedWorkspace;
   const [dynamicWorkspaceIndicator] = useWidgetSetting(
     'main',
     'dynamicWorkspaceIndicator'
   );
+
+  if (!glazewm) return null;
+
+  const workspaces = glazewm.currentWorkspaces;
+  const focusedWorkspace = glazewm.focusedWorkspace;
 
   const borderRadius = tailwindConfig.theme.borderRadius['2xl'];
   const springConfig = { type: 'spring', stiffness: 300, damping: 30 };

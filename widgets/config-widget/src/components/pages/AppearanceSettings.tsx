@@ -68,7 +68,7 @@ function AppearanceSettings() {
             </Select>
           </FieldInput>
           <FieldDescription>
-            Changes how "rounded" elements are.
+            Changes how &quot;rounded&quot; elements are.
           </FieldDescription>
         </FormField>
         <Separator />

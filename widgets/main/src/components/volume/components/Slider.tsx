@@ -12,7 +12,7 @@ export default function Slider({
   setValue: (value: number) => void;
 }) {
   const ref = useRef<ElementRef<typeof RadixSlider.Root>>(null);
-  const [_region, setRegion] = useState('middle');
+  const [, setRegion] = useState('middle');
   const clientX = useMotionValue(0);
   const overflow = useMotionValue(0);
 

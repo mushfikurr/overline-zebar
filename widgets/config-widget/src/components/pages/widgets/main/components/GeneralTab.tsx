@@ -55,8 +55,8 @@ function GeneralTab() {
           <NumberInput value={marginX} onChange={setMarginX} min={0} />
         </FieldInput>
         <FieldDescription>
-          Sets the outside space (left and right). Good for a "floating"
-          appearance.
+          Sets the outside space (left and right). Good for a
+          &quot;floating&quot; appearance.
         </FieldDescription>
       </FormField>
       <Separator />

@@ -55,23 +55,21 @@ const MotionText = React.forwardRef<
     className?: string;
     transition?: MotionProps['transition'];
   } & MotionProps
->(
-  (
-    { children, className, transition = defaultExpansionTransition, ...props },
-    ref
-  ) => {
-    return (
-      <motion.p
-        ref={ref}
-        className={cn('whitespace-nowrap overflow-hidden', className)}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ ...transition, opacity: { duration: 0.3 } }}
-        {...props}
-      >
-        {children}
-      </motion.p>
-    );
-  }
-);
+>(function MotionText(
+  { children, className, transition = defaultExpansionTransition, ...props },
+  ref
+) {
+  return (
+    <motion.p
+      ref={ref}
+      className={cn('whitespace-nowrap overflow-hidden', className)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ ...transition, opacity: { duration: 0.3 } }}
+      {...props}
+    >
+      {children}
+    </motion.p>
+  );
+});

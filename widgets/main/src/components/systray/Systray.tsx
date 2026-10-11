@@ -30,10 +30,11 @@ function arrangeIconsWithPinnedCenter(
 }
 
 export default function Systray({ systray }: SystrayProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [pinnedSystrayIcons] = useWidgetSetting('main', 'pinnedSystrayIcons');
+
   if (!systray) return;
   const icons = systray.icons;
-
-  const [expanded, setExpanded] = useState(false);
 
   // Toggle icon expansion on Shift+Click
   const handleClick = (e: React.MouseEvent) => {
@@ -42,8 +43,6 @@ export default function Systray({ systray }: SystrayProps) {
       setExpanded(!expanded);
     }
   };
-
-  const [pinnedSystrayIcons] = useWidgetSetting('main', 'pinnedSystrayIcons');
 
   // Determine the actual pinned icons that are present in the systray
   const presentPinnedIcons = icons.filter((icon) =>

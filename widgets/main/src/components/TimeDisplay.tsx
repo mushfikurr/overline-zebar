@@ -45,7 +45,7 @@ export function TimeDisplay({ dateOutput }: TimeDisplayProps) {
             .replace(/,/g, '')}
         </div>
       );
-    } catch (e) {
+    } catch {
       // Fallback if format parsing fails - use safe defaults
       try {
         return (
@@ -53,7 +53,7 @@ export function TimeDisplay({ dateOutput }: TimeDisplayProps) {
             {new Date().toLocaleTimeString(safeTimeLocale)}
           </div>
         );
-      } catch (fallbackError) {
+      } catch {
         // Ultimate fallback - no locale
         return (
           <div className="h-full flex items-center justify-center px-1">
