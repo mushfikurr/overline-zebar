@@ -1,6 +1,7 @@
 export { Button, buttonVariants } from './components/button';
 export {
   iconSwap,
+  quickSwap,
   iconFeedback,
   textSwap,
   fadeSwap,
