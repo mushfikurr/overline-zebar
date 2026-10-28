@@ -10,9 +10,6 @@ export function TitleDetails({
   title: string | null | undefined;
   artist: string | null | undefined;
 }) {
-  const artistKey = artist ?? undefined;
-  const titleKey = title ?? undefined;
-
   const [mediaMaxWidth] = useWidgetSetting('main', 'mediaMaxWidth');
 
   return (
@@ -22,22 +19,22 @@ export function TitleDetails({
         'inline-flex items-center gap-1.5 cursor-pointer outline-none'
       )}
     >
-      <AnimatePresence mode="popLayout">
-        <div className="flex-shrink min-w-0">
-          <MotionText key={artistKey} className="truncate">
+      <AnimatePresence mode="popLayout" initial={false}>
+        {artist && (
+          <MotionText key={artist} className="flex-shrink min-w-0 truncate">
             {artist}
           </MotionText>
-        </div>
+        )}
       </AnimatePresence>
 
       {artist && title && <p className="flex-shrink-0">-</p>}
 
-      <AnimatePresence mode="popLayout">
-        <div className="flex-shrink min-w-0">
-          <MotionText key={titleKey} className="truncate">
+      <AnimatePresence mode="popLayout" initial={false}>
+        {title && (
+          <MotionText key={title} className="flex-shrink min-w-0 truncate">
             {title}
           </MotionText>
-        </div>
+        )}
       </AnimatePresence>
     </div>
   );
