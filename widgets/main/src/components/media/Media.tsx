@@ -72,7 +72,7 @@ export default function Media({ media }: MediaProps) {
       <ConditionalPanel sessionActive={!!currentSession}>
         <Chip
           className={cn(
-            'relative flex gap-2 select-none cursor-pointer overflow-clip group',
+            'relative flex gap-1.5 select-none cursor-pointer overflow-clip group',
             'active:bg-background-deeper/90'
           )}
         >
