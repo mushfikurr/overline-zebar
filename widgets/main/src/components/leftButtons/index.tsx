@@ -38,7 +38,11 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
     <div className="flex items-center h-full gap-1.5">
       <AnimatePresence>
         {glazewm.isPaused && (
-          <motion.div key="paused" {...fadeSwap} className="flex items-center h-full">
+          <motion.div
+            key="paused"
+            {...fadeSwap}
+            className="flex items-center h-full"
+          >
             <Button
               size="sm"
               onClick={() => glazewm.runCommand('wm-toggle-pause')}

@@ -26,7 +26,10 @@ export const quickSwap: SwapAnimation = {
   },
 };
 
-export const iconFeedback: Pick<HTMLMotionProps<'div'>, 'whileHover' | 'whileTap'> = {
+export const iconFeedback: Pick<
+  HTMLMotionProps<'div'>,
+  'whileHover' | 'whileTap'
+> = {
   whileTap: { scale: 0.9 },
 };
 
