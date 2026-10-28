@@ -1,4 +1,13 @@
 export { Button, buttonVariants } from './components/button';
+export {
+  iconSwap,
+  iconFeedback,
+  textSwap,
+  fadeSwap,
+  springPanel,
+  springLayout,
+  type SwapAnimation,
+} from './motion';
 export { StatRing } from './components/stat-ring/StatRing';
 export { LabelType } from './components/stat-ring/types/labelType';
 export { systemStatThresholds } from './components/stat-ring/defaults/systemStatThresholds';

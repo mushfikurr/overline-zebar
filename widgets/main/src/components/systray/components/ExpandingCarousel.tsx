@@ -1,3 +1,4 @@
+import { springPanel } from '@overline-zebar/ui';
 import {
   animate,
   AnimatePresence,
@@ -5,7 +6,8 @@ import {
   useMotionTemplate,
   useMotionValue,
   useTransform,
-} from 'framer-motion';
+} from 'motion/react';
+import type { Transition } from 'motion/react';
 import React, { ReactElement, useEffect } from 'react';
 interface ExpandingCarouselProps {
   items: ReactElement[];
@@ -17,11 +19,17 @@ interface ExpandingCarouselProps {
   startIndex?: number;
 }
 
-const springConfig = {
+const springCarouselItem: Transition = {
   type: 'spring',
-  stiffness: 150,
+  stiffness: 320,
   damping: 20,
-  mass: 0.8,
+  mass: 0.4,
+};
+
+const carouselItemSwap = {
+  initial: { opacity: 0, scale: 0.85 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0 },
 };
 
 export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
@@ -65,14 +73,14 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
           maskSize: '100% 100%',
           maskRepeat: 'no-repeat',
         }}
-        transition={springConfig}
+        transition={springPanel}
       >
         <motion.div
           className="flex"
           initial={false}
           style={{ gap: `${gap}px` }}
           animate={{ x: expanded ? 0 : initialOffset }}
-          transition={springConfig}
+          transition={springPanel}
           layout
         >
           <AnimatePresence mode="sync">
@@ -82,18 +90,11 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
                 layout
                 className="flex items-center flex-shrink-0"
                 style={{ width: itemWidth }}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
+                {...carouselItemSwap}
                 transition={{
-                  ...springConfig,
+                  ...springPanel,
                   delay: index * 0.08,
-                  layout: {
-                    type: 'spring',
-                    stiffness: 320,
-                    damping: 20,
-                    mass: 0.4,
-                  },
+                  layout: springCarouselItem,
                 }}
               >
                 {item}

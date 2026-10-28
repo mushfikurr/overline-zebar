@@ -1,4 +1,4 @@
-import { AnimatePresence, MotionProps, motion } from 'framer-motion';
+import { AnimatePresence, MotionProps, motion } from 'motion/react';
 import React from 'react';
 import { cn } from '../../../utils/cn';
 import { useWidgetSetting } from '@overline-zebar/config';
@@ -48,6 +48,12 @@ const defaultExpansionTransition: MotionProps['transition'] = {
   ease: [0.4, 0, 0.2, 1],
 };
 
+const textFade = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+} satisfies Pick<MotionProps, 'initial' | 'animate' | 'exit'>;
+
 const MotionText = React.forwardRef<
   HTMLParagraphElement,
   {
@@ -63,9 +69,7 @@ const MotionText = React.forwardRef<
     <motion.p
       ref={ref}
       className={cn('whitespace-nowrap overflow-hidden', className)}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      {...textFade}
       transition={{ ...transition, opacity: { duration: 0.3 } }}
       {...props}
     >

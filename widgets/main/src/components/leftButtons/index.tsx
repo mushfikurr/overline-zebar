@@ -1,6 +1,6 @@
 import { useWidgetSetting } from '@overline-zebar/config';
-import { Button } from '@overline-zebar/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Button, fadeSwap } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { ChevronRight, LayoutGrid } from 'lucide-react';
 import { useRef } from 'react';
 import * as zebar from 'zebar';
@@ -38,14 +38,7 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
     <div className="flex items-center h-full gap-1.5">
       <AnimatePresence>
         {glazewm.isPaused && (
-          <motion.div
-            key="paused"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
-            exit={{ opacity: 0 }}
-            className="flex items-center h-full"
-          >
+          <motion.div key="paused" {...fadeSwap} className="flex items-center h-full">
             <Button
               size="sm"
               onClick={() => glazewm.runCommand('wm-toggle-pause')}
@@ -58,10 +51,7 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
         {glazewm.bindingModes.map((bindingMode) => (
           <motion.div
             key={bindingMode.name}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
-            exit={{ opacity: 0 }}
+            {...fadeSwap}
             className="flex items-center h-full"
           >
             <Button size="sm">

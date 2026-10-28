@@ -1,5 +1,5 @@
 import * as RadixSlider from '@radix-ui/react-slider';
-import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
+import { motion, useMotionValue, useMotionValueEvent } from 'motion/react';
 import { ElementRef, useRef, useState } from 'react';
 
 const MAX_OVERFLOW = 50;

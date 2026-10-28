@@ -19,7 +19,7 @@
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
-    "framer-motion": "^11.11.17",
+    "motion": "^12.23.9",
     "lucide-react": "^0.460.0",
     "react": "catalog:",
     "react-compiler-runtime": "catalog:",

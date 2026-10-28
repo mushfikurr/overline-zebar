@@ -1,4 +1,5 @@
-import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion';
+import { iconFeedback, iconSwap } from '@overline-zebar/ui';
+import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
 import { LucideIcon } from 'lucide-react';
 import React from 'react';
 import { cn } from '../../../utils/cn';
@@ -10,8 +11,6 @@ interface IconButtonProps
   animateProps?: HTMLMotionProps<'div'>;
 }
 
-// TODO: Shares same animation as Status. Maybe extract to a component?
-
 export const IconButton = ({
   icon: Icon,
   animateKey,
@@ -19,7 +18,7 @@ export const IconButton = ({
   ...props
 }: IconButtonProps) => {
   const renderInner = (Icon: LucideIcon) => (
-    <Icon className="h-3 w-3" strokeWidth={3} />
+    <Icon className="h-3.5 w-3.5" strokeWidth={3} />
   );
 
   return (
@@ -35,12 +34,8 @@ export const IconButton = ({
         <AnimatePresence mode="popLayout">
           <motion.div
             key={animateKey}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1.1 }} // 1.1 to mitigate the blurry icon
-            exit={{ opacity: 0, scale: 0.5 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.2 }}
+            {...iconSwap}
+            {...iconFeedback}
             {...animateProps}
           >
             {renderInner(Icon)}

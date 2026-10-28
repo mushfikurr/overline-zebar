@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { iconSwap } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { ArrowDownUp, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 import { usePlayPause } from '../../../utils/usePlayPause';
 
@@ -22,13 +23,7 @@ export function Status({ isPlaying }: { isPlaying: boolean }) {
 
   return (
     <AnimatePresence mode="popLayout">
-      <motion.div
-        key={key}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1.1 }} // 1.1 to mitigate the blurry icon
-        exit={{ opacity: 0, scale: 0.5 }}
-        transition={{ duration: 0.2 }}
-      >
+      <motion.div key={key} {...iconSwap}>
         <PlayPauseIcon LucideIcon={icon} />
       </motion.div>
     </AnimatePresence>
@@ -49,5 +44,5 @@ function getIcon(trackAction: StatusAction | null, isPlaying: boolean) {
 }
 
 const PlayPauseIcon = ({ LucideIcon }: { LucideIcon: React.ElementType }) => (
-  <LucideIcon className="text-icon h-3 w-3" strokeWidth={3} />
+  <LucideIcon className="text-icon h-3.5 w-3.5" strokeWidth={3} />
 );

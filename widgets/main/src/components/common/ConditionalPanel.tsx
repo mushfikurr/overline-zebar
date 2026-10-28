@@ -1,6 +1,9 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { springPanel } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import useMeasure from 'react-use-measure';
 import { cn } from '../../utils/cn';
+
+const collapsed = { width: 0, opacity: 0 };
 
 export function ConditionalPanel({
   children,
@@ -11,22 +14,15 @@ export function ConditionalPanel({
 }) {
   const [ref, { width }] = useMeasure();
 
-  const springConfig = {
-    type: 'spring',
-    stiffness: 120,
-    damping: 20,
-    mass: 0.8,
-  };
-
   return (
     <AnimatePresence>
       {sessionActive && (
         <motion.div
           key="resizable-panel"
-          initial={{ width: 0, opacity: 0 }}
+          initial={collapsed}
           animate={{ width: width || 'auto', opacity: 1 }}
-          exit={{ width: 0, opacity: 0 }}
-          transition={springConfig}
+          exit={collapsed}
+          transition={springPanel}
           className="relative overflow-hidden h-full"
         >
           <div

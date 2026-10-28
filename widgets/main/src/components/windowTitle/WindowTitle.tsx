@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { textSwap } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { AppWindowIcon } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 import { GlazeWmOutput } from 'zebar';
@@ -14,7 +15,6 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
     if (!glazewm) return;
 
     const title = getWindowTitle(glazewm);
-    const ANIMATION_EXIT_OFFSET = 3;
 
     function handleWindowTitle(e: React.MouseEvent, textToCopy: string) {
       if (e.altKey) {
@@ -37,10 +37,7 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
         <motion.button
           ref={ref}
           key={title ?? 'default-icon'}
-          initial={{ opacity: 0, y: -ANIMATION_EXIT_OFFSET }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: ANIMATION_EXIT_OFFSET }}
-          transition={{ duration: 0.15, ease: 'easeInOut' }}
+          {...textSwap}
           className="font-medium relative h-full flex items-center cu"
           title={title ?? 'Focused Window'}
           onClick={(e: React.MouseEvent) =>

@@ -1,9 +1,16 @@
-import { Chip } from '@overline-zebar/ui';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Chip, type SwapAnimation } from '@overline-zebar/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { Volume, Volume1, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AudioOutput } from 'zebar';
 import Slider from './components/Slider';
+
+const sliderReveal: SwapAnimation = {
+  initial: { width: 0, marginLeft: 0, opacity: 0 },
+  animate: { width: 'auto', marginLeft: '6px', opacity: 1 },
+  exit: { width: 0, marginLeft: 0, opacity: 0 },
+  transition: { type: 'spring', duration: 0.3, bounce: 0 },
+};
 
 export default function VolumeControl({
   iconClassnames,
@@ -89,13 +96,7 @@ export default function VolumeControl({
         <div>
           <AnimatePresence initial={false}>
             {expanded && (
-              <motion.div
-                initial={{ width: 0, marginLeft: 0, opacity: 0 }}
-                animate={{ width: 'auto', marginLeft: '6px', opacity: 1 }}
-                exit={{ width: 0, marginLeft: 0, opacity: 0 }}
-                className="overflow-hidden"
-                transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
-              >
+              <motion.div {...sliderReveal} className="overflow-hidden">
                 <Slider value={playbackDevice.volume} setValue={setVolume} />
               </motion.div>
             )}
