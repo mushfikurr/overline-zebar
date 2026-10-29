@@ -26,7 +26,8 @@ export const IconButton = ({
       className={cn(
         'h-full flex items-center justify-center text-icon',
         'hover:text-text',
-        'transition-colors duration-200 ease-in-out'
+        'transition-colors duration-200 ease-in-out',
+        'disabled:pointer-events-none disabled:opacity-50'
       )}
       {...props}
     >

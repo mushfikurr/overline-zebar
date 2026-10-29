@@ -19,6 +19,7 @@ export const ToggleFloating = ({ glazewm }: CommandProps) => {
       key={command}
       animateKey={isFloating ? 'floating' : 'not-floating'}
       title={tooltipText}
+      disabled={glazewm.isPaused}
       onClick={() => glazewm?.runCommand(command)}
       icon={isFloating ? LayoutTemplate : SquareSquare}
     />

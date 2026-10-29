@@ -25,6 +25,7 @@ export const ToggleFullscreen = ({ glazewm }: CommandProps) => {
       animateKey={isFullscreen ? 'maximise' : 'minimise'}
       key={command}
       title={tooltipText}
+      disabled={glazewm.isPaused}
       onClick={() => glazewm?.runCommand(command)}
       icon={isFullscreen ? Minimize : Maximize}
     />

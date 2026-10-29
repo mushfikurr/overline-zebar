@@ -37,21 +37,6 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
   return (
     <div className="flex items-center h-full gap-1.5">
       <AnimatePresence>
-        {glazewm.isPaused && (
-          <motion.div
-            key="paused"
-            {...fadeSwap}
-            className="flex items-center h-full"
-          >
-            <Button
-              size="sm"
-              onClick={() => glazewm.runCommand('wm-toggle-pause')}
-            >
-              paused
-            </Button>
-          </motion.div>
-        )}
-
         {glazewm.bindingModes.map((bindingMode) => (
           <motion.div
             key={bindingMode.name}
@@ -76,6 +61,7 @@ export function LeftButtons({ glazewm }: LeftButtonsProps) {
 
       <Button
         size="icon-sm"
+        disabled={glazewm.isPaused}
         onClick={() => glazewm.runCommand('toggle-tiling-direction')}
         className="h-full"
       >
