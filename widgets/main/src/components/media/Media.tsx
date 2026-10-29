@@ -33,6 +33,17 @@ export default function Media({ media }: MediaProps) {
   );
   const currentSession = allSessions[currentSessionIdx];
 
+  const zebarSessionId = zebarCurrentSession?.sessionId;
+  React.useEffect(() => {
+    if (!zebarSessionId) return;
+    setCurrentSessionIdx(prevIdx => {
+      const nextIdx = allSessions.findIndex(
+        session => session.sessionId === zebarSessionId
+      );
+      return nextIdx === -1 || nextIdx === prevIdx ? prevIdx : nextIdx;
+    });
+  }, [zebarSessionId]);
+
   const handlePlayPause = (e: React.MouseEvent, currentSessionIdx: number) => {
     const currentSession = allSessions[currentSessionIdx];
 
