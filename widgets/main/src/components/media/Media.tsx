@@ -12,11 +12,10 @@ export const TitleDetailsMemo = React.memo(TitleDetails);
 type MediaProps = {
   media: MediaOutput;
 };
-// To allow cycling of Media sessions with Alt+Click we have to handle our own current session
-// This is why there are two current sessions defined here:
-// zebarCurrentSession: The actual session given from the Media provider.
-// currentSession: Our own local state of Zebar session.
-// This is not ideal and hopefully future Zebar releases will provide a way to change sessions internally.
+// Alt+Click cycles sessions manually; otherwise the widget follows the session
+// that started playing most recently. Play-state transitions are tracked
+// ourselves because the OS/Zebar "current session" designation is sticky and
+// doesn't reliably change when a second app starts playing.
 export default function Media({ media }: MediaProps) {
   const {
     allSessions,
@@ -25,50 +24,93 @@ export default function Media({ media }: MediaProps) {
     previous,
     currentSession: zebarCurrentSession,
   } = media;
-  const zebarCurrentSessionIdx = allSessions.findIndex(
-    (s) => s.sessionId === zebarCurrentSession?.sessionId
-  );
-  const [currentSessionIdx, setCurrentSessionIdx] = React.useState<number>(
-    zebarCurrentSessionIdx === -1 ? 0 : zebarCurrentSessionIdx
-  );
-  const currentSession = allSessions[currentSessionIdx];
+  const zebarSessionId = zebarCurrentSession?.sessionId ?? null;
 
-  const zebarSessionId = zebarCurrentSession?.sessionId;
+  const [overrideSessionId, setOverrideSessionId] = React.useState<
+    string | null
+  >(null);
+  const [, setActivationTick] = React.useState(0);
+
+  const lastPlayedAtRef = React.useRef<Record<string, number>>({});
+  const prevPlayingRef = React.useRef<Record<string, boolean>>({});
+
   React.useEffect(() => {
-    if (!zebarSessionId) return;
-    setCurrentSessionIdx(prevIdx => {
-      const nextIdx = allSessions.findIndex(
-        session => session.sessionId === zebarSessionId
-      );
-      return nextIdx === -1 || nextIdx === prevIdx ? prevIdx : nextIdx;
-    });
-  }, [zebarSessionId]);
+    const now = Date.now();
 
-  const handlePlayPause = (e: React.MouseEvent, currentSessionIdx: number) => {
-    const currentSession = allSessions[currentSessionIdx];
+    if (
+      zebarSessionId &&
+      lastPlayedAtRef.current[zebarSessionId] === undefined
+    ) {
+      lastPlayedAtRef.current[zebarSessionId] = now + 1;
+    }
+
+    for (const session of allSessions) {
+      const wasPlaying = prevPlayingRef.current[session.sessionId];
+
+      if (session.isPlaying && !wasPlaying) {
+        lastPlayedAtRef.current[session.sessionId] =
+          now + (session.sessionId === zebarSessionId ? 1 : 0);
+        setActivationTick(tick => tick + 1);
+        setOverrideSessionId(prev =>
+          prev && prev !== session.sessionId ? null : prev,
+        );
+      }
+    }
+
+    prevPlayingRef.current = Object.fromEntries(
+      allSessions.map(session => [session.sessionId, session.isPlaying]),
+    );
+
+    const activeIds = new Set(allSessions.map(session => session.sessionId));
+    for (const sessionId of Object.keys(lastPlayedAtRef.current)) {
+      if (!activeIds.has(sessionId)) {
+        delete lastPlayedAtRef.current[sessionId];
+      }
+    }
+  }, [allSessions, zebarSessionId]);
+
+  let mostRecentSessionId: string | null = null;
+  let mostRecentPlayedAt = -Infinity;
+  for (const session of allSessions) {
+    const playedAt = lastPlayedAtRef.current[session.sessionId];
+    if (playedAt !== undefined && playedAt >= mostRecentPlayedAt) {
+      mostRecentPlayedAt = playedAt;
+      mostRecentSessionId = session.sessionId;
+    }
+  }
+
+  const currentSession =
+    allSessions.find(session => session.sessionId === overrideSessionId) ??
+    allSessions.find(session => session.sessionId === mostRecentSessionId) ??
+    zebarCurrentSession ??
+    allSessions[0];
+
+  const handlePlayPause = (e: React.MouseEvent) => {
+    if (!currentSession) return;
 
     if (e.shiftKey) {
-      previous({ sessionId: currentSession?.sessionId });
+      previous({ sessionId: currentSession.sessionId });
       return;
     }
 
     if (e.ctrlKey) {
-      next({ sessionId: currentSession?.sessionId });
+      next({ sessionId: currentSession.sessionId });
       return;
     }
 
     if (e.altKey) {
-      if (currentSessionIdx < allSessions.length - 1) {
-        setCurrentSessionIdx((prev) => prev + 1);
-      } else {
-        setCurrentSessionIdx(0);
-      }
+      const currentIdx = Math.max(
+        0,
+        allSessions.findIndex(
+          session => session.sessionId === currentSession.sessionId,
+        ),
+      );
+      const nextIdx = currentIdx < allSessions.length - 1 ? currentIdx + 1 : 0;
+      setOverrideSessionId(allSessions[nextIdx]?.sessionId ?? null);
       return;
     }
 
-    if (currentSession) {
-      togglePlayPause({ sessionId: currentSession.sessionId });
-    }
+    togglePlayPause({ sessionId: currentSession.sessionId });
   };
 
   return (
@@ -77,7 +119,7 @@ export default function Media({ media }: MediaProps) {
         'flex gap-2 select-none cursor-pointer outline-none relative h-full'
       }
       onClick={(e) => {
-        handlePlayPause(e, currentSessionIdx);
+        handlePlayPause(e);
       }}
     >
       <ConditionalPanel sessionActive={!!currentSession}>
