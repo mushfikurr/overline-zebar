@@ -271,6 +271,7 @@ function ThresholdColorSelect({
 }) {
   return (
     <Select
+      items={labelColorOptions}
       value={value}
       onValueChange={(newValue) => onChange(newValue as LabelColor)}
     >
@@ -284,7 +285,13 @@ function ThresholdColorSelect({
       <SelectContent>
         {labelColorOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
-            {option.label}
+            <span className="flex items-center gap-2">
+              <span
+                className="size-2.5 shrink-0 rounded-full border border-border"
+                style={{ backgroundColor: `var(${option.value})` }}
+              />
+              {option.label}
+            </span>
           </SelectItem>
         ))}
       </SelectContent>

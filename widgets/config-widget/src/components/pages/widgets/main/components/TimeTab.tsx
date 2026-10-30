@@ -47,6 +47,7 @@ function TimeTab() {
         <FieldTitle>Time Format</FieldTitle>
         <FieldInput>
           <Select
+            items={TIME_FORMATS}
             value={timeFormat}
             onValueChange={(value) => setTimeFormat(value as string)}
           >
@@ -71,6 +72,7 @@ function TimeTab() {
         <FieldTitle>Time Locale</FieldTitle>
         <FieldInput>
           <Select
+            items={TIME_LOCALES}
             value={timeLocale}
             onValueChange={(value) => setTimeLocale(value as string)}
           >
