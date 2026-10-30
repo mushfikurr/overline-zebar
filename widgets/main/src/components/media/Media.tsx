@@ -24,7 +24,7 @@ export default function Media({ media }: MediaProps) {
   } = media;
   const { currentSession, cycleSession } = useMostRecentMediaSession(
     allSessions,
-    zebarCurrentSession,
+    zebarCurrentSession
   );
 
   const handlePlayPause = (e: React.MouseEvent) => {
