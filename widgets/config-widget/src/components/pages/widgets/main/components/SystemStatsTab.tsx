@@ -1,12 +1,19 @@
 import {
   FieldDescription,
   FieldInput,
+  FieldReset,
   FieldTitle,
   FormField,
   Switch,
+  WidgetFormField,
 } from '@overline-zebar/ui';
 import ThresholdsInput from './ThresholdsInput';
-import { useWidgetSetting, ProviderSettings } from '@overline-zebar/config';
+import {
+  useWidgetSetting,
+  useWidgetSettingDefaults,
+  ProviderSettings,
+  defaultConfig,
+} from '@overline-zebar/config';
 import { Separator } from '@/components/common/Separator';
 import { CoordinateInput } from '@/components/CoordinateInput';
 
@@ -19,6 +26,7 @@ const providerLabels: Record<keyof ProviderSettings, string> = {
 
 export default function SystemStatsTab() {
   const [providers, setProviders] = useWidgetSetting('main', 'providers');
+  const defaultProviders = defaultConfig.widgets.main?.providers;
   const [weatherUnit, setWeatherUnit] = useWidgetSetting('main', 'weatherUnit');
   const [weatherLatitude, setWeatherLatitude] = useWidgetSetting(
     'main',
@@ -40,6 +48,12 @@ export default function SystemStatsTab() {
     'main',
     'batteryThresholds'
   );
+  const [isSystemStatThresholdsDefault, resetSystemStatThresholds] =
+    useWidgetSettingDefaults('main', ['systemStatThresholds']);
+  const [isWeatherThresholdsDefault, resetWeatherThresholds] =
+    useWidgetSettingDefaults('main', ['weatherThresholds']);
+  const [isBatteryThresholdsDefault, resetBatteryThresholds] =
+    useWidgetSettingDefaults('main', ['batteryThresholds']);
 
   const handleProviderToggle = (
     provider: keyof ProviderSettings,
@@ -61,7 +75,17 @@ export default function SystemStatsTab() {
         <div className="space-y-6">
           {(Object.keys(providers) as Array<keyof ProviderSettings>).map(
             (key) => (
-              <FormField switch key={key}>
+              <FormField
+                switch
+                key={key}
+                isDefault={providers[key] === defaultProviders?.[key]}
+                onReset={() =>
+                  setProviders({
+                    ...providers,
+                    [key]: defaultProviders?.[key] ?? true,
+                  })
+                }
+              >
                 <FieldTitle>{providerLabels[key]}</FieldTitle>
                 <FieldInput>
                   <Switch
@@ -88,7 +112,7 @@ export default function SystemStatsTab() {
                 Configure how system statistics are displayed.
               </p>
             </div>
-            <FormField switch>
+            <WidgetFormField switch widget="main" setting="useInlineStats">
               <FieldTitle>Use Inline Stats</FieldTitle>
               <FieldInput>
                 <Switch
@@ -100,17 +124,23 @@ export default function SystemStatsTab() {
                 Display CPU and RAM usage as inline text instead of ring
                 visualization.
               </FieldDescription>
-            </FormField>
+            </WidgetFormField>
             <div className="space-y-4">
-              <div className="space-y-0.5">
-                <h1 className="text-text">Thresholds</h1>
-                <p className="text-text-muted">
-                  Configure color ranges based on usage percentage.
-                </p>
+              <div className="flex items-center gap-2">
+                <div className="space-y-0.5">
+                  <h1 className="text-text">Thresholds</h1>
+                  <p className="text-text-muted">
+                    Configure color ranges based on usage percentage.
+                  </p>
+                </div>
+                {!isSystemStatThresholdsDefault && (
+                  <FieldReset onClick={resetSystemStatThresholds} />
+                )}
               </div>
               <ThresholdsInput
                 thresholds={systemStatThresholds}
                 onChange={setSystemStatThresholds}
+                settingKey="systemStatThresholds"
               />
             </div>
           </div>
@@ -124,7 +154,7 @@ export default function SystemStatsTab() {
       {providers.weather && (
         <div className="space-y-6">
           <h1 className="text-text-muted font-medium">Weather Settings</h1>
-          <FormField switch>
+          <WidgetFormField switch widget="main" setting="weatherUnit">
             <FieldTitle>Toggle Fahrenheit</FieldTitle>
             <FieldInput>
               <Switch
@@ -137,8 +167,11 @@ export default function SystemStatsTab() {
             <FieldDescription>
               Toggle to display weather temperatures in Fahrenheit or Celsius.
             </FieldDescription>
-          </FormField>
-          <FormField>
+          </WidgetFormField>
+          <WidgetFormField
+            widget="main"
+            setting={['weatherLatitude', 'weatherLongitude']}
+          >
             <FieldTitle>Location Override</FieldTitle>
             <FieldInput>
               <div className="grid grid-cols-2 gap-3">
@@ -161,14 +194,19 @@ export default function SystemStatsTab() {
             <FieldDescription>
               Leave empty to estimate location from your IP address.
             </FieldDescription>
-          </FormField>
+          </WidgetFormField>
           <div className="space-y-4">
-            <div className="space-y-0.5">
-              <h1 className="text-text">Thresholds</h1>
-              <p className="text-text-muted">
-                Defines the points at which specific colors are displayed for
-                each range.
-              </p>
+            <div className="flex items-center gap-2">
+              <div className="space-y-0.5">
+                <h1 className="text-text">Thresholds</h1>
+                <p className="text-text-muted">
+                  Defines the points at which specific colors are displayed for
+                  each range.
+                </p>
+              </div>
+              {!isWeatherThresholdsDefault && (
+                <FieldReset onClick={resetWeatherThresholds} />
+              )}
             </div>
             <ThresholdsInput />
           </div>
@@ -180,11 +218,16 @@ export default function SystemStatsTab() {
         <>
           <Separator />
           <div className="space-y-4">
-            <div className="space-y-0.5">
-              <h1 className="text-text">Battery Thresholds</h1>
-              <p className="text-text-muted">
-                Configure color ranges based on battery percentage.
-              </p>
+            <div className="flex items-center gap-2">
+              <div className="space-y-0.5">
+                <h1 className="text-text">Battery Thresholds</h1>
+                <p className="text-text-muted">
+                  Configure color ranges based on battery percentage.
+                </p>
+              </div>
+              {!isBatteryThresholdsDefault && (
+                <FieldReset onClick={resetBatteryThresholds} />
+              )}
             </div>
             <ThresholdsInput
               thresholds={batteryThresholds}

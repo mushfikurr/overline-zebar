@@ -3,7 +3,6 @@ import {
   FieldDescription,
   FieldInput,
   FieldTitle,
-  FormField,
   Input,
   Switch,
   Table,
@@ -17,6 +16,7 @@ import {
   TooltipPortal,
   TooltipPositioner,
   TooltipTrigger,
+  WidgetFormField,
 } from '@overline-zebar/ui';
 import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
@@ -65,7 +65,7 @@ function SystrayTab() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
-      <FormField switch>
+      <WidgetFormField switch widget="main" setting="showSystray">
         <FieldTitle>Show System Tray</FieldTitle>
         <FieldInput>
           <Switch checked={showSystray} onCheckedChange={setShowSystray} />
@@ -73,7 +73,7 @@ function SystrayTab() {
         <FieldDescription>
           Show the system tray icons in the topbar.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="space-y-0.5 mb-4">
           <h1>Pinned Icons</h1>

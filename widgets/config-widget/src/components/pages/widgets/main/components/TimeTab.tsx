@@ -3,12 +3,12 @@ import {
   FieldDescription,
   FieldInput,
   FieldTitle,
-  FormField,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  WidgetFormField,
 } from '@overline-zebar/ui';
 
 const TIME_FORMATS = [
@@ -43,7 +43,7 @@ function TimeTab() {
 
   return (
     <>
-      <FormField>
+      <WidgetFormField widget="main" setting="timeFormat">
         <FieldTitle>Time Format</FieldTitle>
         <FieldInput>
           <Select
@@ -65,9 +65,9 @@ function TimeTab() {
         <FieldDescription>
           Choose how you want the time to be displayed in the topbar.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
 
-      <FormField>
+      <WidgetFormField widget="main" setting="timeLocale">
         <FieldTitle>Time Locale</FieldTitle>
         <FieldInput>
           <Select
@@ -89,7 +89,7 @@ function TimeTab() {
         <FieldDescription>
           Select the locale for time formatting and regional conventions.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
     </>
   );
 }

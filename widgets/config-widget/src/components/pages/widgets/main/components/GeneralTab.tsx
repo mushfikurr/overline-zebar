@@ -6,10 +6,10 @@ import {
   FieldDescription,
   FieldInput,
   FieldTitle,
-  FormField,
   Input,
   Switch,
-  Button, // Added Button import
+  Button,
+  WidgetFormField,
 } from '@overline-zebar/ui';
 
 function GeneralTab() {
@@ -23,11 +23,11 @@ function GeneralTab() {
     'main',
     'paddingRight'
   );
+  const [dynamicWorkspaceIndicator, setDynamicWorkspaceIndicator] =
+    useWidgetSetting('main', 'dynamicWorkspaceIndicator');
   const [isPaddingLinked, setIsPaddingLinked] = useState(
     paddingLeft === paddingRight
   );
-  const [dynamicWorkspaceIndicator, setDynamicWorkspaceIndicator] =
-    useWidgetSetting('main', 'dynamicWorkspaceIndicator');
 
   const handleLinkedPaddingChange = (value: number) => {
     setPaddingLeft(value);
@@ -36,7 +36,7 @@ function GeneralTab() {
 
   return (
     <>
-      <FormField switch>
+      <WidgetFormField switch widget="main" setting="dynamicWorkspaceIndicator">
         <FieldTitle>Allow Dynamic Workspace Indicators</FieldTitle>
         <FieldInput>
           <Switch
@@ -47,9 +47,9 @@ function GeneralTab() {
         <FieldDescription>
           Allow workspace indicators to be named after the first opened window.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
       <Separator />
-      <FormField>
+      <WidgetFormField widget="main" setting="marginX">
         <FieldTitle>Horizontal Margin</FieldTitle>
         <FieldInput>
           <NumberInput value={marginX} onChange={setMarginX} min={0} />
@@ -58,9 +58,9 @@ function GeneralTab() {
           Sets the outside space (left and right). Good for a
           &quot;floating&quot; appearance.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
       <Separator />
-      <FormField>
+      <WidgetFormField widget="main" setting={['paddingLeft', 'paddingRight']}>
         <FieldTitle>Horizontal Padding</FieldTitle>
         <FieldInput className="flex items-center gap-3">
           {isPaddingLinked ? (
@@ -93,9 +93,9 @@ function GeneralTab() {
         <FieldDescription>
           Sets the inner space (left and right).
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
       <Separator />
-      <FormField>
+      <WidgetFormField widget="main" setting="mediaMaxWidth">
         <FieldTitle>Media Max Width (px)</FieldTitle>
         <FieldInput>
           <Input
@@ -108,7 +108,7 @@ function GeneralTab() {
         <FieldDescription>
           Set the maximum width for media displayed in the topbar widget.
         </FieldDescription>
-      </FormField>
+      </WidgetFormField>
     </>
   );
 }
