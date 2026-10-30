@@ -49,7 +49,7 @@ type WindowTitleProps = {
 export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
   function WindowTitle({ glazewm }, ref) {
     const [show, setShow] = useState(false);
-    const [revealing, setRevealing] = useState(false);
+    const wrapRef = useRef<HTMLDivElement>(null);
     const [measureRef, { width }] = useMeasure();
 
     // Derived during render so the direction is known in the same render as
@@ -104,15 +104,18 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
       // container tweens to size. While tweening, a gradient mask fades the
       // clip edge instead of slicing text with a hard overflow cut.
       <motion.div
+        ref={wrapRef}
         initial={false}
         animate={{ width: width || 'auto' }}
         transition={widthTransition}
-        onAnimationStart={() => setRevealing(true)}
-        onAnimationComplete={() => setRevealing(false)}
-        className={cn(
-          'relative overflow-hidden h-full',
-          revealing && REVEAL_MASK
-        )}
+        // Toggle the reveal mask directly on the element: going through
+        // state delays the removal a few frames past the tween, leaving a
+        // visible gradient on the last frame.
+        onAnimationStart={() => wrapRef.current?.classList.add(REVEAL_MASK)}
+        onAnimationComplete={() =>
+          wrapRef.current?.classList.remove(REVEAL_MASK)
+        }
+        className="relative overflow-hidden h-full"
       >
         <div
           ref={measureRef}
