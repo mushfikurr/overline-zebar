@@ -7,6 +7,8 @@
     "eslint-plugin-react-hooks": "^6.0.0-rc.1",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.0.0",
     "syncpack": "14.0.0-alpha.12",
     "typescript": "^5.8.3",
@@ -19,7 +21,8 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md,html,yaml,vue,svelte,graphql}\"",
     "lint": "eslint . && pnpm --filter \"./widgets/*\" run lint",
-    "lint:fix": "eslint . --fix && pnpm --filter \"./widgets/*\" run lint:fix"
+    "lint:fix": "eslint . --fix && pnpm --filter \"./widgets/*\" run lint:fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "react-compiler-runtime": "catalog:",
