@@ -68,3 +68,15 @@ body,
     scrollbar-width: thin;
   }
 }
+
+/* Gentler motion: keep color/opacity transitions, drop movement and loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property:
+      color, background-color, border-color, opacity, box-shadow, fill, stroke !important;
+  }
+}

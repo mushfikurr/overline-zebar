@@ -29,7 +29,7 @@ const springCarouselItem: Transition = {
 const carouselItemSwap = {
   initial: { opacity: 0, scale: 0.85 },
   animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0 },
+  exit: { opacity: 0, scale: 0.85 },
 };
 
 export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
@@ -55,7 +55,7 @@ export const ExpandingCarousel: React.FC<ExpandingCarouselProps> = ({
   const edgeColor = useTransform(edgeOpacity, (val) => `rgba(0,0,0,${val})`);
   const gradient = useMotionTemplate`linear-gradient(to right, ${edgeColor} 0%, black ${leftEdge}, black ${rightEdge}, ${edgeColor} 100%)`;
   useEffect(() => {
-    animate(edgeOpacity, expanded ? 1 : 0.3, { duration: 1.4 });
+    animate(edgeOpacity, expanded ? 1 : 0.3, { duration: 0.35 });
   }, [expanded]);
 
   return (

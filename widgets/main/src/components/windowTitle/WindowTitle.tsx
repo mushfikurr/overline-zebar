@@ -33,7 +33,7 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
     }
 
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <motion.button
           ref={ref}
           key={title ?? 'default-icon'}
