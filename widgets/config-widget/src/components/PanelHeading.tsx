@@ -20,21 +20,48 @@ function PanelHeading({
     const el = ref.current;
     if (!el) return;
 
-    let container: HTMLElement | null = el.parentElement;
+    const scope = el.parentElement;
+    const tracked = new Set<HTMLElement>();
+    const update = () =>
+      setScrolled([...tracked].some((scroller) => scroller.scrollTop > 0));
+
+    // Track scroll events from scrollers that share the header's parent
+    // (e.g. a scrollable tab content), not just ancestor containers.
+    // Scroll events don't bubble, so listen in the capture phase.
+    const onScroll = (event: Event) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        scope?.contains(target) &&
+        !el.contains(target)
+      ) {
+        tracked.add(target);
+        update();
+      }
+    };
+
+    // Initial state: include an ancestor scroll container if present.
+    let container: HTMLElement | null = scope;
     while (container) {
       const { overflowY } = getComputedStyle(container);
       const canScroll =
         (overflowY === 'auto' || overflowY === 'scroll') &&
         container.scrollHeight > container.clientHeight;
-      if (canScroll) break;
+      if (canScroll) {
+        tracked.add(container);
+        break;
+      }
       container = container.parentElement;
     }
-    if (!container) return;
 
-    const update = () => setScrolled(container!.scrollTop > 0);
+    document.addEventListener('scroll', onScroll, {
+      capture: true,
+      passive: true,
+    });
     update();
-    container.addEventListener('scroll', update, { passive: true });
-    return () => container!.removeEventListener('scroll', update);
+
+    return () =>
+      document.removeEventListener('scroll', onScroll, { capture: true });
   }, []);
 
   return (

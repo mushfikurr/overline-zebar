@@ -26,15 +26,21 @@ export function MainSettings() {
             <TabsTrigger value="systray">System Tray</TabsTrigger>
           </TabsList>
         </PanelHeading>
-        <TabsContent value="general" className="space-y-8 flex-none px-4 py-4">
+        <TabsContent
+          value="general"
+          className="space-y-8 min-h-0 flex-1 overflow-y-auto px-4 py-4"
+        >
           <GeneralTab />
         </TabsContent>
-        <TabsContent value="time" className="space-y-8 flex-none px-4 py-4">
+        <TabsContent
+          value="time"
+          className="space-y-8 min-h-0 flex-1 overflow-y-auto px-4 py-4"
+        >
           <TimeTab />
         </TabsContent>
         <TabsContent
           value="system-stats"
-          className="space-y-8 flex-none px-4 py-4"
+          className="space-y-8 min-h-0 flex-1 overflow-y-auto px-4 py-4"
         >
           <SystemStatsTab />
         </TabsContent>
