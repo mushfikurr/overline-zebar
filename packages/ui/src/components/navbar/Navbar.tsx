@@ -29,7 +29,7 @@ export function NavbarItem({
     <Button
       onClick={handleClick}
       className={cn(
-        'group max-h-8 justify-start gap-2 bg-transparent hover:bg-background-deeper/60 h-full px-4 border-none border-b border-button-border rounded-none text-text-muted hover:text-text last:border-b-0',
+        'group max-h-8 justify-start gap-2 bg-transparent hover:bg-background-deeper/60 h-full px-4 border-none border-b border-button-border rounded-none text-text-muted hover:text-text transition-none active:scale-100 last:border-b-0',
         location === href &&
           'text-text bg-background-deeper hover:bg-background-deeper',
         className
@@ -38,7 +38,7 @@ export function NavbarItem({
       <Icon
         strokeWidth={2.6}
         className={cn(
-          'h-5 w-5 text-icon group-hover:text-text transition-colors ease-in-out duration-200',
+          'h-5 w-5 text-icon group-hover:text-text',
           location === href && 'text-text group-hover:text-text',
           iconClassNames
         )}

@@ -82,7 +82,7 @@ export function ThemeCard({
               ? `Use ${theme.name} for the current Windows appearance`
               : `Use ${theme.name}`
           }
-          className="cursor-pointer rounded-full outline-none transition-transform group-hover:scale-105 focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="cursor-pointer rounded-full outline-none transition-transform group-hover:scale-105 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-primary/50"
           onClick={(e) => {
             e.stopPropagation();
             onUse();
@@ -97,7 +97,7 @@ export function ThemeCard({
               aria-pressed={ownsLight}
               title="Use for light mode"
               className={cn(
-                'border-border flex size-5 cursor-pointer items-center justify-center rounded-full border bg-background/80 backdrop-blur-sm transition-colors',
+                'border-border flex size-5 cursor-pointer items-center justify-center rounded-full border bg-background/80 backdrop-blur-sm transition-[color,background-color,border-color,scale] active:scale-[0.97]',
                 ownsLight && 'border-primary bg-primary/25 text-text'
               )}
               onClick={(e) => {
@@ -112,7 +112,7 @@ export function ThemeCard({
               aria-pressed={ownsDark}
               title="Use for dark mode"
               className={cn(
-                'border-border flex size-5 cursor-pointer items-center justify-center rounded-full border bg-background/80 backdrop-blur-sm transition-colors',
+                'border-border flex size-5 cursor-pointer items-center justify-center rounded-full border bg-background/80 backdrop-blur-sm transition-[color,background-color,border-color,scale] active:scale-[0.97]',
                 ownsDark && 'border-primary bg-primary/25 text-text'
               )}
               onClick={(e) => {

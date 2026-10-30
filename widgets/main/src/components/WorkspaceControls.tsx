@@ -117,6 +117,11 @@ export function WorkspaceControls({ glazewm }: WorkspaceControlsProps) {
                 <motion.span
                   {...fadeSwap}
                   transition={{ duration: 0.2 }}
+                  whileTap={
+                    isPaused
+                      ? undefined
+                      : { scale: 0.97, transition: { duration: 0.1 } }
+                  }
                   className={cn(
                     'relative z-10 px-0.5 w-full h-full leading-none text-center flex items-center justify-center',
                     'transition-colors ease-in-out duration-200',

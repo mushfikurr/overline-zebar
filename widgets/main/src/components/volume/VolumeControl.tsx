@@ -88,7 +88,7 @@ export default function VolumeControl({
       onClick={handleClick}
       onWheel={handleWheel}
       onDoubleClick={handleDoubleClick}
-      className="outline-none"
+      className="outline-none active:bg-background-deeper/90"
     >
       <div className="flex items-center">
         <div>{renderIcon()}</div>

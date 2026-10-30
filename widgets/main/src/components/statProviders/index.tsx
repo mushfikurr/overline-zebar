@@ -65,7 +65,7 @@ export default function StatProviders({
   return (
     <Chip
       ref={chipRef}
-      className="flex items-center gap-3 h-full pl-3 pr-2.5"
+      className="flex items-center gap-3 h-full pl-3 pr-2.5 active:bg-background-deeper/90"
       as="button"
       onClick={async () => {
         const widgetPlacement = await calculateWidgetPlacementFromRight(

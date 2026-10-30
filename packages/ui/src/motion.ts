@@ -30,7 +30,7 @@ export const iconFeedback: Pick<
   HTMLMotionProps<'div'>,
   'whileHover' | 'whileTap'
 > = {
-  whileTap: { scale: 0.9 },
+  whileTap: { scale: 0.97 },
 };
 
 export const textSwap: SwapAnimation = {
