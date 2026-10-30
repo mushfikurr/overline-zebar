@@ -1,6 +1,7 @@
 import React from 'react';
 import { MediaOutput } from 'zebar';
 import { cn } from '../../utils/cn';
+import { useMostRecentMediaSession } from '../../utils/useMostRecentMediaSession';
 import { ConditionalPanel } from '../common/ConditionalPanel';
 import { ProgressBar } from './components/ProgressBar';
 import { Status } from './components/Status';
@@ -12,10 +13,7 @@ export const TitleDetailsMemo = React.memo(TitleDetails);
 type MediaProps = {
   media: MediaOutput;
 };
-// Alt+Click cycles sessions manually; otherwise the widget follows the session
-// that started playing most recently. Play-state transitions are tracked
-// ourselves because the OS/Zebar "current session" designation is sticky and
-// doesn't reliably change when a second app starts playing.
+
 export default function Media({ media }: MediaProps) {
   const {
     allSessions,
@@ -24,66 +22,10 @@ export default function Media({ media }: MediaProps) {
     previous,
     currentSession: zebarCurrentSession,
   } = media;
-  const zebarSessionId = zebarCurrentSession?.sessionId ?? null;
-
-  const [overrideSessionId, setOverrideSessionId] = React.useState<
-    string | null
-  >(null);
-  const [, setActivationTick] = React.useState(0);
-
-  const lastPlayedAtRef = React.useRef<Record<string, number>>({});
-  const prevPlayingRef = React.useRef<Record<string, boolean>>({});
-
-  React.useEffect(() => {
-    const now = Date.now();
-
-    if (
-      zebarSessionId &&
-      lastPlayedAtRef.current[zebarSessionId] === undefined
-    ) {
-      lastPlayedAtRef.current[zebarSessionId] = now + 1;
-    }
-
-    for (const session of allSessions) {
-      const wasPlaying = prevPlayingRef.current[session.sessionId];
-
-      if (session.isPlaying && !wasPlaying) {
-        lastPlayedAtRef.current[session.sessionId] =
-          now + (session.sessionId === zebarSessionId ? 1 : 0);
-        setActivationTick(tick => tick + 1);
-        setOverrideSessionId(prev =>
-          prev && prev !== session.sessionId ? null : prev,
-        );
-      }
-    }
-
-    prevPlayingRef.current = Object.fromEntries(
-      allSessions.map(session => [session.sessionId, session.isPlaying]),
-    );
-
-    const activeIds = new Set(allSessions.map(session => session.sessionId));
-    for (const sessionId of Object.keys(lastPlayedAtRef.current)) {
-      if (!activeIds.has(sessionId)) {
-        delete lastPlayedAtRef.current[sessionId];
-      }
-    }
-  }, [allSessions, zebarSessionId]);
-
-  let mostRecentSessionId: string | null = null;
-  let mostRecentPlayedAt = -Infinity;
-  for (const session of allSessions) {
-    const playedAt = lastPlayedAtRef.current[session.sessionId];
-    if (playedAt !== undefined && playedAt >= mostRecentPlayedAt) {
-      mostRecentPlayedAt = playedAt;
-      mostRecentSessionId = session.sessionId;
-    }
-  }
-
-  const currentSession =
-    allSessions.find(session => session.sessionId === overrideSessionId) ??
-    allSessions.find(session => session.sessionId === mostRecentSessionId) ??
-    zebarCurrentSession ??
-    allSessions[0];
+  const { currentSession, cycleSession } = useMostRecentMediaSession(
+    allSessions,
+    zebarCurrentSession,
+  );
 
   const handlePlayPause = (e: React.MouseEvent) => {
     if (!currentSession) return;
@@ -99,14 +41,7 @@ export default function Media({ media }: MediaProps) {
     }
 
     if (e.altKey) {
-      const currentIdx = Math.max(
-        0,
-        allSessions.findIndex(
-          session => session.sessionId === currentSession.sessionId,
-        ),
-      );
-      const nextIdx = currentIdx < allSessions.length - 1 ? currentIdx + 1 : 0;
-      setOverrideSessionId(allSessions[nextIdx]?.sessionId ?? null);
+      cycleSession();
       return;
     }
 
