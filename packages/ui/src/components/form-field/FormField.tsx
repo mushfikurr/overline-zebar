@@ -1,16 +1,21 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Undo2 } from 'lucide-react';
+import { Button } from '../button';
 
 interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   switch?: boolean;
+  isDefault?: boolean;
+  onReset?: () => void;
 }
 
 export function FormField({
   children,
   className,
   switch: isSwitch,
+  isDefault,
+  onReset,
   ...props
 }: FormFieldProps) {
   const childrenArray = React.Children.toArray(children);
@@ -31,20 +36,61 @@ export function FormField({
       (child.type as React.FunctionComponent).displayName === 'FieldDescription'
   );
 
+  const showReset = onReset != null && isDefault === false;
+  const resetButton = showReset && (
+    <FieldReset
+      className="absolute left-full top-1/2 ml-2 -translate-y-[calc(50%+1px)]"
+      onClick={onReset}
+    />
+  );
+
   return (
     <div className={cn(className, !isSwitch && 'space-y-3')} {...props}>
       {isSwitch ? (
         <div className={cn('flex gap-4', !description && 'items-center')}>
           {input}
           <div className="space-y-1.5">
-            <h1 className="leading-none">{title}</h1>
+            <div className="relative w-fit">
+              <h1 className="leading-none">{title}</h1>
+              {resetButton}
+            </div>
             {description}
           </div>
         </div>
+      ) : showReset && title ? (
+        <>
+          <div className="relative w-fit">
+            {title}
+            {resetButton}
+          </div>
+          {childrenArray.filter((child) => child !== title)}
+        </>
       ) : (
         children
       )}
     </div>
+  );
+}
+
+export function FieldReset({
+  onClick,
+  className,
+}: {
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      className={className}
+      onClick={onClick}
+      aria-label="Reset to default"
+      title="Reset to default"
+    >
+      <Undo2 />
+    </Button>
   );
 }
 
