@@ -26,6 +26,7 @@ export {
   SelectSeparator,
 } from './components/select';
 export { Switch } from './components/switch';
+export { Slider } from './components/slider';
 export { WindowsIcon } from './components/icons/windows';
 export { Navbar, NavbarItem } from './components/navbar';
 export { default as PanelLayout } from './components/panel-layout/PanelLayout';
