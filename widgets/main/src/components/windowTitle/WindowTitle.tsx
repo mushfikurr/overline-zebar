@@ -72,6 +72,10 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
     const title = glazewm ? getWindowTitle(glazewm) : null;
     const titleKey = title ?? 'default-icon';
     const focusedName = glazewm?.focusedWorkspace?.name ?? null;
+    // Unresolved focus state (entering a workspace that is being brought
+    // back to life): there is no news worth committing — hold the last
+    // title instead of rendering an intermediate one.
+    const resolved = !!glazewm?.focusedWorkspace && !!glazewm?.focusedContainer;
 
     // Swap state commits only after TITLE_HOLD_MS of stability: `held`
     // drives the rendered swap (key, direction), `committed` is the base
@@ -90,7 +94,7 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
     });
 
     useEffect(() => {
-      if (!glazewm) return;
+      if (!glazewm || !resolved) return;
 
       if (titleKey === committedRef.current.titleKey) {
         committedRef.current.workspaceName = focusedName;
@@ -107,9 +111,14 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
             focusedName !== prev.workspaceName
           ) {
             const order = glazewm.currentWorkspaces.map((w) => w.name);
-            const delta =
-              order.indexOf(focusedName) - order.indexOf(prev.workspaceName);
-            direction = Math.sign(delta) || 0;
+            const nextIndex = order.indexOf(focusedName);
+            const prevIndex = order.indexOf(prev.workspaceName);
+            // A workspace not yet in the strip has no travel direction —
+            // fade instead of guessing a side.
+            direction =
+              nextIndex === -1 || prevIndex === -1
+                ? 0
+                : Math.sign(nextIndex - prevIndex) || 0;
           }
           committedRef.current = {
             titleKey,
@@ -232,6 +241,11 @@ export const formatWindowTitle = (title: string, process: string) => {
 const getWindowTitle = (glazewm: GlazeWmOutput): string | null => {
   const focusedWorkspace = glazewm.focusedWorkspace;
   const focusedContainer = glazewm.focusedContainer;
+
+  // Entering a non-keep_alive workspace briefly reports no focused
+  // container — reading through it would throw during render and blank
+  // the title for a frame.
+  if (!focusedWorkspace || !focusedContainer) return null;
 
   if (focusedContainer.type === ContainerType.WINDOW) {
     return formatWindowTitle(
