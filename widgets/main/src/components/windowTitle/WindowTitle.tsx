@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import type { MotionProps, Variants } from 'motion/react';
 import { AppWindowIcon } from 'lucide-react';
-import { forwardRef, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
 import { WindowControls } from './components/WindowControls';
@@ -12,14 +12,23 @@ import { cn } from '../../utils/cn';
 // switching windows within a workspace has no direction and pure-fades.
 // The exit runs ~2x faster than the enter so the old text is fully gone
 // before the new one is mostly opaque (no crossfade ghosting), and a 2px
-// blur during the swap masks the two text states blending.
+// blur during the swap masks the two text states blending. The enter starts
+// at 0.975 scale (standards band: 0.9-0.97, never from 0) with the
+// transform origin pinned to the entering side so the scale grows along
+// the slide instead of fighting it.
 const SWAP_EASE = [0.23, 1, 0.32, 1] as const;
 
 const titleVariants: Variants = {
-  enter: (dir: number) => ({ opacity: 0, x: 12 * dir, filter: 'blur(2px)' }),
+  enter: (dir: number) => ({
+    opacity: 0,
+    x: 12 * dir,
+    scale: 0.975,
+    filter: 'blur(2px)',
+  }),
   center: {
     opacity: 1,
     x: 0,
+    scale: 1,
     filter: 'blur(0px)',
     transition: { duration: 0.24, ease: SWAP_EASE },
   },
@@ -45,6 +54,12 @@ const widthTransition: MotionProps['transition'] = {
 // leave hanging on the last frame.
 const REVEAL_BAND = 10;
 
+// GlazeWM flaps while restoring a workspace: focused windows report late,
+// so two or three titles can arrive within ~100ms of a workspace focus.
+// Hold each title briefly and only commit a swap when it settles, so
+// transient states never start an animation.
+const TITLE_HOLD_MS = 80;
+
 type WindowTitleProps = {
   glazewm: GlazeWmOutput | null;
 };
@@ -54,36 +69,66 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
     const [show, setShow] = useState(false);
     const [measureRef, { width }] = useMeasure();
 
-    // Derived during render so the direction is known in the same render as
-    // the key change (an effect would always lag one swap behind).
-    const swapRef = useRef({
-      titleKey: '',
+    const title = glazewm ? getWindowTitle(glazewm) : null;
+    const titleKey = title ?? 'default-icon';
+    const focusedName = glazewm?.focusedWorkspace?.name ?? null;
+
+    // Swap state commits only after TITLE_HOLD_MS of stability: `held`
+    // drives the rendered swap (key, direction), `committed` is the base
+    // the next swap's direction derives from.
+    const [held, setHeld] = useState({
+      titleKey: 'default-icon',
+      workspaceName: null as string | null,
+      title: null as string | null,
+      dir: 0,
+    });
+    const firstRef = useRef(true);
+    const committedRef = useRef({
+      titleKey: 'default-icon',
       workspaceName: null as string | null,
       dir: 0,
     });
 
-    if (!glazewm) return;
+    useEffect(() => {
+      if (!glazewm) return;
 
-    const title = getWindowTitle(glazewm);
-    const titleKey = title ?? 'default-icon';
-    const focusedName = glazewm.focusedWorkspace?.name ?? null;
-
-    const prev = swapRef.current;
-    let direction = prev.dir;
-    if (titleKey !== prev.titleKey) {
-      direction = 0;
-      if (
-        focusedName &&
-        prev.workspaceName &&
-        focusedName !== prev.workspaceName
-      ) {
-        const order = glazewm.currentWorkspaces.map((w) => w.name);
-        const delta =
-          order.indexOf(focusedName) - order.indexOf(prev.workspaceName);
-        direction = Math.sign(delta) || 0;
+      if (titleKey === committedRef.current.titleKey) {
+        committedRef.current.workspaceName = focusedName;
+        return;
       }
-    }
-    swapRef.current = { titleKey, workspaceName: focusedName, dir: direction };
+
+      const timer = setTimeout(
+        () => {
+          const prev = committedRef.current;
+          let direction = prev.dir;
+          if (
+            focusedName &&
+            prev.workspaceName &&
+            focusedName !== prev.workspaceName
+          ) {
+            const order = glazewm.currentWorkspaces.map((w) => w.name);
+            const delta =
+              order.indexOf(focusedName) - order.indexOf(prev.workspaceName);
+            direction = Math.sign(delta) || 0;
+          }
+          committedRef.current = {
+            titleKey,
+            workspaceName: focusedName,
+            dir: direction,
+          };
+          setHeld({
+            titleKey,
+            workspaceName: focusedName,
+            title,
+            dir: direction,
+          });
+        },
+        firstRef.current ? 0 : TITLE_HOLD_MS
+      );
+      firstRef.current = false;
+
+      return () => clearTimeout(timer);
+    }, [glazewm, titleKey, focusedName, title]);
 
     function handleWindowTitle(e: React.MouseEvent, textToCopy: string) {
       if (e.altKey) {
@@ -101,6 +146,8 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
       setShow(!show);
     }
 
+    if (!glazewm) return;
+
     return (
       // Measured-width wrapper: the title never pops in at a new width — the
       // container tweens to size, wide enough to hold the reveal band.
@@ -117,22 +164,30 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
             'w-max h-full flex items-center'
           )}
         >
-          <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+          <AnimatePresence initial={false} mode="popLayout" custom={held.dir}>
             <motion.button
               ref={ref}
-              key={titleKey}
-              custom={direction}
+              key={held.titleKey}
+              custom={held.dir}
               variants={titleVariants}
               initial="enter"
               animate="center"
               exit="exit"
+              style={{
+                transformOrigin:
+                  held.dir === 0
+                    ? '50% 50%'
+                    : held.dir > 0
+                      ? '100% 50%'
+                      : '0% 50%',
+              }}
               className="font-medium relative h-full flex items-center cu"
-              title={title ?? 'Focused Window'}
+              title={held.title ?? 'Focused Window'}
               onClick={(e: React.MouseEvent) =>
                 handleWindowTitle(e, getWindowProcess(glazewm) ?? '')
               }
             >
-              {title ?? <AppWindowIcon className="h-4 w-4 text-icon" />}
+              {held.title ?? <AppWindowIcon className="h-4 w-4 text-icon" />}
               <WindowControls
                 glazewm={glazewm}
                 show={show}
