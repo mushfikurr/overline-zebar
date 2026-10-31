@@ -14,7 +14,7 @@ export const defaultConfig: RootConfig = {
     themes: [defaultTheme, ...catppuccinThemes, nordTheme, nordLightTheme],
     currentThemeId: 'default',
     radius: '0.5rem',
-    windowEffect: 'acrylic',
+    windowEffect: 'none',
     fontFamily: 'Geist Mono',
     systemThemeSync: false,
     lightThemeId: 'latte',
