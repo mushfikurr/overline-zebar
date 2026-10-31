@@ -32,15 +32,18 @@ const titleVariants: Variants = {
 };
 
 // Width reveal is predetermined state, not gesture-driven: tween with a
-// strong ease-out instead of a spring. While it runs, the wrapper clips the
-// text — soften that edge with a gradient mask instead of a hard cut.
+// strong ease-out instead of a spring.
 const widthTransition: MotionProps['transition'] = {
   duration: 0.26,
   ease: [0.23, 1, 0.32, 1],
 };
 
-const REVEAL_MASK =
-  '[mask-image:linear-gradient(to_right,black_calc(100%_-_10px),transparent_100%)]';
+// The wrapper keeps a REVEAL_BAND-wide strip past the text width. Its right
+// end fades via mask and only overlaps text while the width tween runs —
+// settled, the strip is empty and looks identical to no mask at all. A
+// permanent mask means there is no class toggle to desync on interrupts or
+// leave hanging on the last frame.
+const REVEAL_BAND = 10;
 
 type WindowTitleProps = {
   glazewm: GlazeWmOutput | null;
@@ -49,7 +52,6 @@ type WindowTitleProps = {
 export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
   function WindowTitle({ glazewm }, ref) {
     const [show, setShow] = useState(false);
-    const wrapRef = useRef<HTMLDivElement>(null);
     const [measureRef, { width }] = useMeasure();
 
     // Derived during render so the direction is known in the same render as
@@ -101,21 +103,12 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
 
     return (
       // Measured-width wrapper: the title never pops in at a new width — the
-      // container tweens to size. While tweening, a gradient mask fades the
-      // clip edge instead of slicing text with a hard overflow cut.
+      // container tweens to size, wide enough to hold the reveal band.
       <motion.div
-        ref={wrapRef}
         initial={false}
-        animate={{ width: width || 'auto' }}
+        animate={{ width: width ? width + REVEAL_BAND : 'auto' }}
         transition={widthTransition}
-        // Toggle the reveal mask directly on the element: going through
-        // state delays the removal a few frames past the tween, leaving a
-        // visible gradient on the last frame.
-        onAnimationStart={() => wrapRef.current?.classList.add(REVEAL_MASK)}
-        onAnimationComplete={() =>
-          wrapRef.current?.classList.remove(REVEAL_MASK)
-        }
-        className="relative overflow-hidden h-full"
+        className="relative overflow-hidden h-full [mask-image:linear-gradient(to_right,black_calc(100%_-_10px),transparent_100%)]"
       >
         <div
           ref={measureRef}
