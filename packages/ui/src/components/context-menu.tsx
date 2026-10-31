@@ -70,7 +70,7 @@ function ContextMenuContent({
         <BaseContextMenu.Popup
           data-slot="context-menu-content"
           className={cn(
-            'bg-surface/75 text-text data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[12rem] origin-[var(--transform-origin)] overflow-hidden rounded-md border border-border p-1 shadow-md outline-none backdrop-blur-2xl',
+            'bg-surface/75 text-text origin-[var(--transform-origin)] transition-[transform,opacity] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 z-50 min-w-[12rem] overflow-hidden rounded-md border border-border p-1 shadow-md outline-none backdrop-blur-2xl',
             className
           )}
           {...props}
@@ -95,7 +95,7 @@ function ContextMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "hover:bg-button/80 focus:bg-button/80 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive-foreground data-[variant=destructive]:*:[svg]:!text-destructive focus:data-[variant=destructive]:*:[svg]:!text-destructive-foreground [&_svg:not([class*='text-'])]:text-text-muted relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-all select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:transition-all [&_svg:not([class*='size-'])]:size-4",
+        "hover:bg-button/80 focus:bg-button/80 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive-foreground data-[variant=destructive]:*:[svg]:!text-destructive focus:data-[variant=destructive]:*:[svg]:!text-destructive-foreground [&_svg:not([class*='text-'])]:text-text-muted relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:transition-colors [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -253,7 +253,7 @@ function ContextMenuSubContent({
         <BaseContextMenu.Popup
           data-slot="context-menu-sub-content"
           className={cn(
-            'bg-surface/75 text-text data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[12rem] origin-[var(--transform-origin)] overflow-hidden rounded-md border border-border p-1 shadow-md backdrop-blur-2xl',
+            'bg-surface/75 text-text origin-[var(--transform-origin)] transition-[transform,opacity] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 z-50 min-w-[12rem] overflow-hidden rounded-md border border-border p-1 shadow-md backdrop-blur-2xl',
             className
           )}
           {...props}

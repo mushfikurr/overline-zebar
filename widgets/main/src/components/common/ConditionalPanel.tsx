@@ -15,7 +15,7 @@ export function ConditionalPanel({
   const [ref, { width }] = useMeasure();
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {sessionActive && (
         <motion.div
           key="resizable-panel"
