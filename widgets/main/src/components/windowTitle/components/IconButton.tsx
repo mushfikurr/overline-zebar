@@ -32,7 +32,7 @@ export const IconButton = ({
       {...props}
     >
       {animateKey ? (
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={animateKey}
             {...iconSwap}

@@ -57,7 +57,7 @@ export default function Media({ media }: MediaProps) {
         handlePlayPause(e);
       }}
     >
-      <ConditionalPanel sessionActive={!!currentSession}>
+      <ConditionalPanel sessionActive={!!currentSession} appearance>
         <Chip
           className={cn(
             'relative flex gap-1.5 select-none cursor-pointer overflow-clip group',

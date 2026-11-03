@@ -22,7 +22,7 @@ export function Status({ isPlaying }: { isPlaying: boolean }) {
   const key = trackAction ?? (state ? 'pause' : 'play');
 
   return (
-    <AnimatePresence mode="popLayout">
+    <AnimatePresence mode="popLayout" initial={false}>
       <motion.div key={key} {...iconSwap} {...iconFeedback}>
         <PlayPauseIcon LucideIcon={icon} />
       </motion.div>

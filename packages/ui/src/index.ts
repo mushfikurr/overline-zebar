@@ -1,6 +1,10 @@
 export { Button, buttonVariants } from './components/button';
 export {
   iconSwap,
+  panelEnterTransition,
+  panelExitTransition,
+  panelReveal,
+  contentAppearance,
   quickSwap,
   iconFeedback,
   textSwap,

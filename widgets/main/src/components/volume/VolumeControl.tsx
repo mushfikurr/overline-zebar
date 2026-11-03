@@ -1,16 +1,10 @@
-import { Chip, type SwapAnimation } from '@overline-zebar/ui';
+import { Chip, iconFeedback, iconSwap } from '@overline-zebar/ui';
 import { AnimatePresence, motion } from 'motion/react';
 import { Volume, Volume1, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AudioOutput } from 'zebar';
 import Slider from './components/Slider';
-
-const sliderReveal: SwapAnimation = {
-  initial: { width: 0, opacity: 0 },
-  animate: { width: 'auto', opacity: 1 },
-  exit: { width: 0, opacity: 0 },
-  transition: { type: 'spring', duration: 0.3, bounce: 0 },
-};
+import { ConditionalPanel } from '../common/ConditionalPanel';
 
 export default function VolumeControl({
   iconClassnames,
@@ -71,15 +65,19 @@ export default function VolumeControl({
     setVolume(100);
   };
 
-  const renderIcon = () => {
-    if (playbackDevice.volume === 0) {
-      return <Volume className={iconClassnames} strokeWidth={3} />;
-    } else if (playbackDevice.volume > 0 && playbackDevice.volume < 60) {
-      return <Volume1 className={iconClassnames} strokeWidth={3} />;
-    } else {
-      return <Volume2 className={iconClassnames} strokeWidth={3} />;
-    }
-  };
+  const volumeLevel =
+    playbackDevice.volume === 0
+      ? 'muted'
+      : playbackDevice.volume < 60
+        ? 'low'
+        : 'high';
+
+  const VolumeIcon =
+    volumeLevel === 'muted'
+      ? Volume
+      : volumeLevel === 'low'
+        ? Volume1
+        : Volume2;
 
   return (
     <Chip
@@ -91,16 +89,20 @@ export default function VolumeControl({
       className="outline-none active:bg-background-deeper/90"
     >
       <div className="flex items-center">
-        <div>{renderIcon()}</div>
-
         <div>
-          <AnimatePresence initial={false}>
-            {expanded && (
-              <motion.div {...sliderReveal} className="overflow-hidden ps-1.5">
-                <Slider value={playbackDevice.volume} setValue={setVolume} />
-              </motion.div>
-            )}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div key={volumeLevel} {...iconSwap} {...iconFeedback}>
+              <VolumeIcon className={iconClassnames} strokeWidth={3} />
+            </motion.div>
           </AnimatePresence>
+        </div>
+
+        <div className="h-4">
+          <ConditionalPanel sessionActive={expanded} subtleExit>
+            <div className="h-full flex items-center pl-1.5">
+              <Slider value={playbackDevice.volume} setValue={setVolume} />
+            </div>
+          </ConditionalPanel>
         </div>
       </div>
     </Chip>
