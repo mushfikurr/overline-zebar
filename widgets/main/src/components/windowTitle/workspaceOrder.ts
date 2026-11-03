@@ -5,6 +5,22 @@ export function mergeWorkspaceOrder(
   live: string[]
 ): string[] {
   const order = [...previous];
+
+  // Empty, non-keep_alive workspaces may never coexist in a snapshot.
+  // Seed unseen numbered workspaces by number rather than visit order;
+  // the live ordering below still takes precedence (including custom orders).
+  for (const name of live) {
+    if (order.includes(name) || !/^\d+$/.test(name)) continue;
+    const nextNumberIndex = order.findIndex(
+      (existing) => /^\d+$/.test(existing) && Number(existing) > Number(name)
+    );
+    order.splice(
+      nextNumberIndex === -1 ? order.length : nextNumberIndex,
+      0,
+      name
+    );
+  }
+
   let nextIndex = order.length;
 
   for (const name of [...live].reverse()) {
