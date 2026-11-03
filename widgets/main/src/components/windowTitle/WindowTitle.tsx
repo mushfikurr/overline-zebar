@@ -6,6 +6,7 @@ import useMeasure from 'react-use-measure';
 import { GlazeWmOutput } from 'zebar';
 import { WindowControls } from './components/WindowControls';
 import { cn } from '../../utils/cn';
+import { mergeWorkspaceOrder } from './workspaceOrder';
 
 const SWAP_EASE = [0.23, 1, 0.32, 1] as const;
 const SWAP_TRAVEL = 8;
@@ -122,13 +123,10 @@ export const WindowTitle = forwardRef<HTMLButtonElement, WindowTitleProps>(
 
     useLayoutEffect(() => {
       if (glazewm) {
-        const seen = new Set(workspaceOrderRef.current);
-        for (const workspace of glazewm.currentWorkspaces) {
-          if (!seen.has(workspace.name)) {
-            workspaceOrderRef.current.push(workspace.name);
-            seen.add(workspace.name);
-          }
-        }
+        workspaceOrderRef.current = mergeWorkspaceOrder(
+          workspaceOrderRef.current,
+          glazewm.currentWorkspaces.map((workspace) => workspace.name)
+        );
       }
       if (!glazewm || !resolved) return;
 

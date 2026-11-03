@@ -30,7 +30,7 @@ const PopoverPopup = React.forwardRef<
   <BasePopover.Popup
     ref={ref}
     className={cn(
-      'z-[9999] w-72 rounded-md border border-border bg-surface/75 p-4 text-text shadow-md outline-none backdrop-blur-2xl origin-[var(--transform-origin)] transition-[transform,opacity] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0',
+      'z-[9999] w-72 rounded-md border border-border bg-surface/75 p-4 text-text shadow-md outline-none backdrop-blur-2xl origin-[var(--transform-origin)] transition-[transform,opacity] duration-150 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
       className
     )}
     {...props}
