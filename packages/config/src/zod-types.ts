@@ -29,7 +29,7 @@ export const AppSettingsSchema = z.object({
   themes: z.array(ThemeSchema),
   currentThemeId: z.string(),
   radius: z.string(),
-  windowEffect: z.string().default('acrylic'),
+  windowEffect: z.string().default('none'),
   fontFamily: z.string().default('Geist Mono'),
   systemThemeSync: z.boolean().default(false),
   lightThemeId: z.string().nullable().default('latte'),

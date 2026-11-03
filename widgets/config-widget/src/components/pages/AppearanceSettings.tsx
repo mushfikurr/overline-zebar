@@ -100,9 +100,10 @@ function AppearanceSettings() {
               </SelectContent>
             </Select>
           </FieldInput>
-          <FieldDescription>
-            Sets the window transparency/blurring effect. Restart Zebar to
-            ensure the correct effect is applied.
+          <FieldDescription warning>
+            Experimental. Window effects apply to the entire window and can
+            bleed gray around transparent edges such as margins and rounded
+            corners. Restart Zebar after changing.
           </FieldDescription>
         </AppFormField>
         <Separator />
