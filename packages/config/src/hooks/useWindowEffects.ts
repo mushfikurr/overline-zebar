@@ -3,6 +3,11 @@ import { Effect } from '@tauri-apps/api/window';
 import * as zebar from 'zebar';
 import { RootConfig } from '../types';
 import { parseHexColor } from '../utils/parseHexColor';
+import { createWindowEffectsQueue } from '../utils/windowEffectsQueue';
+
+// This module controls the current widget's window. Keep ordering across hook
+// cleanup/remount (including Strict Mode), not just across individual renders.
+const requestWindowEffects = createWindowEffectsQueue();
 
 const effectMap: Record<string, Effect[]> = {
   acrylic: [Effect.Acrylic],
@@ -39,13 +44,11 @@ export function useWindowEffects(state: RootConfig) {
     // - Applying one effect does not unset another (acrylic, blur and
     //   mica use different mechanisms on Windows), so switching between
     //   effects would otherwise leave stale backdrops behind.
-    tauriWindow
-      .clearEffects()
-      .catch(() => {})
-      .then(() =>
-        effects.length > 0
-          ? tauriWindow.setEffects({ effects, color }).catch(() => {})
-          : undefined
-      );
+    return requestWindowEffects(
+      () => tauriWindow.clearEffects(),
+      effects.length > 0
+        ? () => tauriWindow.setEffects({ effects, color })
+        : undefined
+    );
   }, [state.app.windowEffect, state.app.currentThemeId, state.app.themes]);
 }
