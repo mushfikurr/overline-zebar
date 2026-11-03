@@ -23,7 +23,7 @@ function arrangeIconsWithPinnedCenter(
 
   const others = icons
     .filter((icon) => !pinnedHashes.includes(icon.iconHash))
-    .sort((a, b) => a.tooltip.localeCompare(b.tooltip));
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   const half = Math.ceil(others.length / 2);
   return [...others.slice(0, half), ...pinned, ...others.slice(half)];

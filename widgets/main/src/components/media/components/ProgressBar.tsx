@@ -36,14 +36,14 @@ export function ProgressBar({
     return () => clearInterval(interval);
   }, [currentSession, currentSession?.position]);
 
+  const fraction = currentSession
+    ? Math.min(1, progress / currentSession.endTime || 0)
+    : 0;
+
   return (
     <div
-      className="absolute h-[1.5px] bg-primary bottom-0 left-0 transition-[width] duration-200 ease-out"
-      style={{
-        width: currentSession
-          ? `${(progress / currentSession?.endTime) * 100 || 0}%`
-          : '0',
-      }}
+      className="absolute h-[1.5px] w-full bg-primary bottom-0 left-0 origin-left transition-transform duration-200 ease-out"
+      style={{ transform: `scaleX(${fraction})` }}
     ></div>
   );
 }

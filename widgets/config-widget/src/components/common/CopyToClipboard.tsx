@@ -26,7 +26,7 @@ export function CopyToClipboard({
         console.log(`Copied to clipboard: ${textToCopy}`);
         setCopying(true);
         clearTimeout(copyTimeout.current);
-        copyTimeout.current = window.setTimeout(() => setCopying(false), 300);
+        copyTimeout.current = window.setTimeout(() => setCopying(false), 750);
       })
       .catch((err) => {
         console.error('Failed to copy text to clipboard:', err);
@@ -73,7 +73,7 @@ const IconButton = ({
       {...props}
     >
       {animateKey ? (
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={animateKey}
             {...quickSwap}

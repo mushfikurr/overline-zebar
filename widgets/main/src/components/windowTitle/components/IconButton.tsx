@@ -1,4 +1,4 @@
-import { iconFeedback, iconSwap } from '@overline-zebar/ui';
+import { iconSwap } from '@overline-zebar/ui';
 import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
 import { LucideIcon } from 'lucide-react';
 import React from 'react';
@@ -9,12 +9,15 @@ interface IconButtonProps
   icon: LucideIcon;
   animateKey?: string;
   animateProps?: HTMLMotionProps<'div'>;
+  static?: boolean;
 }
 
 export const IconButton = ({
   icon: Icon,
   animateKey,
   animateProps,
+  static: isStatic = false,
+  className,
   ...props
 }: IconButtonProps) => {
   const renderInner = (Icon: LucideIcon) => (
@@ -26,19 +29,16 @@ export const IconButton = ({
       className={cn(
         'h-full flex items-center justify-center text-icon',
         'hover:text-text',
-        'transition-colors duration-200 ease-in-out',
-        'disabled:pointer-events-none disabled:opacity-50'
+        'transition-[color,scale] duration-150 ease-out',
+        !isStatic && 'enabled:active:scale-[0.96]',
+        'disabled:pointer-events-none disabled:opacity-50',
+        className
       )}
       {...props}
     >
       {animateKey ? (
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={animateKey}
-            {...iconSwap}
-            {...iconFeedback}
-            {...animateProps}
-          >
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.div key={animateKey} {...iconSwap} {...animateProps}>
             {renderInner(Icon)}
           </motion.div>
         </AnimatePresence>

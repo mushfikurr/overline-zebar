@@ -5,26 +5,45 @@ export type SwapAnimation = Pick<
   'initial' | 'animate' | 'exit' | 'transition'
 >;
 
-export const iconSwap: SwapAnimation = {
-  initial: { opacity: 0, scale: 0.8 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.8 },
-  transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] },
+// Shared rhythm: reveals take a little longer than exits, without a pause.
+export const panelEnterTransition: Transition = {
+  type: 'spring',
+  duration: 0.32,
+  bounce: 0,
 };
 
-export const quickSwap: SwapAnimation = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.12, ease: [0.23, 1, 0.32, 1] },
-  },
+export const panelExitTransition: Transition = {
+  ...panelEnterTransition,
+  duration: 0.26,
+};
+
+export const panelReveal: SwapAnimation = {
+  initial: { opacity: 0, x: -12, filter: 'blur(4px)' },
+  animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
   exit: {
     opacity: 0,
-    scale: 0.9,
-    transition: { duration: 0.08, ease: [0.23, 1, 0.32, 1] },
+    x: -4,
+    filter: 'blur(4px)',
+    transition: panelExitTransition,
   },
+  transition: panelEnterTransition,
 };
+
+export const contentAppearance: SwapAnimation = {
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -2, transition: panelExitTransition },
+  transition: panelEnterTransition,
+};
+
+export const iconSwap: SwapAnimation = {
+  initial: { opacity: 0, scale: 0.25, filter: 'blur(4px)' },
+  animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+  exit: { opacity: 0, scale: 0.25, filter: 'blur(4px)' },
+  transition: { type: 'spring', duration: 0.3, bounce: 0 },
+};
+
+export const quickSwap: SwapAnimation = iconSwap;
 
 export const iconFeedback: Pick<
   HTMLMotionProps<'div'>,
@@ -34,9 +53,9 @@ export const iconFeedback: Pick<
 };
 
 export const textSwap: SwapAnimation = {
-  initial: { opacity: 0, y: -3 },
+  initial: { opacity: 0, y: -2 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 3 },
+  exit: { opacity: 0, y: 2 },
   transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] },
 };
 

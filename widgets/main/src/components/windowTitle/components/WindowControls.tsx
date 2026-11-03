@@ -17,7 +17,7 @@ export function WindowControls({ glazewm, ...props }: WindowControlsProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <ConditionalPanel sessionActive={props.show}>
+    <ConditionalPanel sessionActive={props.show} subtleExit>
       <div className="py-1">
         <Chip
           as="button"
