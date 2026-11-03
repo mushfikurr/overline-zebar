@@ -24,10 +24,10 @@ export const defaultConfig: RootConfig = {
     main: {
       mediaMaxWidth: '400',
       weatherThresholds: [
-        { id: 'weather-1', min: -10, max: 0, labelColor: '--danger' },
-        { id: 'weather-2', min: 1, max: 15, labelColor: '--text' },
-        { id: 'weather-3', min: 16, max: 25, labelColor: '--warning' },
-        { id: 'weather-4', min: 26, max: 35, labelColor: '--danger' },
+        { id: 'weather-1', min: -40, max: 0, labelColor: '--danger' },
+        { id: 'weather-2', min: 0, max: 15, labelColor: '--text' },
+        { id: 'weather-3', min: 15, max: 25, labelColor: '--warning' },
+        { id: 'weather-4', min: 25, max: 60, labelColor: '--danger' },
       ],
       systemStatThresholds: [
         { id: 'stat-1', min: 0, max: 70, labelColor: '--text' },

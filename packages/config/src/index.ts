@@ -14,6 +14,7 @@ export { useThemePreview } from './hooks/useThemePreview';
 export { useThemes } from './hooks/useThemes';
 export { useSystemThemeSync } from './hooks/useSystemThemeSync';
 export { generateThemeFromColor } from './utils/theme-generator';
+export { generateId } from './utils/generateId';
 export type {
   AllWidgetSettings,
   AppSettings,

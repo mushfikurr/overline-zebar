@@ -11,6 +11,9 @@ interface SliderSegment {
   className?: string;
 }
 
+const THUMB_SIZE_PX = 16;
+const HALF_THUMB_PX = THUMB_SIZE_PX / 2;
+
 interface SliderProps extends React.ComponentProps<typeof BaseSlider.Root> {
   indicatorClassName?: string;
   thumbClassName?: string;
@@ -37,7 +40,7 @@ function Slider({
   max: maxProp,
   ...props
 }: SliderProps) {
-  const initialValues = defaultValue ?? value;
+  const initialValues = value ?? defaultValue;
   const thumbCount =
     typeof initialValues === 'number' ? 1 : (initialValues?.length ?? 1);
 
@@ -69,14 +72,14 @@ function Slider({
           className="bg-background-deeper relative h-1.5 w-full grow overflow-hidden rounded-full"
         >
           {segments ? (
-            // Inset by half the thumb (size-4 = 16px, half = 8px = left-2/right-2)
-            // so segment boundaries land exactly on the thumb centers, matching
-            // Base UI's inset thumb positioning (thumbAlignment="edge"). The
-            // first and last segments bleed out to the track ends.
+            // Inset by half the thumb so boundaries land on thumb centers
+            // (thumbAlignment="edge"); first and last segments bleed to the
+            // track ends.
             <div
               data-slot="slider-segments"
               aria-hidden="true"
-              className="absolute inset-y-0 right-2 left-2"
+              className="absolute inset-y-0"
+              style={{ left: HALF_THUMB_PX, right: HALF_THUMB_PX }}
             >
               {segments.map((segment, index) => (
                 <div
@@ -84,10 +87,13 @@ function Slider({
                   data-slot="slider-segment"
                   className={cn('absolute inset-y-0', segment.className)}
                   style={{
-                    left: index === 0 ? '-8px' : `${toPercent(segment.from)}%`,
+                    left:
+                      index === 0
+                        ? -HALF_THUMB_PX
+                        : `${toPercent(segment.from)}%`,
                     right:
                       index === segments.length - 1
-                        ? '-8px'
+                        ? -HALF_THUMB_PX
                         : `${100 - toPercent(segment.to)}%`,
                   }}
                 />
@@ -105,9 +111,13 @@ function Slider({
             key={index}
             index={index}
             getAriaLabel={thumbAriaLabel ?? undefined}
-            style={thumbStyle?.(index)}
+            style={{
+              width: THUMB_SIZE_PX,
+              height: THUMB_SIZE_PX,
+              ...thumbStyle?.(index),
+            }}
             className={cn(
-              'border-primary-border bg-background ring-primary/40 block size-4 shrink-0 rounded-full border-2 shadow-xs outline-none transition-[box-shadow,border-color] duration-150 hover:ring-[3px] focus-visible:ring-[3px] data-[focus-visible]:ring-[3px] data-[dragging]:border-primary data-[dragging]:ring-[3px] disabled:pointer-events-none disabled:opacity-50',
+              'border-primary-border bg-background ring-primary/40 block shrink-0 rounded-full border-2 shadow-xs outline-none transition-[box-shadow,border-color] duration-150 hover:ring-[3px] focus-visible:ring-[3px] data-[focus-visible]:ring-[3px] data-[dragging]:border-primary data-[dragging]:ring-[3px] disabled:pointer-events-none disabled:opacity-50',
               thumbClassName
             )}
           />
